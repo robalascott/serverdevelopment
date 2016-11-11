@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <pageflow:Pageflow xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:pageflow="http://www.sybase.com/suade/pageflow" id="pf14784295247650" configfile="/Lab1/WebContent/WEB-INF/faces-config.xml">
   <nodes xsi:type="pageflow:PFPage" name="*" id="pf14784521117713" referenceLink="//@navigationRule.0/@fromViewId|" outlinks="pf14784521117714 pf14784521117715" path="*"/>
-  <nodes xsi:type="pageflow:PFPage" name="page1.xhtml" id="pf14784521117716" referenceLink="//@navigationRule.0/@navigationCase.2/@toViewId|" inlinks="pf14784521117714" path="page1.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="page1.xhtml" id="pf14784521117716" referenceLink="//@navigationRule.0/@navigationCase.0/@toViewId|" inlinks="pf14784521117714" path="page1.xhtml"/>
   <nodes xsi:type="pageflow:PFPage" name="page2.xhtml" id="pf14784521117717" referenceLink="//@navigationRule.0/@navigationCase.1/@toViewId|" inlinks="pf14784521117715" path="page2.xhtml"/>
   <links id="pf14784521117714" target="pf14784521117716" source="pf14784521117713" outcome="true" redirect="true" fromaction="#{PresidentBean.currentPresident()}"/>
   <links id="pf14784521117715" target="pf14784521117717" source="pf14784521117713" outcome="false" redirect="true" fromaction="#{PresidentBean.currentPresident()}"/>

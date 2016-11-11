@@ -1,1 +1,49 @@
 tester retset
+
+CREATE TABLE `lab1`.`user` (
+  `username` VARCHAR(30) NOT NULL,
+  `password` CHAR(20) NOT NULL,
+  `firstname` VARCHAR(30) NULL,
+  `lastname` VARCHAR(30) NULL,
+  PRIMARY KEY (`username`));
+
+REATE TABLE `lab1`.`flow` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `message` VARCHAR(45) NULL,
+  `timestamp` DATETIME NOT NULL,
+  `sender` VARCHAR(30) NULL,
+  `reciever` VARCHAR(30) NULL,
+  `type` INT(1) NULL,
+  PRIMARY KEY (`id`),
+  INDEX `username_idx` (`sender` ASC),
+  INDEX `username_idx1` (`reciever` ASC),
+  CONSTRAINT `sender`
+    FOREIGN KEY (`sender`)
+    REFERENCES `lab1`.`user` (`username`)
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION,
+  CONSTRAINT `reciever`
+    FOREIGN KEY (`reciever`)
+    REFERENCES `lab1`.`user` (`username`)
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION);
+
+CREATE TABLE `lab1`.`chat` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `sender` VARCHAR(30) NOT NULL,
+  `reciever` VARCHAR(30) NOT NULL,
+  `checked` INT(1) NULL,
+  `timestamp` DATETIME NULL,
+  PRIMARY KEY (`id`),
+  INDEX `sender_idx` (`sender` ASC),
+  INDEX `reciever_idx` (`reciever` ASC),
+  CONSTRAINT `chat_sender`
+    FOREIGN KEY (`sender`)
+    REFERENCES `lab1`.`user` (`username`)
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION,
+  CONSTRAINT `chat_reciever`
+    FOREIGN KEY (`reciever`)
+    REFERENCES `lab1`.`user` (`username`)
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION);
