@@ -5,6 +5,8 @@ import java.io.Serializable;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import bo.UserHandler;
+
 @ManagedBean
 @SessionScoped
 public class LoginBean implements Serializable {
@@ -28,8 +30,13 @@ public class LoginBean implements Serializable {
 	}
 	//Login Confirmation to db via handler
 	//Future exit point for RESTful or Winks
-	public String doLogin(){
-		return "main";
+	public boolean doLogin(){
+		UserHandler handler = new UserHandler();
+		
+		if(handler.login(userName, password))
+			return true;
+		else
+			return false;
 		
 	}
 }

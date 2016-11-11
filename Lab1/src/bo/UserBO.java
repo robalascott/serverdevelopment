@@ -5,15 +5,21 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 @Entity
 @Table(name="user")
+@NamedQuery(query = "SELECT e FROM UserBO e where e.username = :username AND e.password = :password", name = "login")
 public class UserBO {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(name="id")
 	private int id;
+	@Column(name="username")
+	private String username;
+
 	@Column(name="firstname")
 	private String firstname;
 	@Column(name="lastname")
@@ -30,7 +36,15 @@ public class UserBO {
 	public void setId(int id) {
 		this.id = id;
 	}
+	
+	public String getUsername() {
+		return username;
+	}
 
+	public void setUsername(String username) {
+		this.username = username;
+	}
+	
 	public String getFirstname() {
 		return firstname;
 	}
