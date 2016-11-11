@@ -18,9 +18,15 @@
 	<navigation-rule>
 		<from-view-id>*</from-view-id>
 		<navigation-case>
-			<from-action>#{PresidentBean.currentPresident()}</from-action>
-			<from-outcome>true</from-outcome>
+			<from-action>#{LoginBean.doLogin()}</from-action>
+			<from-outcome>false</from-outcome>
 			<to-view-id>page1.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
+		<navigation-case>
+			<from-action>#{LoginBean.doLogin()}</from-action>
+			<from-outcome>true</from-outcome>
+			<to-view-id>main.xhtml</to-view-id>
 			<redirect/>
 		</navigation-case>
 		<navigation-case>
