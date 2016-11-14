@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <pageflow:Pageflow xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:pageflow="http://www.sybase.com/suade/pageflow" id="pf14784295247650" configfile="/Lab1/WebContent/WEB-INF/faces-config.xml">
-  <nodes xsi:type="pageflow:PFPage" name="*" id="pf14784521117713" referenceLink="//@navigationRule.0/@fromViewId|" outlinks="pf14788614632210 pf14789314490960 pf14790572187031" path="*"/>
-  <nodes xsi:type="pageflow:PFPage" name="main.xhtml" id="pf14788614632211" referenceLink="//@navigationRule.0/@navigationCase.2/@toViewId|" inlinks="pf14788614632210" path="main.xhtml"/>
-  <nodes xsi:type="pageflow:PFPage" name="login.xhtml" id="pf14789314490961" referenceLink="//@navigationRule.0/@navigationCase.2/@toViewId|" inlinks="pf14789314490960 pf14790572187031" path="login.xhtml"/>
-  <links id="pf14788614632210" target="pf14788614632211" source="pf14784521117713" outcome="true" redirect="true" fromaction="#{LoginBean.doLogin()}"/>
-  <links id="pf14789314490960" target="pf14789314490961" source="pf14784521117713" outcome="false" redirect="true" fromaction="#{LoginBean.doLogin()}"/>
-  <links id="pf14790572187031" target="pf14789314490961" source="pf14784521117713" outcome="false" redirect="true" fromaction="#{LoginBean.doLogout()}"/>
+  <nodes xsi:type="pageflow:PFPage" name="*" id="pf14784521117713" referenceLink="//@navigationRule.0/@fromViewId|" outlinks="pf14791193483191 pf14791193483192 pf14791193483193" path="*"/>
+  <nodes xsi:type="pageflow:PFPage" name="login.xhtml" id="pf14791193483194" referenceLink="//@navigationRule.0/@navigationCase.2/@toViewId|" inlinks="pf14791193483191 pf14791193483193" path="/login.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="main.xhtml" id="pf14791193483195" referenceLink="//@navigationRule.0/@navigationCase.1/@toViewId|" inlinks="pf14791193483192" path="/main.xhtml"/>
+  <links id="pf14791193483191" target="pf14791193483194" source="pf14784521117713" outcome="false" redirect="true" fromaction="#{LoginBean.doLogin()}"/>
+  <links id="pf14791193483192" target="pf14791193483195" source="pf14784521117713" outcome="true" redirect="true" fromaction="#{LoginBean.doLogin()}"/>
+  <links id="pf14791193483193" target="pf14791193483194" source="pf14784521117713" outcome="false" redirect="true" fromaction="#{LoginBean.doLogout()}"/>
 </pageflow:Pageflow>
