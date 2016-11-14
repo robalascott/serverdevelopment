@@ -9,9 +9,9 @@
 <h:body>
 	<h:form>
 		<h3>Welcome #{LoginBean.userName}</h3>
+		<br></br><br></br>
 		
-		
-		<h:commandButton action ="#{login.validateUserName}" value="Login"></h:commandButton>
+		<h:commandLink action = "#{LoginBean.doLogout()}" value="Logout"></h:commandLink>
 		
 	</h:form>
 </h:body>
