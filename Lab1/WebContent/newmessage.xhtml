@@ -1,0 +1,44 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+          "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+
+<h:body>
+	<ui:composition template="template.xhtml">
+		<ui:define name="title">Welcome</ui:define>
+		<ui:define name="top">#{LoginBean.userName}</ui:define>
+		<ui:define name="content">
+			<h:form class="form-horizontal">
+ 		Username :
+		<h:inputText id="username" value="#{LoginBean.userName}" size="20"
+					Label="Login" required="true"
+					requiredMessage="Please enter an email"></h:inputText>
+				<h:message for="username" errorClass="errorMessage"
+					style="color:red"></h:message>
+		
+		
+		Subject :
+		<h:inputText id="subject" value="#{LoginBean.password}" size="20"
+					required="true" requiredMessage="Please enter a Subject"></h:inputText>
+				<h:message for="subject" errorClass="errorMessage" style="color:red"></h:message>
+				<h:commandButton action="#{LoginBean.doLogin()}" value="Login"></h:commandButton>
+				<br />
+
+		<h:inputTextarea  value="#{LoginBean.password}"  row="10" col="10" >
+		
+		
+		</h:inputTextarea> 
+		
+
+
+
+
+			</h:form>
+		</ui:define>
+	</ui:composition>
+
+</h:body>
+
+</html>

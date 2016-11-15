@@ -44,7 +44,7 @@ public class LoginBean implements Serializable {
 			session.setAttribute("username", userName);
 			return true;
 		}else{
-			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage( errorLogin1));
+			FacesContext.getCurrentInstance().addMessage("password",new FacesMessage( errorLogin1));
 			return false;
 		}
 	}
