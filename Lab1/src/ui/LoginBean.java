@@ -10,7 +10,7 @@ import javax.servlet.http.HttpSession;
 
 import bo.UserHandler;
 
-@ManagedBean
+@ManagedBean(name="login")
 @SessionScoped
 public class LoginBean implements Serializable {
 	private String password;
