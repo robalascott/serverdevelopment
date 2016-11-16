@@ -12,25 +12,25 @@
 		<ui:define name="content">
 			<h:form class="form-horizontal">
  		Username :
-		<h:inputText id="username" value="#{LoginBean.userName}" size="20"
-					Label="Login" required="true"
-					requiredMessage="Please enter an email"></h:inputText>
+		<h:inputText id="username" value="#{MessageBean.recieverName}" size="20" required="true"
+					requiredMessage="Please enter an email" />
 				<h:message for="username" errorClass="errorMessage"
 					style="color:red"></h:message>
-		
+				<br />
 		
 		Subject :
-		<h:inputText id="subject" value="#{LoginBean.password}" size="20"
-					required="true" requiredMessage="Please enter a Subject"></h:inputText>
-				<h:message for="subject" errorClass="errorMessage" style="color:red"></h:message>
-				<h:commandButton action="#{LoginBean.doLogin()}" value="Login"></h:commandButton>
+		<h:inputText id="subject" value="#{MessageBean.subject}" size="20"
+					required="true" requiredMessage="Please enter a Subject" />
+				<h:message for="subject" errorClass="errorMessage" style="color:red" />
+				
 				<br />
 
-		<h:inputTextarea  value="#{LoginBean.password}"  row="10" col="10" >
-		
-		
-		</h:inputTextarea> 
-		
+				<h:inputTextarea id="messagebox" value="#{MessageBean.message}" row="100" col="100" size = "65000" required="true"
+				requiredMessage="Please enter a Message"/>
+ 					
+				<h:message for="messagebox" errorClass="errorMessage" style="color:red" />
+				<br />
+				<h:commandButton action="#{MessageBean.sendMessage()}" value="send" />
 
 
 

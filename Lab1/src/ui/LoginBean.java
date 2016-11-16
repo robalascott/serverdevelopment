@@ -18,6 +18,7 @@ public class LoginBean implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private final static String errorLogin1 = "Incorrect Username and Password";
 	private final static String errorLogin2 = "Please enter correct Username or Password";
+	private final static String doMain = "doMain";
 	
 	public String getPassword() {
 		return password;
@@ -53,5 +54,9 @@ public class LoginBean implements Serializable {
 		HttpSession session = SessionUtils.getSession();
 		session.invalidate();
 		return false;
+	}
+	//Main menu handler used in different views
+	public String doMain(){
+		return "doMain";
 	}
 }

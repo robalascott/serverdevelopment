@@ -30,11 +30,14 @@
 	</div>
 	<div>
 		<div id="left" class="left">
-			<ui:insert name="left" class="left">Left Section
-				<br />
+			<ui:insert name="left" class="left">
 				<h:form>
-				
-					
+					<h:commandLink name="newMessage" action="#{MessageBean.doMessage()}" value=" Create a new Message"/>
+					<br/>
+					<br/>
+					<h:commandLink name="newMain" action="#{LoginBean.doMain()}" value="Main Menu"/>
+					<br/>
+					<br/>
 				</h:form>
 			</ui:insert>
 			
@@ -46,10 +49,7 @@
 		<div id="bottom">
 			<ui:insert name="bottom">Copyright 2016 Community
 					<br />
-				<h:form>
-					<h:commandLink name="logitout" action="#{LoginBean.doLogout()}"
-						value="Logout"></h:commandLink>
-				</h:form>
+			
 			</ui:insert>
 		</div>
 

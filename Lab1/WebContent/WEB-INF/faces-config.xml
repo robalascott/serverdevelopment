@@ -6,8 +6,8 @@
     version="2.2">
 	<!--  Insert Managed Beans Here -->
 	<managed-bean>
-		<managed-bean-name>PresidentBean</managed-bean-name>
-		<managed-bean-class>PresidentBean</managed-bean-class>
+		<managed-bean-name>MessageBean</managed-bean-name>
+		<managed-bean-class>ui.MessageBean</managed-bean-class>
 		<managed-bean-scope>session</managed-bean-scope>
 	</managed-bean>
 	<managed-bean>
@@ -38,6 +38,18 @@
 			<from-action>#{LoginBean.doLogout()}</from-action>
 			<from-outcome>false</from-outcome>
 			<to-view-id>/login.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
+			<navigation-case>
+			<from-action>#{MessageBean.doMessage()}</from-action>
+			<from-outcome>newMessage</from-outcome>
+			<to-view-id>/newmessage.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
+			<navigation-case>
+			<from-action>#{LoginBean.doMain()}</from-action>
+			<from-outcome>doMain</from-outcome>
+			<to-view-id>/main.xhtml</to-view-id>
 			<redirect/>
 		</navigation-case>
 	</navigation-rule>
