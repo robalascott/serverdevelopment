@@ -1,5 +1,6 @@
 package bo;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -8,8 +9,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.NoResultException;
 import javax.persistence.Persistence;
+import javax.persistence.PersistenceException;
 
 import org.hibernate.Hibernate;
+import org.hibernate.Transaction;
 
 public class MessageHandler {
 	
@@ -40,4 +43,29 @@ public class MessageHandler {
 			emf.close();
 		}
 	}
+	
+	public boolean addNewMessage(String sender, String reciver,String message ){
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory("Lab1");
+		EntityManager em = emf.createEntityManager();
+		Message msg = new Message();
+		System.out.println("MessageHandler: Inserting a new message");
+		try{
+			em.getTransaction().begin();
+			msg.setMessage(message);
+			msg.setSender(sender);
+			msg.setReceiver(reciver);
+			em.persist(msg);
+			em.getTransaction().commit();
+			return true;
+		}catch(PersistenceException er){
+			System.out.println(er.getMessage());
+			return false;
+		}finally{
+			em.close();
+			emf.close();
+		}
+	}
+
+
+	
 }

@@ -71,8 +71,6 @@ public class UserBO {
 
 	@Override
 	public String toString() {
-		return "UserBO [id=" + id + ", firstname=" + firstname + ", lastname=" + lastname + ", password=" + password
-				+ "]";
-	};
-	
+		return "UserBO [id=" + this.id + ", firstname=" + this.firstname + ", lastname=" + this.lastname
+				+ "]";};
 }

@@ -10,15 +10,15 @@ public class UserHandler {
 	EntityManagerFactory emf = Persistence.createEntityManagerFactory("Lab1");
 	EntityManager em = emf.createEntityManager();
 	
-	public boolean login(String userName, String password){
+	public int login(String userName, String password){
 		
 		System.out.println("Debug: " + userName + " " + password);
 		try{
-			em.createNamedQuery("login").setParameter("username", userName).setParameter("password", password).getSingleResult();
-			return true;
+			UserBO user = (UserBO) em.createNamedQuery("login").setParameter("username", userName).setParameter("password", password).getSingleResult();
+			return user.getId();
 		}catch(NoResultException e){
 			System.out.println("UserHandler error: No user");
-			return false;
+			return -1;
 		}finally{
 			em.close();
 			emf.close();
