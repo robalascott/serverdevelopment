@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <pageflow:Pageflow xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:pageflow="http://www.sybase.com/suade/pageflow" id="pf14784295247650" configfile="/Lab1/WebContent/WEB-INF/faces-config.xml">
-  <nodes xsi:type="pageflow:PFPage" name="*" id="pf14784521117713" referenceLink="//@navigationRule.0/@fromViewId|" outlinks="pf14791193483191 pf14791193483192 pf14791193483193 pf14792019357250 pf14792027024112" path="*"/>
-  <nodes xsi:type="pageflow:PFPage" name="login.xhtml" id="pf14791193483194" referenceLink="//@navigationRule.0/@navigationCase.4/@toViewId|" inlinks="pf14791193483191 pf14791193483193" path="/login.xhtml"/>
-  <nodes xsi:type="pageflow:PFPage" name="main.xhtml" id="pf14791193483195" referenceLink="//@navigationRule.0/@navigationCase.4/@toViewId|" inlinks="pf14791193483192 pf14792027024112" path="/main.xhtml"/>
-  <nodes xsi:type="pageflow:PFPage" name="newmessage.xhtml" id="pf14792019357251" referenceLink="//@navigationRule.0/@navigationCase.4/@toViewId|" inlinks="pf14792019357250" path="/newmessage.xhtml"/>
-  <links id="pf14791193483191" target="pf14791193483194" source="pf14784521117713" outcome="false" redirect="true" fromaction="#{LoginBean.doLogin()}"/>
-  <links id="pf14791193483192" target="pf14791193483195" source="pf14784521117713" outcome="true" redirect="true" fromaction="#{LoginBean.doLogin()}"/>
+  <nodes xsi:type="pageflow:PFPage" name="*" id="pf14784521117713" referenceLink="//@navigationRule.0/@fromViewId|" outlinks="pf14791193483191 pf14791193483192 pf14791193483193 pf14792019357250 pf14792027024112 pf14793810804250 pf14793881235162 pf14793883133373" path="*"/>
+  <nodes xsi:type="pageflow:PFPage" name="login.xhtml" id="pf14791193483194" referenceLink="//@navigationRule.0/@navigationCase.2/@toViewId|" inlinks="pf14791193483191 pf14791193483193" path="/login.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="main.xhtml" id="pf14791193483195" referenceLink="//@navigationRule.0/@navigationCase.6/@toViewId|" inlinks="pf14791193483192 pf14792027024112 pf14793881235162" path="/main.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="newmessage.xhtml" id="pf14792019357251" referenceLink="//@navigationRule.0/@navigationCase.3/@toViewId|" inlinks="pf14792019357250" path="/newmessage.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="public/register.xhtml" id="pf14793810804261" referenceLink="//@navigationRule.0/@navigationCase.7/@toViewId|" inlinks="pf14793810804250 pf14793883133373" path="/public/register.xhtml"/>
+  <links id="pf14791193483191" target="pf14791193483194" source="pf14784521117713" outcome="failed" redirect="true" fromaction="#{LoginBean.doLogin()}"/>
+  <links id="pf14791193483192" target="pf14791193483195" source="pf14784521117713" outcome="success" redirect="true" fromaction="#{LoginBean.doLogin()}"/>
   <links id="pf14791193483193" target="pf14791193483194" source="pf14784521117713" outcome="false" redirect="true" fromaction="#{LoginBean.doLogout()}"/>
   <links id="pf14792019357250" target="pf14792019357251" source="pf14784521117713" outcome="newMessage" redirect="true" fromaction="#{MessageBean.doMessage()}"/>
   <links id="pf14792027024112" target="pf14791193483195" source="pf14784521117713" outcome="doMain" redirect="true" fromaction="#{LoginBean.doMain()}"/>
+  <links id="pf14793810804250" target="pf14793810804261" source="pf14784521117713" outcome="register" redirect="true"/>
+  <links id="pf14793881235162" target="pf14791193483195" source="pf14784521117713" outcome="RegisterSuccess" redirect="true"/>
+  <links id="pf14793883133373" target="pf14793810804261" source="pf14784521117713" outcome="RegisterFailed" redirect="true"/>
 </pageflow:Pageflow>

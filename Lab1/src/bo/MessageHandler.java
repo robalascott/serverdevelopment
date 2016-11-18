@@ -40,4 +40,28 @@ public class MessageHandler {
 			emf.close();
 		}
 	}
+
+	public static void post(String activeUser, String messageText, String displayedUser) {
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory("Lab1");
+		EntityManager em = emf.createEntityManager();
+		
+		Message newMessage = new Message(activeUser, messageText, displayedUser);
+		
+		System.out.println("MessageHandler: Postin in " + displayedUser + "s flow");
+		try{
+			
+			em.getTransaction().begin();
+			em.persist(newMessage);
+			em.getTransaction().commit();
+			
+			return;
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			em.close();
+			emf.close();
+		}	
+		return;
+	}
 }

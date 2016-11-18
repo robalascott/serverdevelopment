@@ -61,4 +61,10 @@ public class Message {
 	
 	public Message(){}
 
+	public Message(String activeUser, String messageText, String displayedUser) {
+		this.message = messageText;
+		this.sender = activeUser;
+		this.receiver = displayedUser;
+	}
+
 }

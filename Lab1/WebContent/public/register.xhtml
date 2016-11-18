@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<ui:composition template="/WEB-INF/templates/template2.xhtml">
+	<ui:define name="header">
+		<title>Community - Register</title>
+	</ui:define>
+	<ui:define name="content">
+		<h1>Create an account</h1>
+		<h:form>
+			<table>
+				<tr>
+					<h:outputText value="* = Required Fields" />
+				</tr>
+				<tr>
+					<td>
+						*Name
+					</td>
+					<td>
+						<h:inputText id="name" value="#{registerBean.name}" validator="#{RegisterBean.validateName}" required="true" requiredMessage="Name is required">
+							<f:ajax event="change" execute="@this" render="nameError"/>
+						</h:inputText>
+					</td>
+					<td>
+						<h:message for="name" id="nameError" style="color:red"/>
+					</td>
+				</tr>
+				<tr>
+					<td>*Password</td>
+					<td>
+						<h:inputSecret id="password" value="#{registerBean.password}" validator="#{RegisterBean.validatePassword}" required="true" requiredMessage="Password is required">
+							<f:ajax event="blur" execute="@this" render="passwordError"/>
+						</h:inputSecret>
+					</td>
+					<td>
+						<h:message for="password" id="passwordError" style="color:red"/>
+					</td>
+				</tr>
+				<tr>
+					<td>*Confirm Password</td>
+					<td>
+						<h:inputSecret id="confirmPassword" value="#{registerBean.cPassword}" validator="#{RegisterBean.validateCPassword}" required="true" requiredMessage="Password does not match">
+							<f:ajax event="blur" execute="@this" render="cPassError"/>
+						</h:inputSecret>
+					</td>
+					<td>
+						<h:message for="confirmPassword" id="cPassError" style="color:red"/>
+					</td>
+				</tr>
+			</table>
+			<h:commandButton id="submitButton" value="Register" action="#{registerBean.doRegister()}" />
+		</h:form>
+	</ui:define>
+	<ui:define name="footer">
+	
+	</ui:define>
+</ui:composition>
+</html>

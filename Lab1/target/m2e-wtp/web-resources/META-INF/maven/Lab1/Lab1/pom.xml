@@ -55,5 +55,15 @@
   		<artifactId>jstl</artifactId>
   		<version>1.2</version>
   	</dependency>
+  	<dependency>
+  		<groupId>org.omnifaces</groupId>
+  		<artifactId>omnifaces</artifactId>
+  		<version>1.14</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.primefaces</groupId>
+  		<artifactId>primefaces</artifactId>
+  		<version>6.0</version>
+  	</dependency>
   </dependencies>
 </project>

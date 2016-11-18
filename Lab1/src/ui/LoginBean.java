@@ -37,17 +37,22 @@ public class LoginBean implements Serializable {
 	}
 	//Login Confirmation to db via handler
 	//Future exit point for RESTful or Winks
-	public boolean doLogin(){
+	public String doLogin(){
 		UserHandler handler = new UserHandler();
 		
 		if(handler.login(userName, password)){
 			HttpSession session = SessionUtils.getSession();
 			session.setAttribute("username", userName);
-			return true;
+			return "success";
 		}else{
 			FacesContext.getCurrentInstance().addMessage("password",new FacesMessage( errorLogin1));
-			return false;
+			return "failed";
 		}
+	}
+	
+	public boolean authenticated(){
+		System.out.println("User authenticated");
+		return true;
 	}
 	
 	public boolean doLogout(){
