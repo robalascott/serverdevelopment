@@ -4,20 +4,21 @@ import java.io.Serializable;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
 
 import bo.UserHandler;
 
-@ManagedBean(name="login")
+@ManagedBean
 @SessionScoped
 public class LoginBean implements Serializable {
 	private String password;
 	private String userName;
+	private int id;
 	private static final long serialVersionUID = 1L;
 	private final static String errorLogin1 = "Incorrect Username and Password";
-	private final static String errorLogin2 = "Please enter correct Username or Password";
 	private final static String doMain = "doMain";
 	
 	public String getPassword() {
@@ -39,12 +40,15 @@ public class LoginBean implements Serializable {
 	//Future exit point for RESTful or Winks
 	public String doLogin(){
 		UserHandler handler = new UserHandler();
-		
-		if(handler.login(userName, password)){
+		//UserHandler returns an id value 
+		this.id = handler.login(userName, password);
+		if(this.id!=-1){
 			HttpSession session = SessionUtils.getSession();
 			session.setAttribute("username", userName);
+			session.setAttribute("id", id);
 			return "success";
 		}else{
+			//Not working
 			FacesContext.getCurrentInstance().addMessage("password",new FacesMessage( errorLogin1));
 			return "failed";
 		}
@@ -62,6 +66,6 @@ public class LoginBean implements Serializable {
 	}
 	//Main menu handler used in different views
 	public String doMain(){
-		return "doMain";
+		return doMain;
 	}
 }

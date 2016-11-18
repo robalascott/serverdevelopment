@@ -8,12 +8,17 @@
 	<managed-bean>
 		<managed-bean-name>MessageBean</managed-bean-name>
 		<managed-bean-class>ui.MessageBean</managed-bean-class>
-		<managed-bean-scope>session</managed-bean-scope>
+		<managed-bean-scope>view</managed-bean-scope>
+		<managed-property>
+		<property-name>senderName</property-name>
+		<value>#{LoginBean.userName}</value>
+		</managed-property>
 	</managed-bean>
 	<managed-bean>
 		<managed-bean-name>LoginBean</managed-bean-name>
 		<managed-bean-class>ui.LoginBean</managed-bean-class>
 		<managed-bean-scope>session</managed-bean-scope>
+		
 	</managed-bean>
 	<managed-bean>
 		<managed-bean-name>FlowBean</managed-bean-name>

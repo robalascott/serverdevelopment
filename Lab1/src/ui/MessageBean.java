@@ -1,13 +1,22 @@
 package ui;
 
-import javax.faces.bean.ManagedBean;
+import java.io.Serializable;
 
-import javax.faces.bean.ViewScoped;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
+import javax.faces.view.ViewScoped;
+
+import bo.MessageHandler;
+
+
 
 @ManagedBean
 @ViewScoped
-public class MessageBean {
+public class MessageBean implements Serializable{
+	private static final long serialVersionUID = 1L;
 	private final static String messageXhtml = "newMessage";
+	
+	@ManagedProperty(value = "#{userName}")
 	private String senderName;
 	private String recieverName;
 	private String message;
@@ -16,6 +25,7 @@ public class MessageBean {
 	public MessageBean(){
 		
 	}
+
 
 	public String getSenderName() {
 		return senderName;
@@ -41,9 +51,7 @@ public class MessageBean {
 		this.message = message;
 	}
 	
-	public void sendMessage(){
-		
-	}
+
 	public String getSubject() {
 		return subject;
 	}
@@ -57,4 +65,14 @@ public class MessageBean {
 		return messageXhtml;
 	}
 
+	public void sendMessage(){
+		MessageHandler handler = new MessageHandler();
+		
+		if(!(handler.addNewMessage(this.senderName, this.senderName, this.message))){
+			System.out.println("Message sent");
+		}else{
+			System.out.println("Message not sent");
+		}
+		
+	}
 }

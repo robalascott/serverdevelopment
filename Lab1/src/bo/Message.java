@@ -20,7 +20,13 @@ public class Message {
 	
 	@Column(name="sender")
 	private String sender;
+	@Column(name="receiver")
+	private String receiver;
 	
+	@Column(name="message")
+	private String message;
+	
+	public Message(){}
 	public int getId() {
 		return id;
 	}
@@ -53,13 +59,7 @@ public class Message {
 		this.message = message;
 	}
 
-	@Column(name="receiver")
-	private String receiver;
 	
-	@Column(name="message")
-	private String message;
-	
-	public Message(){}
 
 	public Message(String activeUser, String messageText, String displayedUser) {
 		this.message = messageText;

@@ -27,6 +27,9 @@ public class AuthorizationFilter implements Filter{
 		HttpServletResponse res = (HttpServletResponse) response;
 		HttpSession ses = reqt.getSession(false);
 		String reqURI = reqt.getRequestURI();
+	
+		
+	
 		try{
 		if(reqURI.indexOf(pathNamelogin)>=0 || (ses!=null && ses.getAttribute("username")!=null)
 				||reqURI.indexOf("/public/")>=0 || reqURI.contains(pathNameResource)){
@@ -37,6 +40,7 @@ public class AuthorizationFilter implements Filter{
 		}catch(Exception error){
 			System.out.println(error.getMessage());
 		}
+		
 	}
 
 }
