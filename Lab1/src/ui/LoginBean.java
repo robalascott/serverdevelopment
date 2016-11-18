@@ -40,7 +40,7 @@ public class LoginBean implements Serializable {
 	}
 	//Login Confirmation to db via handler
 	//Future exit point for RESTful or Winks
-	public boolean doLogin(){
+	public String doLogin(){
 		UserHandler handler = new UserHandler();
 		//UserHandler returns an id value 
 		this.id = handler.login(userName, password);
@@ -48,15 +48,25 @@ public class LoginBean implements Serializable {
 			HttpSession session = SessionUtils.getSession();
 			session.setAttribute("username", userName);
 			session.setAttribute("id", id);
-			return true;
+			return "success";
 		}else{
 			//Not working
+<<<<<<< HEAD
 			RequestContext.getCurrentInstance().update("growllogin");
 			FacesContext context = FacesContext.getCurrentInstance();
 			context.getExternalContext().getFlash().setKeepMessages(true);
 			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Error","UserName or Password"));
 			return false;
+=======
+			FacesContext.getCurrentInstance().addMessage("password",new FacesMessage( errorLogin1));
+			return "failed";
+>>>>>>> origin/master
 		}
+	}
+	
+	public boolean authenticated(){
+		System.out.println("User authenticated");
+		return true;
 	}
 	
 	public boolean doLogout(){

@@ -10,7 +10,7 @@ import bo.MessageHandler;
 
 
 
-@ManagedBean(name="message")
+@ManagedBean
 @ViewScoped
 public class MessageBean implements Serializable{
 	private static final long serialVersionUID = 1L;

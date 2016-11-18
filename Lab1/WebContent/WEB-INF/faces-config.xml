@@ -25,17 +25,22 @@
 		<managed-bean-class>ui.FlowBean</managed-bean-class>
 		<managed-bean-scope>view</managed-bean-scope>
 	</managed-bean>
+	<managed-bean>
+		<managed-bean-name>RegisterBean</managed-bean-name>
+		<managed-bean-class>ui.RegisterBean</managed-bean-class>
+		<managed-bean-scope>view</managed-bean-scope>
+	</managed-bean>
 	<navigation-rule>
 		<from-view-id>*</from-view-id>
 		<navigation-case>
 			<from-action>#{LoginBean.doLogin()}</from-action>
-			<from-outcome>false</from-outcome>
+			<from-outcome>failed</from-outcome>
 			<to-view-id>/login.xhtml</to-view-id>
 			<redirect/>
 		</navigation-case>
 		<navigation-case>
 			<from-action>#{LoginBean.doLogin()}</from-action>
-			<from-outcome>true</from-outcome>
+			<from-outcome>success</from-outcome>
 			<to-view-id>/main.xhtml</to-view-id>
 			<redirect/>
 		</navigation-case>
@@ -51,12 +56,29 @@
 			<to-view-id>/newmessage.xhtml</to-view-id>
 			<redirect/>
 		</navigation-case>
-			<navigation-case>
+		<navigation-case>
 			<from-action>#{LoginBean.doMain()}</from-action>
 			<from-outcome>doMain</from-outcome>
 			<to-view-id>/main.xhtml</to-view-id>
 			<redirect/>
 		</navigation-case>
+		<navigation-case>
+			<from-outcome>register</from-outcome>
+			<to-view-id>/public/register.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>RegisterSuccess</from-outcome>
+			<to-view-id>/main.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>RegisterFailed</from-outcome>
+			<to-view-id>/public/register.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
+		
+		
 	</navigation-rule>
 
 </faces-config>

@@ -55,10 +55,22 @@
   		<artifactId>jstl</artifactId>
   		<version>1.2</version>
   	</dependency>
+<<<<<<< HEAD
   		<dependency>
   		<groupId>org.primefaces</groupId>
   		<artifactId>primefaces</artifactId>
   		<version>5.3</version>
+=======
+  	<dependency>
+  		<groupId>org.omnifaces</groupId>
+  		<artifactId>omnifaces</artifactId>
+  		<version>1.14</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.primefaces</groupId>
+  		<artifactId>primefaces</artifactId>
+  		<version>6.0</version>
+>>>>>>> origin/master
   	</dependency>
   </dependencies>
 </project>
