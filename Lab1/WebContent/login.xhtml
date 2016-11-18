@@ -1,37 +1,30 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
           "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
-	xmlns:h="http://xmlns.jcp.org/jsf/html">
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
 <head>
 <title>Community Login</title>
 </head>
 <h:body>
-	<h:form id="loginform">
-		<h3>Login</h3>
-		<h:panelGrid columns="3">
-		 Username :
-		<h:inputText id="username" value="#{LoginBean.userName}" size="20"
+
+	<p:growl id="growllogin" sticky="true" showDetails="true"></p:growl>
+	<h:form>
+		<p:panelGrid columns="3" style=" postion: absolute; top: 250px; left: 500px">
+			<f:facet name="header">Login here!</f:facet>
+			<h:outputText value="Username :" />
+			<p:inputText id="username" value="#{LoginBean.userName}"
 				Label="Login" required="true"
-				requiredMessage="Please enter your Username"></h:inputText>
+				requiredMessage="Please enter your Username"></p:inputText>
 			<h:message for="username" errorClass="errorMessage" style="color:red"></h:message>
-		
-		
-		Password :
-		<h:inputSecret id="password" value="#{LoginBean.password}" size="20"
-				required="true" requiredMessage="Please enter your Password">
-			</h:inputSecret>
+			<h:outputText value="Password :" />
+			<h:inputSecret id="password" value="#{LoginBean.password}"
+				required="true" requiredMessage="Please enter your Password"></h:inputSecret>
 			<h:message for="password" errorClass="errorMessage" style="color:red"></h:message>
-			<h:commandButton action="#{LoginBean.doLogin()}" value="Login"></h:commandButton>
-			<br />
 	
-		</h:panelGrid>
-	
-	
+		</p:panelGrid>
+		<p:commandButton value="Login" action="#{LoginBean.doLogin()}"></p:commandButton>
 	</h:form>
-
 </h:body>
-
-
 </html>

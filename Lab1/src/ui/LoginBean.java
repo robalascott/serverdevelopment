@@ -9,6 +9,8 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
 
+import org.primefaces.context.RequestContext;
+
 import bo.UserHandler;
 
 @ManagedBean
@@ -49,7 +51,10 @@ public class LoginBean implements Serializable {
 			return true;
 		}else{
 			//Not working
-			FacesContext.getCurrentInstance().addMessage("password",new FacesMessage( errorLogin1));
+			RequestContext.getCurrentInstance().update("growllogin");
+			FacesContext context = FacesContext.getCurrentInstance();
+			context.getExternalContext().getFlash().setKeepMessages(true);
+			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Error","UserName or Password"));
 			return false;
 		}
 	}
