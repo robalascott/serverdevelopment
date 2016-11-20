@@ -11,14 +11,13 @@
 		<managed-bean-scope>view</managed-bean-scope>
 		<managed-property>
 		<property-name>senderName</property-name>
-		<value>#{LoginBean.userName}</value>
+		<value>#{LoginBean.id}</value>
 		</managed-property>
 	</managed-bean>
 	<managed-bean>
 		<managed-bean-name>LoginBean</managed-bean-name>
 		<managed-bean-class>ui.LoginBean</managed-bean-class>
 		<managed-bean-scope>session</managed-bean-scope>
-		
 	</managed-bean>
 	<managed-bean>
 		<managed-bean-name>FlowBean</managed-bean-name>
@@ -29,7 +28,13 @@
 		<managed-bean-name>RegisterBean</managed-bean-name>
 		<managed-bean-class>ui.RegisterBean</managed-bean-class>
 		<managed-bean-scope>view</managed-bean-scope>
+	</managed-bean>	<managed-bean>
+		<managed-bean-name>UserListBean</managed-bean-name>
+		<managed-bean-class>ui.UserListBean</managed-bean-class>
+		<managed-bean-scope>view</managed-bean-scope>
 	</managed-bean>
+	
+	
 	<navigation-rule>
 		<from-view-id>*</from-view-id>
 		<navigation-case>

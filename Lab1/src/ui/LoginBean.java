@@ -23,11 +23,19 @@ public class LoginBean implements Serializable {
 	private final static String errorLogin1 = "Incorrect Username and Password";
 	private final static String doMain = "doMain";
 	
+
+	public LoginBean(){
+		
+	}
 	public String getPassword() {
 		return password;
 	}
-	public LoginBean(){
-		
+	
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
 	}
 	public void setPassword(String password) {
 		this.password = password;
@@ -51,16 +59,10 @@ public class LoginBean implements Serializable {
 			return "success";
 		}else{
 			//Not working
-<<<<<<< HEAD
-			RequestContext.getCurrentInstance().update("growllogin");
-			FacesContext context = FacesContext.getCurrentInstance();
-			context.getExternalContext().getFlash().setKeepMessages(true);
-			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Error","UserName or Password"));
-			return false;
-=======
-			FacesContext.getCurrentInstance().addMessage("password",new FacesMessage( errorLogin1));
+			FacesContext.getCurrentInstance().addMessage(null, 
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error Message Displayed Growl","Error Message Displayed Growl"));
 			return "failed";
->>>>>>> origin/master
+
 		}
 	}
 	

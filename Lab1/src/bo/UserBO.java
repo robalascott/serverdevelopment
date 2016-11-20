@@ -12,6 +12,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name="user")
 @NamedQuery(query = "SELECT e FROM UserBO e where e.username = :username AND e.password = :password", name = "login")
+ 
 public class UserBO {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)

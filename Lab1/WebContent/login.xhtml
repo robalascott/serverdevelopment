@@ -1,17 +1,22 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
           "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
+<html
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	 xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
-	xmlns:p="http://primefaces.org/ui">
-<head>
+	xmlns:p="http://primefaces.org/ui"
+	>
+	
+<h:head>
 <title>Community Login</title>
-</head>
+</h:head>
 <h:body>
-
-	<p:growl id="growllogin" sticky="true" showDetails="true"></p:growl>
+	
 	<h:form>
-		<p:panelGrid columns="3" style=" postion: absolute; top: 250px; left: 500px">
+	
+
+		<p:panelGrid columns="3" style= "postion: absolute; top: 250px; left: 500px">
 			<f:facet name="header">Login here!</f:facet>
 			<h:outputText value="Username :" />
 			<p:inputText id="username" value="#{LoginBean.userName}"
@@ -24,11 +29,11 @@
 			<h:message for="password" errorClass="errorMessage" style="color:red"></h:message>
 	
 		</p:panelGrid>
-		<p:commandButton value="Login" action="#{LoginBean.doLogin()}"></p:commandButton>
+		<p:commandButton id = "loginbutton" value="Login" action="#{LoginBean.doLogin()}"></p:commandButton>
 	</h:form>
-<<<<<<< HEAD
-=======
+
+
 	<h:outputText value = "Not a member: " /> <h:link value="Register Here" outcome="register"></h:link>
->>>>>>> origin/master
+
 </h:body>
 </html>
