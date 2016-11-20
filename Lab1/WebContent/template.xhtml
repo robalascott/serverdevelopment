@@ -1,11 +1,10 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
-      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:f="http://java.sun.com/jsf/core">
-
+	
 <h:head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<h:outputStylesheet library="css" name="default.css" />
@@ -21,67 +20,73 @@
 	<title><ui:insert name="title"></ui:insert></title>
 </h:head>
 
-<f:metadata>
-	<ui:insert name= "metadata" />
-</f:metadata>
-	
-<h:body>
-	<div id="top" class="top">	
-		<ui:insert name="top">Top Section</ui:insert>
-		
-		
-		<h:form>
-			<h:commandLink name="logitout" action="#{LoginBean.doLogout()}"
-				value="Logout"></h:commandLink>
-		</h:form>
-	</div>
-	<div>
-		<div id="left" class="left">
-			<ui:insert name="left" class="left">
-				<div id="page" class="ui-widget">
-					<!-- Should be able to hide if set to false (through bean) -->
-		      		<ui:fragment rendered="true">
-			          <div id="sidebar" class="ui-widget-content ui-corner-bottom ui-helper-clearfix ui-shadow">
-			              <h3 class="ui-widget ui-widget-header ui-corner-all submenu-title">Menu</h3>
-			              <div class="submenu-content">
-			              	<h:form>
-			                 		<div align="left">
-			                 			<h:outputText value="Find User" style="margin-top:4px;margin-bottom:4px"/>
-			          		</div>
-			          		<div style="padding-right:10px;padding-bottom:10px">
-			     					<p:inputText style="float:left;width:100%;margin-top:4px" id="searchUser" value = "#{FlowBean.searchValue}"/>
-			     					<p:commandButton style="align:Center; width:50%;margin-top:4px;" value="Search" action="#{FlowBean.display()}">
-			            						<f:param name="matches" value="#{FlowBean.matches}"/>
-			            					</p:commandButton>
-			                 		</div>
+
+
+
+<f:view contentType="text/html">
+
+	<f:metadata>
+		<ui:insert name= "metadata" />
+	</f:metadata>
+
+	<h:body>
+		<div id="top" class="top">	
+			<ui:insert name="top">Top Section</ui:insert>
+			
+			
+			<h:form>
+				<h:commandLink name="logitout" action="#{LoginBean.doLogout()}"
+					value="Logout"></h:commandLink>
+			</h:form>
+		</div>
+		<div>
+			<div id="left" class="left">
+				<ui:insert name="left" class="left">
+					<div id="page" class="ui-widget">
+						<!-- Should be able to hide if set to false (through bean) -->
+			      		<ui:fragment rendered="true">
+				          <div id="sidebar" class="ui-widget-content ui-corner-bottom ui-helper-clearfix ui-shadow">
+				              <h3 class="ui-widget ui-widget-header ui-corner-all submenu-title">Menu</h3>
+				              <div class="submenu-content">
+				              	<h:form>
+				                 		<div align="left">
+				                 			<h:outputText value="Find User" style="margin-top:4px;margin-bottom:4px"/>
+				          		</div>
+				          		<div style="padding-right:10px;padding-bottom:10px">
+				     					<p:inputText style="float:left;width:100%;margin-top:4px" id="searchUser" value = "#{flowBean.searchValue}"/>
+				     					<p:commandButton style="align:Center; width:50%;margin-top:4px;" value="Search" action="#{flowBean.display()}">
+	            							<f:param name="matches" value="#{flowBean.matches}"/>
+		            					</p:commandButton>
+				                 		</div>
 			                 	</h:form>
-			              </div>
-			          </div>
-					</ui:fragment>
-				</div>
-				<h:form>
-					<h:commandLink name="newMessage" action="#{MessageBean.doMessage()}" value=" Create a new Message"/>
-					<br/>
-					<br/>
-					<h:commandLink name="newMain" action="#{LoginBean.doMain()}" value="Main Menu"/>
-					<br/>
-					<br/>
-				</h:form>
-			</ui:insert>
-			
-			
+				              </div>
+				          </div>
+						</ui:fragment>
+					</div>
+					<h:form>
+						<h:commandLink name="newMessage" action="#{MessageBean.doMessage()}" value=" Create a new Message"/>
+						<br/>
+						<br/>
+						<h:commandLink name="newMain" action="#{LoginBean.doMain()}" value="Main Menu"/>
+						<br/>
+						<br/>
+					</h:form>
+				</ui:insert>
+				
+				
+			</div>
+			<div id="content" class="context">
+				<ui:insert name="content">Main Content</ui:insert>
+			</div>
+			<div id="bottom">
+				<ui:insert name="bottom">Copyright 2016 Community
+						<br />
+				
+				</ui:insert>
+			</div>
+	
+	
 		</div>
-		<div id="content" class="context">
-			<ui:insert name="content">Main Content</ui:insert>
-		</div>
-		<div id="bottom">
-			<ui:insert name="bottom">Copyright 2016 Community
-					<br />
-			
-			</ui:insert>
-		</div>
-
-
-	</div>
-</h:body>
+	</h:body>
+</f:view>
 </html>

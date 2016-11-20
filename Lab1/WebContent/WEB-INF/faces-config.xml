@@ -23,7 +23,7 @@
 	<managed-bean>
 		<managed-bean-name>FlowBean</managed-bean-name>
 		<managed-bean-class>ui.FlowBean</managed-bean-class>
-		<managed-bean-scope>view</managed-bean-scope>
+		<managed-bean-scope>request</managed-bean-scope>
 	</managed-bean>
 	<managed-bean>
 		<managed-bean-name>RegisterBean</managed-bean-name>
@@ -77,8 +77,18 @@
 			<to-view-id>/public/register.xhtml</to-view-id>
 			<redirect/>
 		</navigation-case>
-		
-		
+		<navigation-case>
+			<from-action>#{flowBean.display()}</from-action>
+			<from-outcome>multiple</from-outcome>
+			<to-view-id>/search.xhtml</to-view-id>
+			<redirect include-view-params="true" />
+		</navigation-case>
+		<navigation-case>
+			<from-action>#{flowBean.display()}</from-action>
+			<from-outcome>found</from-outcome>
+			<to-view-id>/flow.xhtml</to-view-id>
+			<redirect include-view-params="true" />
+		</navigation-case>
 	</navigation-rule>
 
 </faces-config>

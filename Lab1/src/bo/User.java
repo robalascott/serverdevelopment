@@ -1,41 +1,66 @@
 package bo;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.NamedQueries;
+import javax.persistence.JoinTable;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 @Entity
 @Table(name="user")
-@NamedQuery(query = "SELECT e FROM UserBO e where e.username = :username AND e.password = :password", name = "login")
-public class UserBO {
+@NamedQuery(query = "SELECT e FROM User e where e.username = :username AND e.password = :password", name = "login")
+public class User {
+	
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(name="id")
 	private int id;
+	
 	@Column(name="username")
 	private String username;
 
 	@Column(name="firstname")
 	private String firstname;
+	
 	@Column(name="lastname")
 	private String lastname;
-	@Column(name="password")
+	
+	@Column(name="password", nullable=false)
 	private String password;
 	
-	public UserBO(){}
+	@ManyToMany()
+	@JoinTable(
+			name="USER_MESSAGE",
+			joinColumns = @JoinColumn(name="id"),
+			inverseJoinColumns = @JoinColumn(name="messageId")
+	)
+	protected List<Message> RecievedMessages = new ArrayList<Message>();
+	
+	public User(){}
 
-	public UserBO(String username, String password) {
+	public User(String username, String password) {
 		this.username = username;
 		this.password = password;
 	}
 
 	public int getId() {
 		return id;
+	}
+
+	public List<Message> getRecievedMessages() {
+		return RecievedMessages;
+	}
+
+	public void setRecievedMessages(List<Message> recievedMessages) {
+		RecievedMessages = recievedMessages;
 	}
 
 	public void setId(int id) {

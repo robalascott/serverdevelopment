@@ -16,7 +16,7 @@ public class UserHandler {
 		
 		System.out.println("Debug: " + userName + " " + password);
 		try{
-			UserBO user = (UserBO) em.createNamedQuery("login").setParameter("username", userName).setParameter("password", password).getSingleResult();
+			User user = (User) em.createNamedQuery("login").setParameter("username", userName).setParameter("password", password).getSingleResult();
 			return user.getId();
 		}catch(NoResultException e){
 			System.out.println("UserHandler error: No user");
@@ -34,7 +34,7 @@ public class UserHandler {
 		
 		System.out.print("Regestering new user; name: " + name + " pass: " + password);
 		
-		UserBO newUser = new UserBO(name, password);
+		User newUser = new User(name, password);
 			try{
 				em.getTransaction().begin();
 				em.persist(newUser);
@@ -53,7 +53,7 @@ public class UserHandler {
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("Lab1");
 		EntityManager em = emf.createEntityManager();
 		try{
-			Query query = em.createQuery("SELECT e FROM UserBO e where e.username = ?1", UserBO.class).setParameter(1, searchValue);
+			Query query = em.createQuery("SELECT e FROM User e where e.username = ?1", User.class).setParameter(1, searchValue);
 			List<UserDTO> matches = query.getResultList();
 			return matches;
 		}catch(NoResultException e){

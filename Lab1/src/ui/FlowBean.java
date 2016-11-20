@@ -1,18 +1,13 @@
 package ui;
 
-import java.io.IOException;
 import java.io.Serializable;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import bo.MessageDTO;
 import bo.MessageHandler;
@@ -47,31 +42,43 @@ public class FlowBean implements Serializable {
 		this.message = message;
 	}
 
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
 	public FlowBean(){}
+	
+	public void loadData(){
+		System.out.println(displayName);
+	}
 	
 	public String getDisplayName() {
 		
 		// Apparently this is how you get the session attribute (Not sure this is how it is supposed to be (With JAAS i did req.getremoteuser())
-		HttpServletRequest req = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-		displayName = (String) req.getSession().getAttribute("username");
-		System.out.println("User:" + displayName);
+		if(displayName == null){
+			HttpServletRequest req = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+			displayName = (String) req.getSession().getAttribute("username");
+			System.out.println(this + ": Displayname not set, setting it to authenticated user: " + displayName);
+		}else
+			System.out.println(this + ": GetDisplayName:" + displayName);
 		return displayName;
 	}
 
 	public void setDisplayName(String displayName) {
-		HttpServletRequest req = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-		displayName = req.getRemoteUser();
-		System.out.println("User:" + displayName);
+		//HttpServletRequest req = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+		//displayName = req.getRemoteUser();
+		this.displayName = displayName;
+		System.out.println("SetDisplayname:" + displayName);
 	}
 
 	public List<MessageDTO> getMessages(){
 		System.out.println("Calling messagehandler getting messages for: " + displayName);
 		messages = MessageHandler.getMessages(displayName);
-		if(messages == null)
-			System.out.println("Messages ÄR NULL");
-		else
-			System.out.println("Size: " + messages.size());
-			System.out.println("Message 1: " + messages.get(0).getMessage());
+		if(messages.size() == 0){
+			System.out.println("No messages");
+			messages.add(new MessageDTO("This looks empty, why don't you post something!?", "System Overlord"));
+		}
+		
 		return messages;
 	}
 	
@@ -81,7 +88,7 @@ public class FlowBean implements Serializable {
 		HttpServletRequest req = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
 		authenticatedUser = (String) req.getSession().getAttribute("username");
 		
-		MessageHandler.post(authenticatedUser, message, "Daniel");
+		MessageHandler.post(authenticatedUser, message, displayName);
 		
 		message = null;
 	}
@@ -98,6 +105,8 @@ public class FlowBean implements Serializable {
 	// Then we either display the matching users or navigate to a user-page (single match) via the serverfacelet
 	public String display(){
         
+		//TODO: Multiple matches/No matching result
+		System.out.println(this + ": Display called with: " + searchValue);
 		if((matches = UserHandler.findUserByName(searchValue)) != null){
 			System.out.println("User found");
 			if(matches.size() != 1){
@@ -105,6 +114,7 @@ public class FlowBean implements Serializable {
 				return "multiple";
 			}
 			displayName = searchValue;
+			System.out.println("Displayname set to: " + displayName);
 			searchValue = "Search";
 			return "found";
 		}else{
