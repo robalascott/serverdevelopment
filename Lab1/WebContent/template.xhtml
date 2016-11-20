@@ -31,13 +31,20 @@
 
 	<h:body>
 		<div id="top" class="top">	
-			<ui:insert name="top">Top Section</ui:insert>
-			
-			
 			<h:form>
-				<h:commandLink name="logitout" action="#{LoginBean.doLogout()}"
-					value="Logout"></h:commandLink>
-			</h:form>
+			<p:menubar>
+				
+				<p:menuitem />
+			
+				<p:menuitem type="button" name="newMain"
+					action="#{LoginBean.doMain()}" value="Main Menu"
+					icon="ui-icon-home" />
+				<p:menuitem type="button" title="Print" value="New Mail" action="#{MessageBean.doMessage()}" icon="ui-icon-mail-closed" />
+				
+				<p:menuitem name="logitout" action="#{LoginBean.doLogout()}"
+					value="Logout" icon="ui-icon-close" alight="right"/>
+			</p:menubar>
+		</h:form>
 		</div>
 		<div>
 			<div id="left" class="left">
@@ -63,29 +70,16 @@
 				          </div>
 						</ui:fragment>
 					</div>
-					<h:form>
-						<h:commandLink name="newMessage" action="#{MessageBean.doMessage()}" value=" Create a new Message"/>
-						<br/>
-						<br/>
-						<h:commandLink name="newMain" action="#{LoginBean.doMain()}" value="Main Menu"/>
-						<br/>
-						<br/>
-					</h:form>
-				</ui:insert>
-				
-				
+				</ui:insert>	
 			</div>
 			<div id="content" class="context">
 				<ui:insert name="content">Main Content</ui:insert>
 			</div>
 			<div id="bottom">
 				<ui:insert name="bottom">Copyright 2016 Community
-						<br />
-				
+						<br />		
 				</ui:insert>
-			</div>
-	
-	
+			</div>	
 		</div>
 	</h:body>
 </f:view>

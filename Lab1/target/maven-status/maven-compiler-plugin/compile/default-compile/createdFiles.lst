@@ -1,1 +1,10 @@
-PresidentBean.class
+ui\LoginBean.class
+bo\MessageHandler.class
+bo\Message.class
+ui\SessionUtils.class
+ui\MessageBean.class
+bo\MessageDTO.class
+ui\AuthorizationFilter.class
+ui\FlowBean.class
+bo\UserBO.class
+bo\UserHandler.class

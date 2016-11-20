@@ -18,7 +18,6 @@ import javax.persistence.Table;
 @Table(name="user")
 @NamedQuery(query = "SELECT e FROM User e where e.username = :username AND e.password = :password", name = "login")
 public class User {
-	
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(name="id")
@@ -101,6 +100,6 @@ public class User {
 
 	@Override
 	public String toString() {
-		return "UserBO [id=" + this.id + ", firstname=" + this.firstname + ", lastname=" + this.lastname
+		return "User [id=" + this.id + ", firstname=" + this.firstname + ", lastname=" + this.lastname
 				+ "]";};
 }

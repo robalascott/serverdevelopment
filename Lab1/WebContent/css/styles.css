@@ -3,24 +3,23 @@
 #top {
 		position:fixed;
 		vertical-align: top;
-		background-color:#e6f2ff;
 		height:3em;
 		width:100%;
 		z-index:100;
 		left:0;
 		top:0;
 		padding:1px;
-		padding-left:1.5em;
 
 	}
+	
+
+	
 		.left {
 		position:fixed;
 		left: 4px;
 		top: 3em;
 		width:145px;	
 		height: 100%;
-		background-color:#ffffb3;
-		padding-left:1.5em;
 		z-index:100;
 	}
 		#content {
@@ -29,6 +28,7 @@
 		margin-left: 165px;
 		padding:5px;
 		padding-left:1.5em;
+	
 	}
 		#bottom {
 		position:absolute;
