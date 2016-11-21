@@ -1,24 +1,36 @@
 package bo;
 
+import java.util.Date;
 
 public class MessageDTO {
 	
+	// Attributes
 	private int id;
 	private String message;
-	private String receiver;
 	private String sender;
+	private String receiver;
+	private Date timestamp;
 	
-	public MessageDTO(){
-		
+	//Constructors
+	public MessageDTO(int id, String message, String sender){
+		this.id = id;
+		this.sender = sender;
+		this.message = message;
 	}
 
-	public MessageDTO(int id, String message, String receiver, String sender) {
+	public MessageDTO(int id, String message, String sender, Date date) {
 		this.id = id;
 		this.message = message;
-		this.receiver = receiver;
+		this.sender = sender;
+		this.timestamp = date;
+	}
+
+	public MessageDTO(String message, String sender) {
+		this.message = message;
 		this.sender = sender;
 	}
 
+	//Getters and Setters
 	public int getId() {
 		return id;
 	}
@@ -32,15 +44,7 @@ public class MessageDTO {
 	}
 
 	public void setMessage(String message) {
-		message = message;
-	}
-
-	public String getReceiver() {
-		return receiver;
-	}
-
-	public void setReceiver(String receiver) {
-		receiver = receiver;
+		this.message = message;
 	}
 
 	public String getSender() {
@@ -48,7 +52,29 @@ public class MessageDTO {
 	}
 
 	public void setSender(String sender) {
-		sender = sender;
+		this.sender = sender;
+	}
+	
+	public String getReceiver() {
+		return receiver;
 	}
 
+	public void setReceiver(String receiver) {
+		this.receiver = receiver;
+	}
+
+	public Date getTimestamp() {
+		return timestamp;
+	}
+
+	public void setTimestamp(Date timestamp) {
+		this.timestamp = timestamp;
+	}
+	
+	//Methods
+	public String getHeader(){
+		System.out.println("Getting Head: " + sender + " " + timestamp);
+		return sender + " " + timestamp;
+	}
+	
 }
