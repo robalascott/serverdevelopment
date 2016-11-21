@@ -37,12 +37,7 @@
 	
 	<navigation-rule>
 		<from-view-id>*</from-view-id>
-		<navigation-case>
-			<from-action>#{LoginBean.doLogin()}</from-action>
-			<from-outcome>failed</from-outcome>
-			<to-view-id>/login.xhtml</to-view-id>
-			<redirect/>
-		</navigation-case>
+
 		<navigation-case>
 			<from-action>#{LoginBean.doLogin()}</from-action>
 			<from-outcome>success</from-outcome>
@@ -82,7 +77,12 @@
 			<to-view-id>/public/register.xhtml</to-view-id>
 			<redirect/>
 		</navigation-case>
-		
+			<navigation-case>
+			<from-action>#{RegisterBean.doRedirect()}</from-action>
+			<from-outcome>redirectLogin</from-outcome>
+			<to-view-id>/public/login.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
 		
 	</navigation-rule>
 

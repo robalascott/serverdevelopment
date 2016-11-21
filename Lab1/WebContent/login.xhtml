@@ -7,33 +7,33 @@
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:p="http://primefaces.org/ui"
 	>
-	
+
 <h:head>
-<title>Community Login</title>
+  <h:outputScript library="primefaces" name="jquery/jquery.js" />
 </h:head>
 <h:body>
-	
-	<h:form>
-	
-
-		<p:panelGrid columns="3" style= "postion: absolute; top: 250px; left: 500px">
+	<ui:composition template="/templates/publictemplate.xhtml">	
+	<ui:define name="content">
+	<h:form id="Login">
+		<p:messages id="messages" autoUpdate="true"/>
+			<p:panelGrid columns="2" style= "postion: absolute; top: 250px; left: 500px">
 			<f:facet name="header">Login here!</f:facet>
-			<h:outputText value="Username :" />
-			<p:inputText id="username" value="#{LoginBean.userName}"
-				Label="Login" required="true"
-				requiredMessage="Please enter your Username"></p:inputText>
-			<h:message for="username" errorClass="errorMessage" style="color:red"></h:message>
-			<h:outputText value="Password :" />
-			<h:inputSecret id="password" value="#{LoginBean.password}"
-				required="true" requiredMessage="Please enter your Password"></h:inputSecret>
-			<h:message for="password" errorClass="errorMessage" style="color:red"></h:message>
-	
+			<p:outputLabel value="Username :" />
+			<p:inputText id="Username" value="#{LoginBean.userName}" Label="Username" required="true"/>
+			<p:outputLabel value="Password :" />
+			<p:password id="Password" value="#{LoginBean.password}"	required="true" />
 		</p:panelGrid>
 		<p:commandButton id = "loginbutton" value="Login" action="#{LoginBean.doLogin()}"></p:commandButton>
+	
+		
 	</h:form>
 
-
-	<h:outputText value = "Not a member: " /> <h:link value="Register Here" outcome="register"></h:link>
-
+	<br/>
+	<p:separator />
+	<p:outputLabel value = "Not a member: " /> <p:link value="Register Here" outcome="register"/>
+	<p:separator />
+	</ui:define>
+	<ui:define name="footer"/>
+	</ui:composition>
 </h:body>
 </html>

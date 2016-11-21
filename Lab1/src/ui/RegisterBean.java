@@ -73,5 +73,9 @@ public class RegisterBean {
 			return "RegisterFailed";
 		}
 	}
-	
+	public String doRedirect(){
+		
+			return "RedirectLogin";
+
+	}		
 }
