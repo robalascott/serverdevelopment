@@ -27,14 +27,14 @@ public class UserHandler {
 		}
 	}
 
-	public static boolean register(String name, String password) {
+	public static boolean register(String name, String password, String first,String last) {
 		
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("Lab1");
 		EntityManager em = emf.createEntityManager();
 		
 		System.out.print("Regestering new user; name: " + name + " pass: " + password);
 		
-		User newUser = new User(name, password);
+		User newUser = new User(name, password,first,last);
 			try{
 				em.getTransaction().begin();
 				em.persist(newUser);

@@ -13,10 +13,30 @@ import bo.UserHandler;
 @ManagedBean
 @ViewScoped
 public class RegisterBean {
-	String name;
-	String password;
-	String cPassword;
-	String message = null;
+	private String name;
+	private String password;
+	private String cPassword;
+	private String firstname;
+	private String lastname;
+	private String message = null;
+	final static String errorUserName1 = "Unable to complete registration: Please select a new username";
+	final static String errorUserName2 = "Username cannot be empty";
+	final static String successMsg = "RegisterSuccess";
+	final static String passwordError1 = "Password must be at least 6 characters long";
+	final static String passwordError2 ="The passwords don't match";
+	
+	public String getFirstname() {
+		return firstname;
+	}
+	public void setFirstname(String firstname) {
+		this.firstname = firstname;
+	}
+	public String getLastname() {
+		return lastname;
+	}
+	public void setLastname(String lastname) {
+		this.lastname = lastname;
+	}
 	
 	// Getters and Setters
 	public String getName() {
@@ -48,34 +68,29 @@ public class RegisterBean {
 	public void validateName(FacesContext f, UIComponent c, Object obj){
 		String s = (String) obj;
 		if(s.length() == 0)
-			throw new ValidatorException(new FacesMessage("Name cannot be empty"));
+			throw new ValidatorException(new FacesMessage(errorUserName2));
 	}
 	
 	public void validatePassword(FacesContext f, UIComponent c, Object obj){
 		password = (String) obj;
-		if(password.length() < 6)
-			throw new ValidatorException(new FacesMessage("Password must be atleast 6 characters long"));
+		if(password.length() <= 6)
+			throw new ValidatorException(new FacesMessage(passwordError1));
 	}
 	
 	public void validateCPassword(FacesContext f, UIComponent c, Object obj){
 		cPassword = (String) obj;
 		if(!password.equals(cPassword))
-			throw new ValidatorException(new FacesMessage("The passwords don't match"));
+			throw new ValidatorException(new FacesMessage(passwordError2));
 	}
 	
 	// Functions
 	public String doRegister(){
-		if(UserHandler.register(name, password)){
-			this.message="";
-			return "RegisterSuccess";
+		if(UserHandler.register(name, password,firstname,lastname)){
+			FacesContext.getCurrentInstance().addMessage("growl", new FacesMessage("Successful",  "You have created a user ") );
+			return successMsg;
 		}else{
-			this.message = "Unable to complete registration, please try again later";
-			return "RegisterFailed";
+			FacesContext.getCurrentInstance().addMessage(null,  new FacesMessage(FacesMessage.SEVERITY_WARN,errorUserName1,"Please Try Again!"));
+			return "";
 		}
-	}
-	public String doRedirect(){
-		
-			return "RedirectLogin";
-
-	}		
+	}	
 }

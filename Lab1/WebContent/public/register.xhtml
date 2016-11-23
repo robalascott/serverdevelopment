@@ -5,67 +5,57 @@
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
-	xmlns:p="http://primefaces.org/ui"
-	>
+	xmlns:p="http://primefaces.org/ui">
 
 <ui:composition template="/templates/publictemplate.xhtml">
 	<ui:define name="header">
 		<title>Community - Register</title>
 	</ui:define>
 	<ui:define name="content">
-		<h1>Create an account</h1>
-		<h:form>
-			<table>
-				<tr>
-					<h:outputText value="* = Required Fields" />
-				</tr>
-				<tr>
-					<td>
-						*Name
-					</td>
-					<td>
-						<h:inputText id="name" value="#{registerBean.name}" validator="#{RegisterBean.validateName}" required="true" requiredMessage="Name is required">
-							<f:ajax event="change" execute="@this" render="nameError"/>
-						</h:inputText>
-					</td>
-					<td>
-						<h:message for="name" id="nameError" style="color:red"/>
-					</td>
-				</tr>
-				<tr>
-					<td>*Password</td>
-					<td>
-						<h:inputSecret id="password" value="#{registerBean.password}" validator="#{RegisterBean.validatePassword}" required="true" requiredMessage="Password is required">
-							<f:ajax event="blur" execute="@this" render="passwordError"/>
-						</h:inputSecret>
-					</td>
-					<td>
-						<h:message for="password" id="passwordError" style="color:red"/>
-					</td>
-				</tr>
-				<tr>
-					<td>*Confirm Password</td>
-					<td>
-						<h:inputSecret id="confirmPassword" value="#{registerBean.cPassword}" validator="#{RegisterBean.validateCPassword}" required="true" requiredMessage="Password does not match">
-							<f:ajax event="blur" execute="@this" render="cPassError"/>
-						</h:inputSecret>
-					</td>
-					<td>
-						<h:message for="confirmPassword" id="cPassError" style="color:red"/>
-					</td>
-				</tr>
-			</table>
-			<h:commandButton id="submitButton" value="Register" action="#{registerBean.doRegister()}" />
+		<h:form id="reg">
+		 	<p:growl id="growl" showDetail="true" sticky="true" autoUpdate="true" /> 
+			<p:panelGrid columns="2"
+				style="postion: absolute; top: 250px; left: 500px">
+				<f:facet name="header">Create an account</f:facet>
+				<p:outputLabel value="*Username :" />
+				<h:inputText id="name" value="#{registerBean.name}"
+					validator="#{RegisterBean.validateName}" required="true"
+					requiredMessage="Name is required">
+
+				</h:inputText>
+
+
+				<p:outputLabel value="*Password :" />
+				<h:inputSecret id="password" value="#{registerBean.password}"
+					validator="#{RegisterBean.validatePassword}" required="true"
+					requiredMessage="Password is required">
+				</h:inputSecret>
+				<p:outputLabel value="*Confirm Password :" />
+				<h:inputSecret id="confirmPassword"
+					value="#{registerBean.cPassword}"
+					validator="#{RegisterBean.validateCPassword}" required="true"
+					requiredMessage="Password does not match">
+				</h:inputSecret>
+				<p:outputLabel value="First Name :" />
+				<h:inputText id="first" value="#{registerBean.firstname}"/>
+				<p:outputLabel value="Last Name :" />
+				<h:inputText id="last" value="#{registerBean.lastname}"/>
+					<p:outputLabel value="* = Required Fields" />
+					<p:commandButton id="submitButton" value="Register"
+						action="#{registerBean.doRegister()}" update="growl" />
+			</p:panelGrid>
 		</h:form>
-			<p:separator />
-			<br/>
-				<p:separator />
-			<h:commandButton id="redirectLoginButton" value="Redirect Login" action="#{registerBean.doRedirect()}" />
 		<p:separator />
-		
+		<br />
+		<p:separator />
+		<p:outputLabel value="Go back to " />
+		<p:link value="Login" outcome="login" />
+
+		<p:separator />
+
 	</ui:define>
 	<ui:define name="footer">
-	
+
 	</ui:define>
 </ui:composition>
 </html>

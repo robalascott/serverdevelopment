@@ -15,7 +15,7 @@
 	<ui:composition template="/templates/publictemplate.xhtml">	
 	<ui:define name="content">
 	<h:form id="Login">
-		<p:messages id="messages" autoUpdate="true"/>
+	<p:growl id="growl" showDetail="true" sticky="true" autoUpdate="true"/>
 			<p:panelGrid columns="2" style= "postion: absolute; top: 250px; left: 500px">
 			<f:facet name="header">Login here!</f:facet>
 			<p:outputLabel value="Username :" />
@@ -24,10 +24,7 @@
 			<p:password id="Password" value="#{LoginBean.password}"	required="true" />
 		</p:panelGrid>
 		<p:commandButton id = "loginbutton" value="Login" action="#{LoginBean.doLogin()}"></p:commandButton>
-	
-		
 	</h:form>
-
 	<br/>
 	<p:separator />
 	<p:outputLabel value = "Not a member: " /> <p:link value="Register Here" outcome="register"/>

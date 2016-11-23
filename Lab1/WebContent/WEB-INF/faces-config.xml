@@ -11,7 +11,7 @@
 		<managed-bean-scope>view</managed-bean-scope>
 		<managed-property>
 		<property-name>senderName</property-name>
-		<value>#{LoginBean.id}</value>
+		<value>#{LoginBean.userName}</value>
 		</managed-property>
 	</managed-bean>
 	<managed-bean>
@@ -57,6 +57,12 @@
 			<redirect/>
 		</navigation-case>
 		<navigation-case>
+			<from-action>#{MessageBean.sendMessage()}</from-action>
+			<from-outcome>main</from-outcome>
+			<to-view-id>/main.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
+		<navigation-case>
 			<from-action>#{LoginBean.doMain()}</from-action>
 			<from-outcome>doMain</from-outcome>
 			<to-view-id>/main.xhtml</to-view-id>
@@ -78,9 +84,8 @@
 			<redirect/>
 		</navigation-case>
 			<navigation-case>
-			<from-action>#{RegisterBean.doRedirect()}</from-action>
-			<from-outcome>redirectLogin</from-outcome>
-			<to-view-id>/public/login.xhtml</to-view-id>
+			<from-outcome>login</from-outcome>
+			<to-view-id>/login.xhtml</to-view-id>
 			<redirect/>
 		</navigation-case>
 		
@@ -96,7 +101,12 @@
 			<to-view-id>/flow.xhtml</to-view-id>
 			<redirect include-view-params="true" />
 		</navigation-case>
-
+		<navigation-case>
+			<from-action>#{FlowBean.doInbox()}</from-action>
+			<from-outcome>inbox</from-outcome>
+			<to-view-id>/inbox.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
 	</navigation-rule>
 
 </faces-config>

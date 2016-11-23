@@ -122,4 +122,7 @@ public class FlowBean implements Serializable {
 			return null;
 		}
 	}
+	public String doInbox(){
+		return "inbox";
+	}
 }

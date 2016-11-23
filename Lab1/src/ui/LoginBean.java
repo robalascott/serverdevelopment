@@ -58,11 +58,7 @@ public class LoginBean implements Serializable {
 			session.setAttribute("id", id);
 			return "success";
 		}else{
-			//Not working
-			 FacesContext.getCurrentInstance().addMessage(null,
-	                    new FacesMessage(FacesMessage.SEVERITY_WARN,
-	                    "Invalid Login!",
-	                    "Please Try Again!"));
+			FacesContext.getCurrentInstance().addMessage(null,  new FacesMessage(FacesMessage.SEVERITY_WARN,"Invalid Login!","Please Try Again!"));
 			return "failed";
 
 		}
