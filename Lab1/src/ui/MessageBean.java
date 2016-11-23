@@ -68,8 +68,10 @@ public class MessageBean implements Serializable{
 		System.out.println(this.senderName +" "+this.recieverName+ " " + this.subject +" "+this.message);
 		
 		if((handler.addNewMessage(this.senderName, this.recieverName, this.subject,this.message))){
-			 FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO, "Message:Sent","Sent"));
-			 return mainXhtml;
+			FacesContext context = FacesContext.getCurrentInstance();
+			context.addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO, "Message:Sent","Sent"));
+			context.getExternalContext().getFlash().setKeepMessages(true);
+			return mainXhtml;
 		}else{
 			 FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_ERROR, "Message:Failed to send","Failed to Send"));
 			System.out.println("Message not sent");

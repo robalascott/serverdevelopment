@@ -19,11 +19,12 @@ public class RegisterBean {
 	private String firstname;
 	private String lastname;
 	private String message = null;
-	final static String errorUserName1 = "Unable to complete registration: Please select a new username";
-	final static String errorUserName2 = "Username cannot be empty";
-	final static String successMsg = "RegisterSuccess";
-	final static String passwordError1 = "Password must be at least 6 characters long";
+	final static String errorUserName1 ="Unable to complete registration: Please select a new username";
+	final static String errorUserName2 ="Username cannot be empty";
+	final static String successMsg ="RegisterSuccess";
+	final static String passwordError1 ="Password must be at least 6 characters long";
 	final static String passwordError2 ="The passwords don't match";
+	final static String successMsg2 ="Successful: Created a User";
 	
 	public String getFirstname() {
 		return firstname;
@@ -86,7 +87,9 @@ public class RegisterBean {
 	// Functions
 	public String doRegister(){
 		if(UserHandler.register(name, password,firstname,lastname)){
-			FacesContext.getCurrentInstance().addMessage("growl", new FacesMessage("Successful",  "You have created a user ") );
+			FacesContext context = FacesContext.getCurrentInstance();
+			context.addMessage("growl",new FacesMessage(FacesMessage.SEVERITY_INFO, successMsg2, name));
+			context.getExternalContext().getFlash().setKeepMessages(true);
 			return successMsg;
 		}else{
 			FacesContext.getCurrentInstance().addMessage(null,  new FacesMessage(FacesMessage.SEVERITY_WARN,errorUserName1,"Please Try Again!"));
