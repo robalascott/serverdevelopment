@@ -15,11 +15,10 @@ public class UserListHandler {
 	EntityManager em = emf.createEntityManager();
 	
 	public Map<String,String> getUserList(){
-		//em.getTransaction().begin();
 		Map<String,String> userlist = new HashMap<String,String>();
 		List<User> temp = em.createQuery(sqlAll,User.class).getResultList();
 		for(User user:temp){
-			System.out.println(user.getId() + user.getUsername());
+			//System.out.println(user.getId() + user.getUsername());
 			
 			if(user.getFirstname() != null && user.getLastname() != null ){
 			userlist.put(user.getUsername() + " <" + user.getFirstname() + " " + user.getLastname()+">",user.getUsername());

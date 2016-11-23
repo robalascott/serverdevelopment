@@ -7,10 +7,12 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.primefaces.context.RequestContext;
 
+import bo.User;
 import bo.UserHandler;
 
 @ManagedBean
@@ -58,7 +60,7 @@ public class LoginBean implements Serializable {
 			session.setAttribute("id", id);
 			return "success";
 		}else{
-			FacesContext.getCurrentInstance().addMessage(null,  new FacesMessage(FacesMessage.SEVERITY_WARN,"Invalid Login!","Please Try Again!"));
+			FacesContext.getCurrentInstance().addMessage(null,  new FacesMessage(FacesMessage.SEVERITY_WARN,errorLogin1,"Please Try Again!"));
 			return "failed";
 
 		}
@@ -78,4 +80,6 @@ public class LoginBean implements Serializable {
 	public String doMain(){
 		return doMain;
 	}
+	
+	
 }

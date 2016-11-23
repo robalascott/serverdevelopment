@@ -34,9 +34,8 @@
 			<h:form>
 			<p:menubar>
 				<p:menuitem />
-				<p:menuitem type="button" name="newMain"
-					action="#{LoginBean.doMain()}" value="Main Menu"
-					icon="ui-icon-home" />
+				<p:menuitem type="button" name="newMain" action="#{LoginBean.doMain()}" value="Main Menu" icon="ui-icon-home" />
+				<p:menuitem type="button" title="Profile" value="Profile" action="#{ProfileBean.doProfile()}" icon="ui-icon-person" />
 				<p:menuitem type="button" title="inbox" value="Inbox" action="#{FlowBean.doInbox()}" icon="ui-icon-mail-open" />
 				<p:menuitem type="button" title="newMail" value="New Mail" action="#{MessageBean.doMessage()}" icon="ui-icon-mail-closed" />
 				<p:menuitem name="logitout" action="#{LoginBean.doLogout()}"

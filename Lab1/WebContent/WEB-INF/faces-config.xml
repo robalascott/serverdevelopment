@@ -28,12 +28,17 @@
 		<managed-bean-name>RegisterBean</managed-bean-name>
 		<managed-bean-class>ui.RegisterBean</managed-bean-class>
 		<managed-bean-scope>view</managed-bean-scope>
-	</managed-bean>	<managed-bean>
+	</managed-bean>
+		<managed-bean>
 		<managed-bean-name>UserListBean</managed-bean-name>
 		<managed-bean-class>ui.UserListBean</managed-bean-class>
 		<managed-bean-scope>view</managed-bean-scope>
 	</managed-bean>
-	
+	<managed-bean>
+		<managed-bean-name>ProfileBean</managed-bean-name>
+		<managed-bean-class>ui.ProfileBean</managed-bean-class>
+		<managed-bean-scope>view</managed-bean-scope>
+	</managed-bean>
 	
 	<navigation-rule>
 		<from-view-id>*</from-view-id>
@@ -102,11 +107,18 @@
 			<redirect include-view-params="true" />
 		</navigation-case>
 		<navigation-case>
-			<from-action>#{FlowBean.doInbox()}</from-action>
+			<from-action>#{flowBean.doInbox()}</from-action>
 			<from-outcome>inbox</from-outcome>
 			<to-view-id>/inbox.xhtml</to-view-id>
 			<redirect/>
 		</navigation-case>
+			<navigation-case>
+			<from-action>#{ProfileBean.doProfile()}</from-action>
+			<from-outcome>profile</from-outcome>
+			<to-view-id>/profile.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
+		
 	</navigation-rule>
 
 </faces-config>

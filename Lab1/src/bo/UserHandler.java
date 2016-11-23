@@ -26,7 +26,18 @@ public class UserHandler {
 			emf.close();
 		}
 	}
-
+	public User userDetails(String userName){
+		try{
+			User user = (User) em.createNamedQuery("userdetails").setParameter("username", userName).getSingleResult();
+			return user;
+		}catch(NoResultException e){
+			System.out.println("UserHandler error: No user");
+			return null;
+		}finally{
+			em.close();
+			emf.close();
+		}
+	}
 	public static boolean register(String name, String password, String first,String last) {
 		
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("Lab1");

@@ -18,6 +18,6 @@
   <links id="pf147966006120525" target="pf147966006120527" source="pf14796554779051" outcome="multiple" redirect="true" fromaction="#{flowBean.display()}"/>
   <links id="pf147966006120526" target="pf147966006120528" source="pf14796554779051" outcome="found" redirect="true" fromaction="#{flowBean.display()}"/>
   <links id="pf14797303040081" target="pf147965547790612" source="pf14796554779051" outcome="RegisterSuccess" redirect="true"/>
-  <links id="pf14798960520600" target="pf14798960520602" source="pf14796554779051" outcome="inbox" redirect="true" fromaction="#{FlowBean.doInbox()}"/>
+  <links id="pf14798960520600" target="pf14798960520602" source="pf14796554779051" outcome="inbox" redirect="true" fromaction="#{flowBean.doInbox()}"/>
   <links id="pf14798960520601" target="pf147965547790611" source="pf14796554779051" outcome="login" redirect="true"/>
 </pageflow:Pageflow>
