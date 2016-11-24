@@ -4,7 +4,7 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:f="http://java.sun.com/jsf/core">
-	
+
 <h:head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<h:outputStylesheet library="css" name="default.css" />
@@ -26,67 +26,60 @@
 <f:view contentType="text/html">
 
 	<f:metadata>
-		<ui:insert name= "metadata" />
+		<ui:insert name="metadata" />
 	</f:metadata>
 
 	<h:body>
-		<div id="top" class="top">	
+		<div id="top" class="top">
 			<h:form>
-			<p:menubar>
-				<p:menuitem />
-				<p:menuitem type="button" name="newMain" action="#{LoginBean.doMain()}" value="Main Menu" icon="ui-icon-home" />
-				<p:menuitem type="button" title="Profile" value="Profile" action="#{ProfileBean.doProfile()}" icon="ui-icon-person" />
-				<p:menuitem type="button" title="inbox" value="Inbox" action="#{FlowBean.doInbox()}" icon="ui-icon-mail-open" />
-				<p:menuitem type="button" title="newMail" value="New Mail" action="#{MessageBean.doMessage()}" icon="ui-icon-mail-closed" />
-				<p:menuitem name="logitout" action="#{LoginBean.doLogout()}"
-					value="Logout" icon="ui-icon-close" alight="right"/>
-			</p:menubar>
-		</h:form>
-	</div>
-	<div>
-		<div id="left" class="left">
-			<ui:insert name="left" class="left">
-				<div id="page" class="ui-widget">
-					<!-- Should be able to hide if set to false (through bean) -->
-					<ui:fragment rendered="true">
-						<div id="sidebar"
-							class="ui-widget-content ui-corner-bottom ui-helper-clearfix ui-shadow">
-							<h3
-								class="ui-widget ui-widget-header ui-corner-all submenu-title">Menu</h3>
-							<div class="submenu-content">
-								<h:form>
-									<div align="left">
-										<h:outputText value="Find User"
-											style="margin-top:4px;margin-bottom:4px" />
-									</div>
-									<div style="padding-right: 10px; padding-bottom: 10px">
-										<p:inputText style="float:left;width:100%;margin-top:4px"
-											id="searchUser" value="#{flowBean.searchValue}" />
-										<p:commandButton
-											style="align:Center; width:50%;margin-top:4px;"
-											value="Search" action="#{flowBean.display()}">
-											<f:param name="matches" value="#{flowBean.matches}" />
-										</p:commandButton>
-									</div>
-								</h:form>
-							</div>
-						</div>
-					</ui:fragment>
-				</div>
-			</ui:insert>
+				<p:menubar>
+					<p:menuitem />
+					<p:menuitem type="button" name="newMain"
+						action="#{LoginBean.doMain()}" value="Main Menu"
+						icon="ui-icon-home" />
+					<p:menuitem type="button" title="Profile" value="Profile"
+						action="#{ProfileBean.doProfile()}" icon="ui-icon-person" />
+					<p:menuitem type="button" title="inbox" value="Inbox"
+						action="#{FlowBean.doInbox()}" icon="ui-icon-mail-open" />
+					<p:menuitem type="button" title="newMail" value="New Mail"
+						action="#{MessageBean.doMessage()}" icon="ui-icon-mail-closed" />
+					<p:menuitem name="logitout" action="#{LoginBean.doLogout()}"
+						value="Logout" icon="ui-icon-close" />
+				</p:menubar>
+			</h:form>
 		</div>
-		<div id="content" class="context">
-			<ui:insert name="content">Main Content</ui:insert>
-		</div>
-		<div id="bottom">
-		<p:separator />
-			<p:panel>
-			<p:outputLabel >2016 Community</p:outputLabel>
-			</p:panel>
+		<div>
+			<div id="left" class="left">
+				<ui:insert name="left" class="left">
+									<h:form>
+										<p:panel style="width:100%;background-color:#DCDCDC;height:100%">
+											<p:outputLabel style="font-weight:bold">Find User</p:outputLabel>
+										
+										<div style="padding-right: 10px; padding-bottom: 10px">
+											<p:inputText style="float:left;width:100%;margin-top:4px"
+												id="searchUser" value="#{flowBean.searchValue}" />
+											<p:commandButton
+												style="align:Left; width:100%;margin-top:4px;"
+												value="Search" action="#{flowBean.display()}">
+												<f:param name="matches" value="#{flowBean.matches}" />
+											</p:commandButton>
+										</div>
+										</p:panel>
+									</h:form>
+				</ui:insert>
+			</div>
+			<div id="content" class="context">
+				<ui:insert name="content"> </ui:insert>
+			</div>
+			<div id="bottom">
+				<p:separator />
+				<p:panel style="width:100% ; background-color:#DCDCDC">
+					<p:outputLabel>2016 Community</p:outputLabel>
+				</p:panel>
 
-		<p:separator />
+				<p:separator />
+			</div>
 		</div>
-	</div>
-</h:body>
+	</h:body>
 </f:view>
 </html>

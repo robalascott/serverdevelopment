@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
@@ -23,7 +24,7 @@ public class FlowBean implements Serializable {
 	private String displayName;
 	private ArrayList<MessageDTO> messages;
 	private String message;
-	private String searchValue = "Search";
+	private String searchValue;
 	private List<UserDTO> matches;
 
 	public String getMessage() {
@@ -53,8 +54,7 @@ public class FlowBean implements Serializable {
 	}
 	
 	public String getDisplayName() {
-		
-		// Apparently this is how you get the session attribute (Not sure this is how it is supposed to be (With JAAS i did req.getremoteuser())
+			// Apparently this is how you get the session attribute (Not sure this is how it is supposed to be (With JAAS i did req.getremoteuser())
 		if(displayName == null){
 			HttpServletRequest req = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
 			displayName = (String) req.getSession().getAttribute("username");

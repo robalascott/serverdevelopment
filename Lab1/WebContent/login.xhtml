@@ -1,19 +1,21 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
-          "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:f="http://xmlns.jcp.org/jsf/core"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:p="http://primefaces.org/ui">
+
 
 <h:head>
 	<h:outputScript library="primefaces" name="jquery/jquery.js" />
 </h:head>
-
 <ui:composition template="/templates/publictemplate.xhtml">
 	<ui:define name="header">
 	</ui:define>
 	<ui:define name="content">
+	<br/>
 		<h:form id="Login">
 			<p:growl id="growl" showDetail="true" autoUpdate="true" />
 			<p:panelGrid columns="2"
@@ -35,7 +37,8 @@
 		<p:link value="Register Here" outcome="register" />
 		<p:separator />
 	</ui:define>
-	<ui:define name="footer" />
-</ui:composition>
+	<ui:define name="footer">
 
+	</ui:define>
+</ui:composition>
 </html>
