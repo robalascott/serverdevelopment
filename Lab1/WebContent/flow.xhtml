@@ -27,11 +27,10 @@
 				    </p:panel>
 	        	</ui:repeat>
 	        <div class="message">
-		        <o:form includeViewParams="true">
+		        <o:form includeViewParams="true" style="postion:flow-centre; width: 100%">
 		       	 <p:growl id="growl" showDetail="true" autoUpdate="true" />
-		        	<div>
-		        		<p:inputTextarea rows="6" cols="50" value="#{flowBean.message}" style="margin-left:0px"/>
-		        	</div>
+		        		<p:inputTextarea id="messagebox" value="#{flowBean.message}" style="postion: flow-centre; width: 100%" size="65000" required="true" />
+		        		
 		        	<div>
 		        		<p:commandButton styleClass="ui-priority-primary contentbutton" value="Post" action="#{flowBean.post()}" />
 		        	</div>

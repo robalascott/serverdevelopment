@@ -73,14 +73,24 @@ public class FlowBean implements Serializable {
 
 	public List<MessageDTO> getMessages(){
 		System.out.println("Calling messagehandler getting messages for: " + displayName);
-		messages = MessageHandler.getMessages(displayName);
+		messages = MessageHandler.getFlowMessages(displayName);
 		if(messages.size() == 0){
-			System.out.println("No messages");
+			FacesContext.getCurrentInstance().addMessage("growl",  new FacesMessage(FacesMessage.SEVERITY_INFO,"No Messages","Please Try Again!"));
 			messages.add(new MessageDTO("This looks empty, why don't you post something!?", "System Overlord"));
 		}
-		
 		return messages;
 	}
+	
+	public List<MessageDTO> getInboxMessages(){
+		System.out.println("Calling messagehandler getting messages for: " + displayName);
+		messages = MessageHandler.getInboxMessages(displayName);
+		if(messages.size() == 0){
+			FacesContext.getCurrentInstance().addMessage("growl",  new FacesMessage(FacesMessage.SEVERITY_INFO,"No Messages","Please Try Again!"));
+			messages.add(new MessageDTO("This looks empty, are you unloved!?", "System Overlord"));
+		}
+		return messages;
+	}
+	
 	
 	public void post(){
 		
