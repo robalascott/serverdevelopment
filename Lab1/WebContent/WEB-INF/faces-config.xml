@@ -94,23 +94,23 @@
 			<redirect/>
 		</navigation-case>
 		
-		<navigation-case>
-			<from-action>#{flowBean.display()}</from-action>
-			<from-outcome>multiple</from-outcome>
-			<to-view-id>/search.xhtml</to-view-id>
-			<redirect include-view-params="true" />
-		</navigation-case>
+	
 		<navigation-case>
 			<from-action>#{flowBean.display()}</from-action>
 			<from-outcome>found</from-outcome>
 			<to-view-id>/flow.xhtml</to-view-id>
 			<redirect include-view-params="true" />
 		</navigation-case>
+			<navigation-case>
+			<from-action>#{flowBean.display()}</from-action>
+			<from-outcome>redirectMain</from-outcome>
+			<to-view-id>/main.xhtml</to-view-id>
+		</navigation-case>
 		<navigation-case>
 			<from-action>#{flowBean.doInbox()}</from-action>
 			<from-outcome>inbox</from-outcome>
 			<to-view-id>/inbox.xhtml</to-view-id>
-			<redirect/>
+			<redirect include-view-params="true" />
 		</navigation-case>
 			<navigation-case>
 			<from-action>#{ProfileBean.doProfile()}</from-action>
@@ -118,7 +118,12 @@
 			<to-view-id>/profile.xhtml</to-view-id>
 			<redirect/>
 		</navigation-case>
-		
+			<navigation-case>
+			<from-action>#{flowBean.post()}</from-action>
+			<from-outcome>RedirectMain</from-outcome>
+			<to-view-id>/main.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
 	</navigation-rule>
 
 </faces-config>

@@ -52,12 +52,13 @@
 			<div id="left" class="left">
 				<ui:insert name="left" class="left">
 									<h:form>
+									<p:growl id="growl1" showDetail="true" autoUpdate="true" />
 										<p:panel style="width:100%;background-color:#DCDCDC;height:100%">
 											<p:outputLabel style="font-weight:bold">Find User</p:outputLabel>
 										
 										<div style="padding-right: 10px; padding-bottom: 10px">
 											<p:inputText style="float:left;width:100%;margin-top:4px"
-												id="searchUser" value="#{flowBean.searchValue}" />
+												id="searchUser" value="#{flowBean.searchValue}" required="true" requiredMessage="Username is required"/>
 											<p:commandButton
 												style="align:Left; width:100%;margin-top:4px;"
 												value="Search" action="#{flowBean.display()}">

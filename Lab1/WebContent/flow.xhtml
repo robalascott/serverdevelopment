@@ -1,4 +1,4 @@
-<ui:composition template="/templates/template.xhtml" 
+<ui:composition template="/WEB-INF/templates/template.xhtml" 
 	xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:h="http://java.sun.com/jsf/html"
@@ -29,7 +29,7 @@
 	        <div class="message">
 		        <o:form includeViewParams="true" style="postion:flow-centre; width: 100%">
 		       	 <p:growl id="growl" showDetail="true" autoUpdate="true" />
-		        		<p:inputTextarea id="messagebox" value="#{flowBean.message}" style="postion: flow-centre; width: 100%" size="65000" required="true" />
+		        		<p:inputTextarea id="messagebox" value="#{flowBean.message}" style="postion: flow-centre; width: 80%" size="65000" required="true" />
 		        		
 		        	<div>
 		        		<p:commandButton styleClass="ui-priority-primary contentbutton" value="Post" action="#{flowBean.post()}" />

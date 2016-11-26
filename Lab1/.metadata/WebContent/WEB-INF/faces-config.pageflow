@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <pageflow:Pageflow xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:pageflow="http://www.sybase.com/suade/pageflow" id="pf14796551774890" configfile="/Lab1/WebContent/WEB-INF/faces-config.xml">
-  <nodes xsi:type="pageflow:PFPage" name="*" x="122" y="1266" id="pf14796554779051" referenceLink="//@navigationRule.0/@fromViewId|" outlinks="pf14796554779052 pf14796554779053 pf14796554779055 pf14796554779056 pf14796554779057 pf14796554779058 pf14796554779059 pf147966006120525 pf147966006120526 pf14797303040081 pf14798960520600 pf14798960520601" path="*"/>
+  <nodes xsi:type="pageflow:PFPage" name="*" x="122" y="946" id="pf14796554779051" referenceLink="//@navigationRule.0/@fromViewId|" outlinks="pf14796554779052 pf14796554779053 pf14796554779055 pf14796554779056 pf14796554779057 pf14796554779058 pf14796554779059 pf147966006120526 pf14797303040081 pf14798960520600 pf14798960520601 pf14800640855850 pf14800653525322 pf14800769251920" path="*"/>
   <nodes xsi:type="pageflow:PFPage" name="login.xhtml" x="338" y="178" id="pf147965547790611" referenceLink="//@navigationRule.0/@navigationCase.8/@toViewId|" inlinks="pf14796554779052 pf14798960520601" path="/login.xhtml"/>
-  <nodes xsi:type="pageflow:PFPage" name="main.xhtml" x="338" y="562" id="pf147965547790612" referenceLink="//@navigationRule.0/@navigationCase.6/@toViewId|" inlinks="pf14796554779053 pf14796554779056 pf14796554779058 pf14797303040081" path="/main.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="main.xhtml" x="338" y="562" id="pf147965547790612" referenceLink="//@navigationRule.0/@navigationCase.13/@toViewId|" inlinks="pf14796554779053 pf14796554779056 pf14796554779058 pf14797303040081 pf14800653525322" path="/main.xhtml"/>
   <nodes xsi:type="pageflow:PFPage" name="newmessage.xhtml" x="338" y="946" id="pf147965547790613" referenceLink="//@navigationRule.0/@navigationCase.2/@toViewId|" inlinks="pf14796554779055" path="/newmessage.xhtml"/>
   <nodes xsi:type="pageflow:PFPage" name="public/register.xhtml" x="338" y="1330" id="pf147965547790614" referenceLink="//@navigationRule.0/@navigationCase.7/@toViewId|" inlinks="pf14796554779057 pf14796554779059" path="/public/register.xhtml"/>
-  <nodes xsi:type="pageflow:PFPage" name="search.xhtml" x="338" y="1714" id="pf147966006120527" referenceLink="//@navigationRule.0/@navigationCase.9/@toViewId|" inlinks="pf147966006120525" path="/search.xhtml"/>
-  <nodes xsi:type="pageflow:PFPage" name="flow.xhtml" x="338" y="2098" id="pf147966006120528" referenceLink="//@navigationRule.0/@navigationCase.10/@toViewId|" inlinks="pf147966006120526" path="/flow.xhtml"/>
-  <nodes xsi:type="pageflow:PFPage" name="inbox.xhtml" x="338" y="2866" id="pf14798960520602" referenceLink="//@navigationRule.0/@navigationCase.11/@toViewId|" inlinks="pf14798960520600" path="/inbox.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="search.xhtml" x="122" y="2098" id="pf147966006120527" referenceLink="//@navigationRule.0/@navigationCase.9/@toViewId|" path="/search.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="flow.xhtml" x="338" y="1714" id="pf147966006120528" referenceLink="//@navigationRule.0/@navigationCase.9/@toViewId|" inlinks="pf147966006120526" path="/flow.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="inbox.xhtml" x="338" y="2098" id="pf14798960520602" referenceLink="//@navigationRule.0/@navigationCase.11/@toViewId|" inlinks="pf14798960520600" path="/inbox.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="profile.xhtml" x="338" y="2482" id="pf14800640855851" referenceLink="//@navigationRule.0/@navigationCase.12/@toViewId|" inlinks="pf14800640855850" path="/profile.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="Main.xhtml" x="338" y="2866" id="pf14800769251931" referenceLink="//@navigationRule.0/@navigationCase.10/@toViewId|" inlinks="pf14800769251920" path="/main.xhtml"/>
   <links id="pf14796554779052" target="pf147965547790611" source="pf14796554779051" outcome="false" redirect="true" fromaction="#{LoginBean.doLogout()}"/>
   <links id="pf14796554779053" target="pf147965547790612" source="pf14796554779051" outcome="success" redirect="true" fromaction="#{LoginBean.doLogin()}"/>
   <links id="pf14796554779055" target="pf147965547790613" source="pf14796554779051" outcome="newMessage" redirect="true" fromaction="#{MessageBean.doMessage()}"/>
@@ -15,9 +17,11 @@
   <links id="pf14796554779057" target="pf147965547790614" source="pf14796554779051" outcome="register" redirect="true"/>
   <links id="pf14796554779058" target="pf147965547790612" source="pf14796554779051" outcome="doMain" redirect="true" fromaction="#{LoginBean.doMain()}"/>
   <links id="pf14796554779059" target="pf147965547790614" source="pf14796554779051" outcome="RegisterFailed" redirect="true"/>
-  <links id="pf147966006120525" target="pf147966006120527" source="pf14796554779051" outcome="multiple" redirect="true" fromaction="#{flowBean.display()}"/>
   <links id="pf147966006120526" target="pf147966006120528" source="pf14796554779051" outcome="found" redirect="true" fromaction="#{flowBean.display()}"/>
   <links id="pf14797303040081" target="pf147965547790612" source="pf14796554779051" outcome="RegisterSuccess" redirect="true"/>
   <links id="pf14798960520600" target="pf14798960520602" source="pf14796554779051" outcome="inbox" redirect="true" fromaction="#{flowBean.doInbox()}"/>
   <links id="pf14798960520601" target="pf147965547790611" source="pf14796554779051" outcome="login" redirect="true"/>
+  <links id="pf14800640855850" target="pf14800640855851" source="pf14796554779051" outcome="profile" redirect="true" fromaction="#{ProfileBean.doProfile()}"/>
+  <links id="pf14800653525322" target="pf147965547790612" source="pf14796554779051" outcome="RedirectMain" redirect="true" fromaction="#{flowBean.post()}"/>
+  <links id="pf14800769251920" target="pf14800769251931" source="pf14796554779051" outcome="redirectMain" fromaction="#{flowBean.display()}"/>
 </pageflow:Pageflow>

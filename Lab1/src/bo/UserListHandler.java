@@ -11,7 +11,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
-//
 public class UserListHandler {
 	private final static String sqlAll = "FROM User";
 	private final static String errorMsg = "No Users";
@@ -31,8 +30,7 @@ public class UserListHandler {
 				}
 			}
 			/*Awesome coding thing*/
-			userlist = userlist.entrySet().stream().sorted(Entry.comparingByValue())
-				    .collect(Collectors.toMap(Entry::getKey, Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+			userlist = userlist.entrySet().stream().sorted(Entry.comparingByValue()).collect(Collectors.toMap(Entry::getKey, Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
 		}
 		catch(Exception Error){
 			userlist.put(errorMsg,errorMsg);
