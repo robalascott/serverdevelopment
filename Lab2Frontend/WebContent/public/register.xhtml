@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+
+<h:head>
+	<h:outputScript library="primefaces" name="jquery/jquery.js" />
+</h:head>
+<ui:composition template="/templates/publictemplate.xhtml">
+	<ui:define name="header">
+	</ui:define>
+	<ui:define name="content">
+	<br/>
+		<h:form id="reg">
+		 	<p:growl id="growl" showDetail="true" sticky="true" autoUpdate="true" /> 
+			<p:panelGrid columns="2"
+				style="postion: absolute; top: 250px; left: 500px">
+				<f:facet name="header">Create an account</f:facet>
+				<p:outputLabel value="*Username :" />
+				<h:inputText id="name" value="#{registerBean.name}"
+					validator="#{RegisterBean.validateName}" required="true"
+					requiredMessage="Name is required">
+				</h:inputText>
+				<p:outputLabel value="*Password :" />
+				<h:inputSecret id="password" value="#{registerBean.password}"
+					validator="#{RegisterBean.validatePassword}" required="true"
+					requiredMessage="Password is required">
+				</h:inputSecret>
+				<p:outputLabel value="*Confirm Password :" />
+				<h:inputSecret id="confirmPassword"
+					value="#{registerBean.cPassword}"
+					validator="#{RegisterBean.validateCPassword}" required="true"
+					requiredMessage="Password does not match">
+				</h:inputSecret>
+				<p:outputLabel value="First Name :" />
+				<h:inputText id="first" value="#{registerBean.firstname}"/>
+				<p:outputLabel value="Last Name :" />
+				<h:inputText id="last" value="#{registerBean.lastname}"/>
+					<p:outputLabel value="* = Required Fields" />
+					<p:commandButton id="submitButton" value="Register"
+						action="#{registerBean.doRegister()}" update="growl" />
+			</p:panelGrid>
+		</h:form>
+		<p:separator />
+		<br />
+		<p:separator />
+		<p:outputLabel value="Go back to " />
+		<p:link value="Login" outcome="login" />
+
+		<p:separator />
+
+	</ui:define>
+	<ui:define name="footer">
+
+	</ui:define>
+</ui:composition>
+</html>

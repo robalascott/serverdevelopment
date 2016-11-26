@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<faces-config
+    xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_2.xsd"
+    version="2.2">
+	<!--  Insert Managed Beans Here -->
+	<managed-bean>
+		<managed-bean-name>MessageBean</managed-bean-name>
+		<managed-bean-class>ui.MessageBean</managed-bean-class>
+		<managed-bean-scope>view</managed-bean-scope>
+		<managed-property>
+		<property-name>senderName</property-name>
+		<value>#{LoginBean.userName}</value>
+		</managed-property>
+	</managed-bean>
+	<managed-bean>
+		<managed-bean-name>LoginBean</managed-bean-name>
+		<managed-bean-class>ui.LoginBean</managed-bean-class>
+		<managed-bean-scope>session</managed-bean-scope>
+	</managed-bean>
+	<managed-bean>
+		<managed-bean-name>FlowBean</managed-bean-name>
+		<managed-bean-class>ui.FlowBean</managed-bean-class>
+		<managed-bean-scope>request</managed-bean-scope>
+	</managed-bean>
+	<managed-bean>
+		<managed-bean-name>RegisterBean</managed-bean-name>
+		<managed-bean-class>ui.RegisterBean</managed-bean-class>
+		<managed-bean-scope>view</managed-bean-scope>
+	</managed-bean>
+		<managed-bean>
+		<managed-bean-name>UserListBean</managed-bean-name>
+		<managed-bean-class>ui.UserListBean</managed-bean-class>
+		<managed-bean-scope>view</managed-bean-scope>
+	</managed-bean>
+	<managed-bean>
+		<managed-bean-name>ProfileBean</managed-bean-name>
+		<managed-bean-class>ui.ProfileBean</managed-bean-class>
+		<managed-bean-scope>view</managed-bean-scope>
+	</managed-bean>
+	
+	<navigation-rule>
+		<from-view-id>*</from-view-id>
+
+		<navigation-case>
+			<from-action>#{LoginBean.doLogin()}</from-action>
+			<from-outcome>success</from-outcome>
+			<to-view-id>/main.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
+			<navigation-case>
+			<from-action>#{LoginBean.doLogout()}</from-action>
+			<from-outcome>false</from-outcome>
+			<to-view-id>/login.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
+			<navigation-case>
+			<from-action>#{MessageBean.doMessage()}</from-action>
+			<from-outcome>newMessage</from-outcome>
+			<to-view-id>/newmessage.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
+		<navigation-case>
+			<from-action>#{MessageBean.sendMessage()}</from-action>
+			<from-outcome>main</from-outcome>
+			<to-view-id>/main.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
+		<navigation-case>
+			<from-action>#{LoginBean.doMain()}</from-action>
+			<from-outcome>doMain</from-outcome>
+			<to-view-id>/main.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>register</from-outcome>
+			<to-view-id>/public/register.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>RegisterSuccess</from-outcome>
+			<to-view-id>/main.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>RegisterFailed</from-outcome>
+			<to-view-id>/public/register.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
+			<navigation-case>
+			<from-outcome>login</from-outcome>
+			<to-view-id>/login.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
+		
+		<navigation-case>
+			<from-action>#{flowBean.display()}</from-action>
+			<from-outcome>multiple</from-outcome>
+			<to-view-id>/search.xhtml</to-view-id>
+			<redirect include-view-params="true" />
+		</navigation-case>
+		<navigation-case>
+			<from-action>#{flowBean.display()}</from-action>
+			<from-outcome>found</from-outcome>
+			<to-view-id>/flow.xhtml</to-view-id>
+			<redirect include-view-params="true" />
+		</navigation-case>
+		<navigation-case>
+			<from-action>#{flowBean.doInbox()}</from-action>
+			<from-outcome>inbox</from-outcome>
+			<to-view-id>/inbox.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
+			<navigation-case>
+			<from-action>#{ProfileBean.doProfile()}</from-action>
+			<from-outcome>profile</from-outcome>
+			<to-view-id>/profile.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
+		
+	</navigation-rule>
+
+</faces-config>

@@ -1,0 +1,41 @@
+@CHARSET "ISO-8859-1";
+
+#top {
+		position:fixed;
+		vertical-align: top;
+		height:3em;
+		width:100%;
+		z-index:100;
+		left:0;
+		top:0;
+		padding:1px;
+
+	}	
+		.left {
+		position:fixed;
+		left: 4px;
+		top: 3em;
+		width:145px;	
+		height: 100%;
+		z-index:100;
+		padding:3px;
+	
+	}
+		#content {
+		top: 3em;
+		position:relative;
+		margin-left: 165px;
+		padding:5px;
+		padding-left:1.5em;
+	
+	}
+		#bottom {
+		position:absolute;
+		top: 3em;
+		position:relative;
+		margin-left: 165px;
+		padding:5px;
+		z-index:99;
+		padding-left:1.5em;
+	}
+	

@@ -1,8 +1,6 @@
 package bo;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -13,12 +11,6 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.NoResultException;
 import javax.persistence.Persistence;
 import javax.persistence.PersistenceException;
-import javax.persistence.Query;
-
-import org.hibernate.Hibernate;
-import org.hibernate.Transaction;
-
-import bo.Message.MessageType;
 
 //TODO: Delete/Remove Methods
 public class MessageHandler {

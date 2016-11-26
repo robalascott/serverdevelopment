@@ -1,10 +1,16 @@
+bo\UserDTO.class
+bo\User.class
 ui\LoginBean.class
 bo\MessageHandler.class
 bo\Message.class
 ui\SessionUtils.class
+bo\Message$MessageType.class
 ui\MessageBean.class
+ui\UserListBean.class
 bo\MessageDTO.class
 ui\AuthorizationFilter.class
 ui\FlowBean.class
-bo\UserBO.class
+ui\RegisterBean.class
 bo\UserHandler.class
+bo\UserListHandler.class
+bo\MessageHandler$1.class

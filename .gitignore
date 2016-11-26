@@ -216,3 +216,4 @@ pip-log.txt
 .mr.developer.cfg
 Lab1/target/m2e-wtp/web-resources/META-INF/maven/Lab1/Lab1/pom.properties
 Lab1/.metadata/WebContent/WEB-INF/faces-config.pageflow
+Lab1/target/m2e-wtp/web-resources/META-INF/MANIFEST.MF
