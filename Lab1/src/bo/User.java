@@ -11,12 +11,18 @@ import javax.persistence.Id;
 import javax.persistence.JoinTable;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
+import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 @Entity
 @Table(name="user")
-@NamedQuery(query = "SELECT e FROM User e where e.username = :username AND e.password = :password", name = "login")
+@NamedQueries({
+	@NamedQuery(query = "SELECT e FROM User e where e.username = :username AND e.password = :password", name = "login"),
+	@NamedQuery(query = "SELECT e FROM User e where e.username = :username", name = "userdetails"),
+	@NamedQuery(query = "SELECT e FROM User e", name = "userlist")
+})
+
 public class User {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
@@ -45,9 +51,11 @@ public class User {
 	
 	public User(){}
 
-	public User(String username, String password) {
+	public User(String username, String password,String first, String last) {
 		this.username = username;
 		this.password = password;
+		this.firstname = first;
+		this.lastname = last;
 	}
 
 	public int getId() {

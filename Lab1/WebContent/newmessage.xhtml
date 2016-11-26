@@ -11,9 +11,10 @@
 </h:head>
 
 <h:body>
-	<ui:composition template="templates/template.xhtml">
+	<ui:composition template="WEB-INF/templates/template.xhtml">
 		<ui:define name="title">New Message</ui:define>
-		<ui:define name="top"></ui:define>
+		<ui:define name="top">
+		</ui:define>
 		<ui:define name="content">
 			<h:form id="NewMessage">
 				<p:messages id="messages" autoUpdate="true"/>

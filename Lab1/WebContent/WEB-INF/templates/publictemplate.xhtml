@@ -23,18 +23,25 @@
 <h:body>
 	<div id="top" class="top">
 		<ui:insert name="top">
-			<p:panel>
-			<p:outputLabel style="font-weight:bold" color="#040404" >Community</p:outputLabel>
+			<p:panel style = "background-color:#DCDCDC">
+			<p:outputLabel style="font-weight:bold" color="#040404"  >Community</p:outputLabel>
 			</p:panel>
 		</ui:insert>
 	</div>
+		<div id="left" class="left">
+			<ui:insert name="left" class="left">
+				<p:panel style = "width:100% ; background-color:#DCDCDC ;height:100%">
+				<p:outputLabel style="font-weight:boldM" >Welcome</p:outputLabel>
+				</p:panel>
+			</ui:insert>
+		</div>
 	<div id="content" class="context">
 			<ui:insert name="content">Main Content</ui:insert>
 		</div>
 
 	<div id="bottom">
 		<p:separator />
-		<p:panel>
+		<p:panel style = "width:100% ; background-color:#D3D3D3">
 			<p:outputLabel color="#040404" >2016 Community</p:outputLabel>
 		</p:panel>
 

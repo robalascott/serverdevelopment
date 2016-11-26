@@ -1,10 +1,14 @@
-<ui:composition template="templates/template.xhtml" 
+<ui:composition template="/WEB-INF/templates/template.xhtml" 
 	xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:o="http://omnifaces.org/ui">
+
+	<h:head>
+  	<h:outputScript library="primefaces" name="jquery/jquery.js" />
+	</h:head>
 
 	<ui:define name="metadata">
 		<f:metadata>
@@ -23,12 +27,12 @@
 				    </p:panel>
 	        	</ui:repeat>
 	        <div class="message">
-		        <o:form includeViewParams="true">
+		        <o:form includeViewParams="true" style="postion:flow-centre; width: 100%">
+		       	 <p:growl id="growl" showDetail="true" autoUpdate="true" />
+		        		<p:inputTextarea id="messagebox" value="#{flowBean.message}" style="postion: flow-centre; width: 80%" size="65000" required="true" />
+		        		
 		        	<div>
-		        		<h:inputTextarea rows="6" cols="50" value="#{flowBean.message}" />
-		        	</div>
-		        	<div>
-		        		<h:commandButton styleClass="ui-priority-primary contentbutton" value="Post" action="#{flowBean.post()}" />
+		        		<p:commandButton styleClass="ui-priority-primary contentbutton" value="Post" action="#{flowBean.post()}" />
 		        	</div>
 		        </o:form>
 	        </div>

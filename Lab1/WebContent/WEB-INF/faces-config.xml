@@ -11,7 +11,7 @@
 		<managed-bean-scope>view</managed-bean-scope>
 		<managed-property>
 		<property-name>senderName</property-name>
-		<value>#{LoginBean.id}</value>
+		<value>#{LoginBean.userName}</value>
 		</managed-property>
 	</managed-bean>
 	<managed-bean>
@@ -28,12 +28,17 @@
 		<managed-bean-name>RegisterBean</managed-bean-name>
 		<managed-bean-class>ui.RegisterBean</managed-bean-class>
 		<managed-bean-scope>view</managed-bean-scope>
-	</managed-bean>	<managed-bean>
+	</managed-bean>
+		<managed-bean>
 		<managed-bean-name>UserListBean</managed-bean-name>
 		<managed-bean-class>ui.UserListBean</managed-bean-class>
 		<managed-bean-scope>view</managed-bean-scope>
 	</managed-bean>
-	
+	<managed-bean>
+		<managed-bean-name>ProfileBean</managed-bean-name>
+		<managed-bean-class>ui.ProfileBean</managed-bean-class>
+		<managed-bean-scope>view</managed-bean-scope>
+	</managed-bean>
 	
 	<navigation-rule>
 		<from-view-id>*</from-view-id>
@@ -54,6 +59,12 @@
 			<from-action>#{MessageBean.doMessage()}</from-action>
 			<from-outcome>newMessage</from-outcome>
 			<to-view-id>/newmessage.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
+		<navigation-case>
+			<from-action>#{MessageBean.sendMessage()}</from-action>
+			<from-outcome>main</from-outcome>
+			<to-view-id>/main.xhtml</to-view-id>
 			<redirect/>
 		</navigation-case>
 		<navigation-case>
@@ -78,25 +89,41 @@
 			<redirect/>
 		</navigation-case>
 			<navigation-case>
-			<from-action>#{RegisterBean.doRedirect()}</from-action>
-			<from-outcome>redirectLogin</from-outcome>
-			<to-view-id>/public/login.xhtml</to-view-id>
+			<from-outcome>login</from-outcome>
+			<to-view-id>/login.xhtml</to-view-id>
 			<redirect/>
 		</navigation-case>
 		
-		<navigation-case>
-			<from-action>#{flowBean.display()}</from-action>
-			<from-outcome>multiple</from-outcome>
-			<to-view-id>/search.xhtml</to-view-id>
-			<redirect include-view-params="true" />
-		</navigation-case>
+	
 		<navigation-case>
 			<from-action>#{flowBean.display()}</from-action>
 			<from-outcome>found</from-outcome>
 			<to-view-id>/flow.xhtml</to-view-id>
 			<redirect include-view-params="true" />
 		</navigation-case>
-
+			<navigation-case>
+			<from-action>#{flowBean.display()}</from-action>
+			<from-outcome>redirectMain</from-outcome>
+			<to-view-id>/main.xhtml</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-action>#{flowBean.doInbox()}</from-action>
+			<from-outcome>inbox</from-outcome>
+			<to-view-id>/inbox.xhtml</to-view-id>
+			<redirect include-view-params="true" />
+		</navigation-case>
+			<navigation-case>
+			<from-action>#{ProfileBean.doProfile()}</from-action>
+			<from-outcome>profile</from-outcome>
+			<to-view-id>/profile.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
+			<navigation-case>
+			<from-action>#{flowBean.post()}</from-action>
+			<from-outcome>RedirectMain</from-outcome>
+			<to-view-id>/main.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
 	</navigation-rule>
 
 </faces-config>

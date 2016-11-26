@@ -26,15 +26,26 @@ public class UserHandler {
 			emf.close();
 		}
 	}
-
-	public static boolean register(String name, String password) {
+	public User userDetails(String userName){
+		try{
+			User user = (User) em.createNamedQuery("userdetails").setParameter("username", userName).getSingleResult();
+			return user;
+		}catch(NoResultException e){
+			System.out.println("UserHandler error: No user");
+			return null;
+		}finally{
+			em.close();
+			emf.close();
+		}
+	}
+	public static boolean register(String name, String password, String first,String last) {
 		
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("Lab1");
 		EntityManager em = emf.createEntityManager();
 		
 		System.out.print("Regestering new user; name: " + name + " pass: " + password);
 		
-		User newUser = new User(name, password);
+		User newUser = new User(name, password,first,last);
 			try{
 				em.getTransaction().begin();
 				em.persist(newUser);

@@ -48,6 +48,13 @@ public class Message {
 		this.type = type;
 	}
 	
+	public Message(User sender, String messageText, Date date, String subject, MessageType type) {
+		this.message = messageText;
+		this.sender = sender;
+		this.timestamp = date;
+		this.type = type;
+		this.subject = subject;
+	}
 	//Getters and Setters
 	public int getId() {
 		return id;

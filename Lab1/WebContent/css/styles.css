@@ -10,10 +10,7 @@
 		top:0;
 		padding:1px;
 
-	}
-	
-
-	
+	}	
 		.left {
 		position:fixed;
 		left: 4px;
@@ -21,6 +18,8 @@
 		width:145px;	
 		height: 100%;
 		z-index:100;
+		padding:3px;
+	
 	}
 		#content {
 		top: 3em;

@@ -15,7 +15,7 @@ import bo.UserListHandler;
 public class UserListBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private Map<String,Integer> userList;
+	private Map<String, String> userList;
 	private String cReciever;
 	
 	public UserListBean(){};   
@@ -23,13 +23,13 @@ public class UserListBean implements Serializable {
 	@PostConstruct
 	public void init() {
 		UserListHandler ur = new UserListHandler();
-		userList = new HashMap<String,Integer>();
+		userList = new HashMap<String,String>();
 		userList = ur.getUserList();
 	 }	 
-	public Map<String,Integer> getUserList() {
+	public Map<String,String> getUserList() {
 		return userList;
 	}
-	public void setUserList(Map<String,Integer> userList) {
+	public void setUserList(Map<String,String> userList) {
 		this.userList = userList;
 	}
 	public String getcReciever() {
