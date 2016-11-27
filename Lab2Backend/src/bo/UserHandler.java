@@ -1,10 +1,14 @@
 package bo;
 
-import java.net.HttpURLConnection;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -19,6 +23,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
+import static java.util.Comparator.comparing;
 
 @Path("/user")
 public class UserHandler {
@@ -100,18 +105,15 @@ public class UserHandler {
 		
 		Map<String,String> userlist = new HashMap<String,String>();
 		List<User> temp = em.createQuery(sqlAll,User.class).getResultList();
+		Collections.sort(temp, Comparator.comparing(User::getUsername));
 		for(User user:temp){
-			//System.out.println(user.getId() + user.getUsername());
-			
 			if(user.getFirstname() != null && user.getLastname() != null ){
-				userlist.put(user.getUsername() + " <" + user.getFirstname() + " " + user.getLastname()+">",user.getUsername());
+				userlist.put(user.getUsername() +" - " + user.getLastname(),user.getUsername());
 			}else{
 				userlist.put(user.getUsername(),user.getUsername());
 			}
 		}
-		
 		return userlist;
-	
 	}
 	
 	@GET

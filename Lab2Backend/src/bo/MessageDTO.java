@@ -45,14 +45,14 @@ public class MessageDTO {
 		this.message = message;
 		this.receiver = displayName;
 	}
-
-	public MessageDTO(String senderName, String message2, String recieverName, String subject, MessageType type) {
-		this.sender = senderName;
-		this.message = message2;
-		this.receiver = recieverName;
-		this.subject = subject;
-		this.type = type;
+	public MessageDTO(int id, String message, String sender, Date date,String sub) {
+		this.id = id;
+		this.message = message;
+		this.sender = sender;
+		this.timestamp = date;
+		this.subject=sub;
 	}
+	
 
 	//Getters and Setters
 	public int getId() {
@@ -118,5 +118,8 @@ public class MessageDTO {
 		System.out.println("Getting Head: " + sender + " " + timestamp);
 		return sender + " " + timestamp;
 	}
-	
+	@JsonIgnore
+	public String getHeaderSub(){
+		return getHeader() + "  <----" + subject + "---->";
+	}
 }

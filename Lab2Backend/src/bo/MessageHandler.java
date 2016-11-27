@@ -17,6 +17,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Response;
 
 import bo.Message.MessageType;
 
@@ -45,7 +46,7 @@ public class MessageHandler {
 			// Sort messages in chronological order
 			Collections.sort(messages, new Comparator<Message>() {
 				public int compare(Message o1, Message o2) {
-					return o1.getTimestamp().compareTo(o2.getTimestamp());
+					return o2.getTimestamp().compareTo(o1.getTimestamp());
 				}
 			});
 			
@@ -54,7 +55,7 @@ public class MessageHandler {
 			for (Message message : messages) {
 				if(message.getType().equals(type)){
 					messageList.add(new MessageDTO(message.getId(), message.getMessage(), message.getSender().getUsername(),
-							message.getTimestamp()));
+							message.getTimestamp(),message.getSubject()));
 				}
 			}
 
@@ -72,12 +73,13 @@ public class MessageHandler {
 	/** 
 	 * Converts and adds a message to the DB. Requires type in {@code message}
 	 * @param message The MessageDTO to be converted to Message and Added to the DB
+	 * @return 
 	 *
 	 **/
 	@POST
 	@Path("/post")
 	@Consumes("application/json")
-	public static void post(MessageDTO message) {
+	public static Response post(MessageDTO message) {
 		
 		System.out.println("MessageHandler-Post: ");
 		System.out.println("message: " + message.getMessage());
@@ -101,15 +103,17 @@ public class MessageHandler {
 			em.persist(newMessage);
 			em.getTransaction().commit();
 
-			return;
+			
+			 return Response.status(Response.Status.CREATED).entity("ok").build();
 
 		} catch (Exception e) {
 			e.printStackTrace();
+			return Response.status(Response.Status.CREATED).entity("fail").build();
 		} finally {
 			em.close();
 			emf.close();
 		}
 		
-		return;
+		
 	}
 }

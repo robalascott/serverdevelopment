@@ -8,8 +8,10 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
@@ -24,6 +26,7 @@ public class UserListBean implements Serializable {
 	private Map<String, String> userList;
 	private String cReciever;
 	private String serverIP = "localhost";
+	private String failed = "Failed to load";
 	
 	public UserListBean(){};   
 	
@@ -31,16 +34,12 @@ public class UserListBean implements Serializable {
 	public void init() {
 		
 		ObjectMapper mapper = new ObjectMapper();
-		//TODO: Fix exceptions
 		try {
 			userList = mapper.readValue(new URL("http://" + serverIP + ":8080/Lab2Backend/user/getAllUsers"), new TypeReference<HashMap<String,String>>(){});
 		} catch (IOException e) {
+			FacesContext.getCurrentInstance().addMessage(null,  new FacesMessage(FacesMessage.SEVERITY_WARN,failed,failed));
 			e.printStackTrace();
 		}
-		
-		//UserListHandler ur = new UserListHandler();
-		//userList = new HashMap<String,String>();
-		//userList = ur.getUserList();
 	}
 	
 	public Map<String,String> getUserList() {

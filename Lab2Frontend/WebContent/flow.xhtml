@@ -19,7 +19,7 @@
     <ui:define name="content">
     	<div class="ui-widget-content ui-shadow">
 	    	<h1 class="title ui-widget-header" style="margin-left:0px">Welcome to #{flowBean.displayName}s flow</h1>
-	        	<ui:repeat var="message" value="#{flowBean.getMessages()}">
+	        	<ui:repeat var="message" value="#{flowBean.getFlowWrapper()}">
 	        		<p:panel id="basic" header="#{message.getHeader()}" style="margin-bottom:20px">
 				        <h:panelGrid columns="1" cellpadding="10">
 				            <h:outputText value = "#{message.message}"/>
@@ -30,10 +30,12 @@
 		        <o:form includeViewParams="true">
 		       	 <p:growl id="growl" showDetail="true" autoUpdate="true" />
 		        	<div>
-		        		<p:inputTextarea rows="6" cols="50" value="#{flowBean.message}" style="margin-left:0px"/>
+		        	<p:inputTextarea id="messagebox" value="#{flowBean.message}" style=" margin-left:10px; postion: flow-centre; width: 80%" size="65000" required="true" />
 		        	</div>
 		        	<div>
-		        		<p:commandButton styleClass="ui-priority-primary contentbutton" value="Post" action="#{flowBean.post()}" />
+		        	<p:separator />
+		        		<p:commandButton style=" margin-left:10px" styleClass="ui-priority-primary contentbutton" value="Post" action="#{flowBean.post()}" />
+		        	<p:separator />
 		        	</div>
 		        </o:form>
 	        </div>

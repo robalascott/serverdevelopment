@@ -1,8 +1,11 @@
 package ui;
 
 import java.io.Serializable;
+
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
+import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
@@ -79,31 +82,22 @@ public class MessageBean implements Serializable{
 		//Create a DTO to transmit the Message-data
 		MessageDTO msg = new MessageDTO(senderName, message, recieverName, subject, MessageType.PRIVATE);
 		
-		//TODO: Handle response (Might get error)
 		//Post to target with the "msg" parameter and expect a response
 		Response response = target.request().post(Entity.json(msg), Response.class);
 		String value = response.readEntity(String.class);
-		System.out.println("FlowBean:Post:Response value: " + value);
-		response.close(); 
+		//System.out.println("FlowBean:Post:Response value: " + value);
 		
-		message = null;
-		
-		System.out.println(this.senderName +" "+this.recieverName+ " " + this.subject +" "+this.message);
-		
-		//TODO: Replace with responses to response value
-		/*
-		if((handler.addNewMessage(this.senderName, this.recieverName, this.subject,this.message))){
+		if(value.equalsIgnoreCase("ok")){
 			FacesContext context = FacesContext.getCurrentInstance();
 			context.addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO, "Message:Sent","Sent"));
 			context.getExternalContext().getFlash().setKeepMessages(true);
 			return mainXhtml;
 		}else{
 			 FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_ERROR, "Message:Failed to send","Failed to Send"));
-			System.out.println("Message not sent");
-			return null;
 		}
-		*/
+		response.close(); 
+		message = null;
+		//System.out.println(this.senderName +" "+this.recieverName+ " " + this.subject +" "+this.message);
 		return null;
-	
 	}
 }

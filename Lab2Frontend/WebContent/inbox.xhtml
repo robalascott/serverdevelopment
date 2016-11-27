@@ -8,16 +8,20 @@
 
 <h:body>
 	<ui:composition template="templates/template.xhtml">
-		<ui:define name="title">Welcome</ui:define>
+		<ui:define name="title">Inbox #{flowBean.displayName}</ui:define>
 		<ui:define name="top"></ui:define>
 		<ui:define name="content">
 			<h:form>
-				<h3>Welcome #{LoginBean.userName}</h3>
-				<br></br>
-			
-				
-				
-
+				<div class="ui-widget-content ui-shadow">
+	    	<h1 class="title ui-widget-header" style="margin-left:2px"> Inbox </h1>
+	        	<ui:repeat var="message" value="#{flowBean.getInboxWrapper()}">
+	        		<p:panel id="basic" header="#{message.getHeaderSub()}" style="margin-bottom:20px; margin-left:10px"> 
+				        <h:panelGrid columns="1" cellpadding="10">
+				            <h:outputText value = "#{message.message}"/>
+				        </h:panelGrid>
+				    </p:panel>
+	        	</ui:repeat>
+			</div>
 			</h:form>
 		</ui:define>
 	</ui:composition>

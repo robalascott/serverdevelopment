@@ -77,7 +77,7 @@ public class FlowBean implements Serializable {
 
 	public List<MessageDTO> getMessages() {
 		System.out.println("Calling messagehandler getting messages for: " + displayName);
-		messages = MessageHandler.getFlowMessages(displayName);
+		messages = MessageHandler.getMessages(displayName);
 		if (messages.size() == 0) {
 			FacesContext.getCurrentInstance().addMessage("growl",
 					new FacesMessage(FacesMessage.SEVERITY_INFO, "No Messages", "Please Try Again!"));
@@ -128,7 +128,7 @@ public class FlowBean implements Serializable {
 		matches = UserHandler.findUserByName(searchValue);
 		System.out.println(this + ": Display called with: " + searchValue + " " + matches.size());
 		if (matches.isEmpty()) {
-			System.out.println("not found");
+	
 			searchValue = "";
 			return "redirectMain";
 		}

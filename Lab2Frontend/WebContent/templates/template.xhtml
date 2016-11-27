@@ -36,14 +36,14 @@
 					<p:menuitem />
 					<p:menuitem type="button" name="newMain"
 						action="#{LoginBean.doMain()}" value="Main Menu"
-						icon="ui-icon-home" />
+						icon="ui-icon-home"/>	
 					<p:menuitem type="button" title="Profile" value="Profile"
 						action="#{ProfileBean.doProfile()}" icon="ui-icon-person" />
 					<p:menuitem type="button" title="inbox" value="Inbox"
 						action="#{FlowBean.doInbox()}" icon="ui-icon-mail-open" />
 					<p:menuitem type="button" title="newMail" value="New Mail"
 						action="#{MessageBean.doMessage()}" icon="ui-icon-mail-closed" />
-					<p:menuitem name="logitout" action="#{LoginBean.doLogout()}"
+					<p:menuitem style="position: absolute; right: 6px;" name="logitout" action="#{LoginBean.doLogout()}"
 						value="Logout" icon="ui-icon-close" />
 				</p:menubar>
 			</h:form>
@@ -52,12 +52,13 @@
 			<div id="left" class="left">
 				<ui:insert name="left" class="left">
 									<h:form>
-										<p:panel style="width:100%;background-color:#DCDCDC;height:100%">
+										<p:growl id="growl" showDetail="true" autoUpdate="true" />
+										<p:panel style="width:90%;background-color:#DCDCDC;height:90%">
 											<p:outputLabel style="font-weight:bold">Find User</p:outputLabel>
 										
 										<div style="padding-right: 10px; padding-bottom: 10px">
 											<p:inputText style="float:left;width:100%;margin-top:4px"
-												id="searchUser" value="#{flowBean.searchValue}" />
+												id="searchUser" value="#{flowBean.searchValue}" required="true" requiredMessage="Required a Username"/>
 											<p:commandButton
 												style="align:Left; width:100%;margin-top:4px;"
 												value="Search" action="#{flowBean.display()}">

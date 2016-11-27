@@ -57,6 +57,13 @@ public class MessageDTO {
 		this.type = type;
 	}
 
+	public MessageDTO(int id, String message, String sender, Date date,String sub) {
+		this.id = id;
+		this.message = message;
+		this.sender = sender;
+		this.timestamp = date;
+		this.subject=sub;
+	}
 	//Getters and Setters
 	public int getId() {
 		return id;
@@ -118,6 +125,9 @@ public class MessageDTO {
 	public String getHeader(){
 		System.out.println("Getting Head: " + sender + " " + timestamp);
 		return sender + " " + timestamp;
+	}
+	public String getHeaderSub(){
+		return "  <-Subject: " + subject +  " : " +getHeader() +" -> " ;
 	}
 	
 	public enum MessageType{

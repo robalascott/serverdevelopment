@@ -81,7 +81,7 @@
 		<navigation-case>
 			<from-outcome>RegisterSuccess</from-outcome>
 			<to-view-id>/main.xhtml</to-view-id>
-			<redirect/>
+			<redirect include-view-params="true" />
 		</navigation-case>
 		<navigation-case>
 			<from-outcome>RegisterFailed</from-outcome>
@@ -96,8 +96,8 @@
 		
 		<navigation-case>
 			<from-action>#{flowBean.display()}</from-action>
-			<from-outcome>multiple</from-outcome>
-			<to-view-id>/search.xhtml</to-view-id>
+			<from-outcome>oops</from-outcome>
+			<to-view-id>/oops.xhtml</to-view-id>
 			<redirect include-view-params="true" />
 		</navigation-case>
 		<navigation-case>
@@ -118,7 +118,12 @@
 			<to-view-id>/profile.xhtml</to-view-id>
 			<redirect/>
 		</navigation-case>
-		
+		<navigation-case>
+			<from-action>#{flowBean.post()}</from-action>
+			<from-outcome>RedirectMain</from-outcome>
+			<to-view-id>/main.xhtml</to-view-id>
+			<redirect/>
+		</navigation-case>
 	</navigation-rule>
 
 </faces-config>

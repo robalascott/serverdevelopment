@@ -8,17 +8,19 @@
 		z-index:100;
 		left:0;
 		top:0;
-		padding:1px;
+		padding:5px;
+		
 
 	}	
 		.left {
 		position:fixed;
 		left: 4px;
-		top: 3em;
+		top: 3.3em;
 		width:145px;	
-		height: 100%;
+		height: 95%;
 		z-index:100;
-		padding:3px;
+		padding:5px;
+		background-color: #DCDCDC;
 	
 	}
 		#content {
@@ -26,16 +28,20 @@
 		position:relative;
 		margin-left: 165px;
 		padding:5px;
-		padding-left:1.5em;
-	
-	}
-		#bottom {
-		position:absolute;
-		top: 3em;
-		position:relative;
-		margin-left: 165px;
-		padding:5px;
 		z-index:99;
 		padding-left:1.5em;
+		padding-bottom:4em;
+		bottom: 3em;
+	}
+		#bottom {
+		position:fixed;
+		margin-left: 165px;
+		padding:5px;
+		z-index: 99; 
+    	bottom: 0; 
+    	left: 0;
+    	width: 100%;
+		padding-left:1.5em;
+		font-style: oblique
 	}
 	
