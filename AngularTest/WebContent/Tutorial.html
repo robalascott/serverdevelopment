@@ -1,0 +1,23 @@
+<!doctype html>
+<html ng-app="myApp" ng-controller="mainCtrl">
+  <head>
+  	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.0-rc.2/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-route.js"></script>
+    <script type="text/javascript" src="script.js"></script>
+    <script type="text/javascript" src="../node_modules/socket.io-client/dist/socket.io.js"></script>
+    <script type="text/javascript" src="../bower_components/angular-socket-io/socket.js"></script>
+  </head>
+  <body>
+    <div ng-controller="myCtrl">
+      <form ng-submit="submit()" ng-controller="messageCtrl">
+		  Enter text and hit enter:
+		  <input type="text" ng-model="text" name="text" />
+		  <input type="submit" id="submit" value="Submit" />
+	  </form>
+      <hr>
+      <h1>Name from server: {{name}}</h1>
+    </div>
+    <div id="main"><div ng-view></div></div>
+  </body>
+</html>

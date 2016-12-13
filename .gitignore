@@ -217,3 +217,9 @@ pip-log.txt
 Lab1/target/m2e-wtp/web-resources/META-INF/maven/Lab1/Lab1/pom.properties
 Lab1/.metadata/WebContent/WEB-INF/faces-config.pageflow
 Lab1/target/m2e-wtp/web-resources/META-INF/MANIFEST.MF
+AngularTest/node_modules/
+AngularTest/bower_components/
+NodeTest/node_modules/*
+AngularTest/node_modules/coffee-script/lib/coffee-script/browser.js
+Lab1/target/m2e-wtp/web-resources/META-INF/MANIFEST.MF
+Lab1/target/m2e-wtp/web-resources/META-INF/maven/Lab1/Lab1/pom.properties

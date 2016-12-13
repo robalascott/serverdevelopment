@@ -1,0 +1,24 @@
+Note that this project was created and run in eclipse:
+
+Requirements: Bower & NPM
+
+Setup (NodeTest)
+
+Requirement: Nodejs addon for eclipse: http://www.nodeclipse.org/ (Just drag and drop install-link)
+Import Project into eclipse
+After grabing from git: run: "npm init", then "npm install" and "bower install"
+Then just run as Node Application
+Done
+
+Setup (AngularTest)
+
+Requirement: Angularjs for eclipse: https://marketplace.eclipse.org/content/angularjs-eclipse (Just drag and drop install-link)
+Import Project into eclipse
+After grabing from git: run: "npm init", then "npm install";
+
+(Since i had problem getting it to work with tomcat in eclipse i installed a http-server):
+Open CMD
+Navigate to Project folder
+Install server with: "npm install http-server -g"
+Run server(must be from folder): "http-server -o --cors "
+You should be able to navigate to localhost:8080 to se the content of the http-server

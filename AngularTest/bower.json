@@ -1,0 +1,21 @@
+{
+  "name": "angulartest",
+  "description": "test",
+  "main": "script.js",
+  "authors": [
+    "Daniel Ostberg <dnlostberg@gmail.com>"
+  ],
+  "license": "ISC",
+  "homepage": "",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular-socket-io": "^0.7.0"
+  }
+}

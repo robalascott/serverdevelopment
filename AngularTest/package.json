@@ -1,0 +1,17 @@
+{
+  "name": "angulartest",
+  "version": "1.0.0",
+  "private": true,
+  "description": "test",
+  "main": "script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "grunt-contrib-uglify": "^2.0.0"
+  },
+  "dependencies": {
+  }
+}
