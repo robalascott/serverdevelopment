@@ -31,7 +31,7 @@ public class RegisterBean {
 	final static String passwordError1 ="Password must be at least 6 characters long";
 	final static String passwordError2 ="The passwords don't match";
 	final static String successMsg2 ="Successful: Created a User";
-	private String serverIP = "localhost";
+	private KeyHolder key = new KeyHolder();
 	
 	public String getFirstname() {
 		return firstname;
@@ -96,16 +96,15 @@ public class RegisterBean {
 		
 		//Create a Client with a target address pointing to the backend Rest-service
 		ResteasyClient client = new ResteasyClientBuilder().build();
-		ResteasyWebTarget target = client.target("http://" + serverIP + ":8080/Lab2Backend/user/register/");
+		ResteasyWebTarget target = client.target("http://" + key.getServerIP() + ":8080/Lab2Backend/user/register/");
 		
 		//Create a DTO to transmit the Message-data
 		UserDTO newUser = new UserDTO(name, password, firstname, lastname);
 		
-		//TODO: Handle response (Might get error)
 		//Post to target with the "msg" parameter and expect a response
 		Response response = target.request().post(Entity.json(newUser), Response.class);
 		String value = response.readEntity(String.class);
-		System.out.println("RegisterBean:doRegister:Response value: " + value);
+		//System.out.println("RegisterBean:doRegister:Response value: " + value);
 		
 		if(response.getStatus() == 201){
 			FacesContext context = FacesContext.getCurrentInstance();
@@ -114,7 +113,7 @@ public class RegisterBean {
 			response.close(); 
 			return successMsg;
 		}else{
-			System.out.println("RegisterBean:Error:Http code: " + response.getStatus());
+			//System.out.println("RegisterBean:Error:Http code: " + response.getStatus());
 			System.out.print("Response: " + response.toString());
 			FacesContext.getCurrentInstance().addMessage(null,  new FacesMessage(FacesMessage.SEVERITY_WARN,errorUserName1,"Please Try Again!"));
 			return "";

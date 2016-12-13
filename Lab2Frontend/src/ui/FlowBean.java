@@ -32,7 +32,7 @@ public class FlowBean implements Serializable {
 	private String message;
 	private String searchValue;
 	private List<UserDTO> matches;
-	private String serverIP = "localhost";
+	private KeyHolder key = new KeyHolder();
 
 	public String getMessage() {
 		return message;
@@ -87,7 +87,7 @@ public class FlowBean implements Serializable {
 		
 		ObjectMapper mapper = new ObjectMapper();
 		try {
-			messages = mapper.readValue(new URL("http://" + serverIP + ":8080/Lab2Backend/message/getMessages/" + displayName + "/" + messageType), new TypeReference<List<MessageDTO>>(){});
+			messages = mapper.readValue(new URL("http://" + key.getServerIP() + ":8080/Lab2Backend/message/getMessages/" + displayName + "/" + messageType), new TypeReference<List<MessageDTO>>(){});
 		} catch (IOException e) {
 			FacesContext context = FacesContext.getCurrentInstance();
 			context.addMessage(null,new FacesMessage(FacesMessage.SEVERITY_WARN, "No Message","At the moment"));
@@ -109,7 +109,7 @@ public class FlowBean implements Serializable {
 		
 		//Create a Client with a target address pointing to the backend Rest-service
 		ResteasyClient client = new ResteasyClientBuilder().build();
-		ResteasyWebTarget target = client.target("http://" + serverIP + ":8080/Lab2Backend/message/post/");
+		ResteasyWebTarget target = client.target("http://" + key.getServerIP() + ":8080/Lab2Backend/message/post/");
 		
 		//Create a DTO to transmit the Message-data
 		MessageDTO msg = new MessageDTO(authenticatedUser, message, displayName, MessageType.PUBLIC);
@@ -138,7 +138,7 @@ public class FlowBean implements Serializable {
 		ObjectMapper mapper = new ObjectMapper();
 		//TODO: Fix exceptions
 		try {
-			matches = mapper.readValue(new URL("http://" + serverIP + ":8080/Lab2Backend/user/findUserByName/" + searchValue), new TypeReference<List<UserDTO>>(){});
+			matches = mapper.readValue(new URL("http://" + key.getServerIP()+ ":8080/Lab2Backend/user/findUserByName/" + searchValue), new TypeReference<List<UserDTO>>(){});
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

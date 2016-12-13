@@ -131,10 +131,10 @@ public class UserHandler {
 			for(User user: userList){
 				matches.add(new UserDTO(user.getUsername()));
 			}
-			System.out.println("Returning with matches");
+			//System.out.println("Returning with matches");
 			return matches;
 		}catch(NoResultException e){
-			System.out.println("UserHandler error: No user");
+			//System.out.println("UserHandler error: No user");
 			return null;
 		}finally{
 			em.close();

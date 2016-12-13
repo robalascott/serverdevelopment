@@ -29,7 +29,7 @@ public class MessageBean implements Serializable{
 	private String recieverName;
 	private String message;
 	private String subject;
-	private String serverIP = "localhost";
+	private KeyHolder key = new KeyHolder();
 	
 	public MessageBean(){
 		
@@ -77,7 +77,7 @@ public class MessageBean implements Serializable{
 		
 		//Create a Client with a target address pointing to the backend Rest-service
 		ResteasyClient client = new ResteasyClientBuilder().build();
-		ResteasyWebTarget target = client.target("http://" + serverIP + ":8080/Lab2Backend/message/post/");
+		ResteasyWebTarget target = client.target("http://" + key.getServerIP() + ":8080/Lab2Backend/message/post/");
 		
 		//Create a DTO to transmit the Message-data
 		MessageDTO msg = new MessageDTO(senderName, message, recieverName, subject, MessageType.PRIVATE);

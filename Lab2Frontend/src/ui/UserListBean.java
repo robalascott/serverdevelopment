@@ -25,7 +25,7 @@ public class UserListBean implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private Map<String, String> userList;
 	private String cReciever;
-	private String serverIP = "localhost";
+	private KeyHolder key = new KeyHolder();
 	private String failed = "Failed to load";
 	
 	public UserListBean(){};   
@@ -35,7 +35,7 @@ public class UserListBean implements Serializable {
 		
 		ObjectMapper mapper = new ObjectMapper();
 		try {
-			userList = mapper.readValue(new URL("http://" + serverIP + ":8080/Lab2Backend/user/getAllUsers"), new TypeReference<HashMap<String,String>>(){});
+			userList = mapper.readValue(new URL("http://" + key.getServerIP() + ":8080/Lab2Backend/user/getAllUsers"), new TypeReference<HashMap<String,String>>(){});
 		} catch (IOException e) {
 			FacesContext.getCurrentInstance().addMessage(null,  new FacesMessage(FacesMessage.SEVERITY_WARN,failed,failed));
 			e.printStackTrace();

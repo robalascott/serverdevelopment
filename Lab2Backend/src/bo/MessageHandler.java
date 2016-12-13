@@ -62,7 +62,7 @@ public class MessageHandler {
 			return messageList;
 
 		} catch (NoResultException e) {
-			System.out.println("UserHandler error: No messages");
+			//System.out.println("UserHandler error: No messages");
 			return null;
 		} finally {
 			em.close();
@@ -98,13 +98,10 @@ public class MessageHandler {
 					.setParameter(1, message.getSender()).getSingleResult();
 
 			Message newMessage = new Message(sender, message.getMessage(), new Date(), message.getSubject(), message.getType());
-
 			reciever.RecievedMessages.add(newMessage);
 			em.persist(newMessage);
 			em.getTransaction().commit();
-
-			
-			 return Response.status(Response.Status.CREATED).entity("ok").build();
+			return Response.status(Response.Status.CREATED).entity("ok").build();
 
 		} catch (Exception e) {
 			e.printStackTrace();

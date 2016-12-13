@@ -18,7 +18,7 @@ public class LoginBean implements Serializable {
 	private String userName;
 	private int id;
 	private static final long serialVersionUID = 1L;
-	private String serverIP = "localhost";
+	private KeyHolder key = new KeyHolder();
 	private final static String errorLogin1 = "Incorrect Username and Password";
 	private final static String doMain = "doMain";
 	//Test
@@ -50,7 +50,7 @@ public class LoginBean implements Serializable {
 		ObjectMapper mapper = new ObjectMapper();
 		try {
 			System.out.println("doLogin: Fetching value from backend");
-			this.id = mapper.readValue(new URL("http://" + serverIP + ":8080/Lab2Backend/user/login/" + userName + "/" + password), int.class);
+			this.id = mapper.readValue(new URL("http://" + key.getServerIP() + ":8080/Lab2Backend/user/login/" + userName + "/" + password), int.class);
 			System.out.println("Got: " + id + " from Backend");
 			if(this.id!=-1){
 				HttpSession session = SessionUtils.getSession();

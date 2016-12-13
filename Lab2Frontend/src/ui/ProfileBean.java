@@ -19,7 +19,7 @@ public class ProfileBean implements Serializable{
 	private String userName;
 	private String firstName;
 	private String lastName;
-	private String serverIP = "localhost";
+	private KeyHolder key = new KeyHolder();
 	
 	public ProfileBean(){
 		
@@ -34,7 +34,7 @@ public class ProfileBean implements Serializable{
 		
 		ObjectMapper mapper = new ObjectMapper();
 		try {
-			UserDTO user = mapper.readValue(new URL("http://" + serverIP + ":8080/Lab2Backend/user/getUserInfo/" + this.userName), UserDTO.class);
+			UserDTO user = mapper.readValue(new URL("http://" + key.getServerIP() + ":8080/Lab2Backend/user/getUserInfo/" + this.userName), UserDTO.class);
 			System.out.println(user.getFirstName());
 			this.userName = user.getUsername();
 			this.firstName = user.getFirstName();
