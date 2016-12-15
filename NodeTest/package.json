@@ -19,6 +19,7 @@
   "dependencies": {
     "bluebird": "^3.4.6",
     "express": "^4.14.0",
+    "mongodb": "^2.2.15",
     "socket.io": "^1.7.1"
   }
 }

@@ -1,6 +1,7 @@
 var app = angular.module('myApp', [
 	'btford.socket-io',
-	'ngRoute'
+	'ngRoute',
+	'ui.bootstrap',
 ]).factory('mySocket', function (socketFactory) {
 	
 	// Create the IO-Socket
@@ -68,8 +69,12 @@ app.config(['$routeProvider', '$locationProvider', function($routeProvider, $loc
 	    templateUrl: 'home.html',
 	    controller: 'myCtrl',
 	  });
+	  $routeProvider.when('/register', {
+		    templateUrl: 'register.html',
+		    controller: 'registerController',
+		  });
 	  $routeProvider.otherwise({ redirectTo: '/login' });
-	  //$locationProvider.html5Mode(true); - Can play with this later: Remove the # in address and (Make it not so ugly)
+	  //$locationProvider.html5Mode({enabled:true, requireBase:false}); //- Can play with this later: Remove the # in address and (Make it not so ugly)
 	  //Ps need <base href=""> on html pages
 	  
 	  // Don't put / infront of templateUrl
@@ -83,12 +88,12 @@ app.run(["$rootScope", "$location", "Auth", function($rootScope, $location, Auth
 		if (!Auth.isLoggedIn()) {
 			//Redirect to login
             console.log('Not logged in');
-            if($location.path().localeCompare("/login") != 0){
+            if($location.path().localeCompare("/login") != 0 && $location.path().localeCompare("/register") != 0){
             	console.log('Redirecting to login');
 	            event.preventDefault();
 	            $location.path('/login');
 			}else{
-				console.log("Staying on login");
+				console.log("Allowed page");
 			}
         }
         else {
@@ -100,22 +105,6 @@ app.run(["$rootScope", "$location", "Auth", function($rootScope, $location, Auth
 	});
 }]);
 
-/*
-app.controller('messageCtrl', function($scope, mySocket) {
-	console.log("In messageCtrl");
-	
-	$scope.submit = function() {
-		console.log("In submit i guess");
-        if ($scope.text) {
-        	console.log("Sending text: " + $scope.text);
-	    	mySocket.emit('send:message', {
-	    		message: $scope.text
-	    	});
-	    	$scope.text = '';
-        }
-      };
-});
-*/
 app.controller('mainCtrl', ['$scope', 'Auth', '$location', "Page", function ($scope, Auth, $location, Page) {
 	
 	$scope.Page = Page;
@@ -140,104 +129,107 @@ app.controller('mainCtrl', ['$scope', 'Auth', '$location', "Page", function ($sc
 	}, true);
 }]);
 
+// Chat Controller
 // Current Experiment, Apperently the [] are to prevent minification to break the code (TODO: read about it and ng-annotate)
 app.controller('myCtrl', ["$scope", "mySocket", "Page", "Auth", function($scope, mySocket, Page, Auth) {
 	
 	$scope.messages = [];
+	$scope.friendsList = [{status: "offline", name: "Daniel"},{status: "offline", name: "Daniel"}]; //{status: "offline", name: "Daniel"}
 	$scope.Page = Page;
 	$scope.name = Auth.getDisplayName()
+	$scope.activeRoom = "General";
+		
 	Page.setTitle("Lets Chat");
 	console.log("In myCtrl");
 		
 	mySocket.on('send:message', function(data) {
 		console.log("Got message: " + data.text.toString() + " from: " + data.user.toString());
-		$scope.$apply(function() {
-			$scope.messages.push({user: data.user, message: data.text});
-		});
+		
+		if(data.room){
+			$scope.$apply(function() {
+				$scope.messages.push({user: data.user, message: data.text, room: data.room});
+			});
+		}else{
+			$scope.$apply(function() {
+				$scope.messages.push({user: data.user, message: data.text, room: "General"});
+			});
+		}
 	});
 	
+	// The user click send
 	$scope.sendMessage = function () {
 		console.log("Called SendMessage: " + $scope.message);
 		  event.preventDefault();
 		  if ($scope.message) {
-	        	console.log("Sending text: " + $scope.message);
-		    	mySocket.emit('send:message', {
-		    		message: $scope.message
-		    	});
-		    	$scope.message = '';
-	        }
+			  var changeRoom = "/change "
+			  if(($scope.message.substring(0, changeRoom.length) == changeRoom)){
+				  console.log("User want to change room");
+				  var tmp = $scope.message.substring(changeRoom.length);
+				  console.log("Want to change room to: " + tmp);
+				  // Should probably check if exist/allowed
+				  $scope.activeRoom = tmp;
+				  //Should check/handle strange/invalid input
+			  }else{
+				  console.log("Sending text: " + $scope.message + "to room " + $scope.activeRoom);
+		        	
+			    	mySocket.emit('send:message', {
+			    		message: $scope.message,
+			    		room: $scope.activeRoom
+			    	});
+			  }
+			  $scope.message = '';
+		  }
 	}
 }])
 
-function login(name, pass) {
-	
+//TODO: Is this an acceptable solution? Removing the listener after getting response? Was accedently creating a new 
+// listener every call before, quickly resulted in a bunch of them
+function waitforServerResponse($q, $timeout, Auth){
+	return $q(function(resolve, reject){
+		var timeoutPromise = $timeout(function(){
+		  console.log("Rejecting: timeout");
+		  reject("Timeout");
+		}, 5000);
+  
+		mySocket.on('authenticate', function(data) {
+			console.log("Auth reply: " + status);
+			if(data.status === "success"){
+				$timeout.cancel(timeoutPromise);
+				mySocket.removeAllListeners("authenticate");
+				resolve("Correct");
+			}else{
+				$timeout.cancel(timeoutPromise);
+				mySocket.removeAllListeners("authenticate");
+				reject("Denied");
+			}
+		});
+	});
 }
 
-app.controller('loginController', [ '$scope', 'Auth', 'mySocket', '$q', '$timeout', function ($scope, Auth, mySocket, $q, $timeout) {
+app.directive('myDirective', function($timeout) {
+    return {
+        restrict: 'A',
+        link: function(scope, element) {
+        	scope.myStyle = {'background':'black'};
+            scope.height = element.prop('offsetHeight').toString().trim();
+            scope.width = element.prop('offsetWidth');
+        }
+    };
+});
 
-	  function authenticate(){
-		  
-		  return $q(function(resolve, reject){
-			  var timeoutPromise = $timeout(function(){
-				  console.log("Rejecting: timeout");
-				  reject("Timeout");
-			  }, 5000);
-			  
-			  mySocket.on('authenticate', function(data) {
-				  console.log("Auth reply: " + status);
-				  if(data.status === "success"){
-					  $timeout.cancel(timeoutPromise);
-					  resolve("Correct");
-				  }else{
-					  $timeout.cancel(timeoutPromise);
-					  reject("Denied");
-				  }
-			  });
-		  });
-	  }
-		//submit
-	  $scope.login = function () {
-		
-		// Send provided user credentials
-		mySocket.emit("authenticate", {user: $scope.credentials.username, pass: $scope.credentials.password});
-		// Then wait for server response
-		var promise = authenticate();
-		promise.then(function(){
-			//If successfull
-			var user = {
-					name: $scope.credentials.username	
-			};
-			console.log("Setting user");
-			Auth.setUser(user)
-		}, function(reason){
-			//If auth failed
-			//TODO: Something when login fails (check reason, could be timeout or w/e)
-			console.log("Promise rejected: " + reason);
-		});
-	    console.log("LoginController: Authenticated: " + Auth.isLoggedIn());
+app.controller('AlertDemoCtrl', function ($scope) {
+	  $scope.alerts = [
+	    { type: 'danger', msg: 'Oh snap! Change a few things up and try submitting again.' },
+	    { type: 'success', msg: 'Well done! You successfully read this important alert message.' }
+	  ];
+
+	  $scope.addAlert = function() {
+	    $scope.alerts.push({msg: 'Another alert!'});
 	  };
-}]);
 
-/*
-console.log("in controller");
-var socket = io.connect("http://127.0.0.1:1337");
-$http.get("http://127.0.0.1:1337")
-.then(function(response) {
-	console.log("got response");
-    $scope.todos = response.data;
+	  $scope.closeAlert = function(index) {
+	    $scope.alerts.splice(index, 1);
+	  };
 });
-console.log("after response");
-*/
-/*
-mySocket.on('init', function(data) {
-	console.log("I guess we got a message");
-	console.log(data);
-	
-	//To update page it seem like we need to call $apply (Test by commentin this function)
-	$scope.$apply(function() {
-		
-		$scope.name = data.name.toString();
-	});
-	
-});
-*/
+  
+  

@@ -2,27 +2,82 @@ var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var Promise = require('bluebird');
+var MongoClient = require('mongodb').MongoClient, assert = require('assert');
+var url = 'mongodb://localhost:27017/NodeTest';
 
-//TODO: Check data against DB - Currently Hardcoded, Usernam:Daniel Pass:123
+var insertDocuments = function(db, callback) {
+	  // Get the documents collection
+	  var collection = db.collection('users');
+	  // Insert some documents
+	  collection.insertMany([
+	    {a : 1}, {a : 2}, {a : 3}
+	  ], function(err, result) {
+	    assert.equal(err, null);
+	    assert.equal(3, result.result.n);
+	    assert.equal(3, result.ops.length);
+	    console.log("Inserted 3 documents into the collection");
+	    callback(result);
+	  });
+	};
+
+var test;
+//TODO: Decide where & how (in the code) to connect, do we do it several times or just one that we close when connection is closed
+//Connect to the MongoDB
+MongoClient.connect(url, function(err, db) {
+  assert.equal(null, err);
+  console.log("Connected successfully to server");
+  test = db;
+  /*
+  findDocuments(db, "Daniel", "123", function() {
+	  console.log("Closing connection");
+      db.close();
+  });
+  */
+});
+
+//TODO: Make values in DB unique, checking in code for now
 var Auth = (function() {
-	var login = function(username, password){
-		if(username != null && password != null){
-			console.log("Atleast they exist, might break if we pass an object");
-			if(username.toString() === "Daniel" && password.toString() === "123"){
-				console.log("Auth checks out");
-				return true;
-			}else{
-				console.log("Auth failed");
-				return false;
-			}
-		}else{
-			console.log("Invalid login data");
-			return false;
-		}
+	var login = function(db, name, password, callback){
+		 var collection = db.collection('users');
+		  // Find some documents
+		  console.log("Looking for: " + name + ":" + password);
+		  collection.findOne({"name": name, "password": password}, function(err, user){
+
+		    assert.equal(err, null);
+		    if(user){
+		    console.log("Found the following records");
+		    console.log(user);
+		    callback(true);
+		   }else{
+			   callback(false);
+		   }
+		  });  
+	};
+	
+	var register = function(db, name, password, callback){
+		 var collection = db.collection('users');
+		  // Find some documents
+		  collection.findOne({"name": name}, function(err, user){
+		  if(user){
+		    console.log("Found the following records");
+		    console.log(user);
+		    callback({success: false, reason: "exist"});
+		   }else{
+			   //Create user
+			   collection.insert({"name": name, "password":password}, function(err, user){
+				   if(user){
+					   callback({success: true});
+				   }else{
+					   callback({success: false, reason: "something went wrong"});
+				   }
+			   });
+		   }
+		  });  
 	};
 	
 	return{
-		login: login
+		login: login,
+		register: register
 	};
 })();
 
@@ -31,6 +86,7 @@ io.on('connection', function(socket) {
 	console.log("User Connected");
 	var authenticated = false;
 	var name = "Rookie";
+	var activeRooms = [];
 
 	// Keep connection alive untill we decide otherwise
 	function keepAlive(){
@@ -40,20 +96,38 @@ io.on('connection', function(socket) {
 			socket.on('authenticate', function(data) {
 				// !== is wrong!
 				if(data.user != null && data.pass != null){
-					if(Auth.login(data.user.toString().trim(), data.pass.toString().trim())){
-						console.log("Setting authenticated to true");
-						authenticated = true;
-						name = data.user.toString().trim();
-						resolve("Success!");
+					
+					if(data.command === "login"){
+						Auth.login(test, data.user.toString().trim(), data.pass.toString().trim(), function(authConfirmed){
+							if(authConfirmed){
+								console.log("Setting authenticated to true");
+								authenticated = true;
+								name = data.user.toString().trim();
+								resolve("Success!");
+							}else
+								reject("Denied");
+						});
+					}else if(data.command == "register"){
+						Auth.register(test, data.user.toString().trim(), data.pass.toString().trim(), function(result){
+							if(result.success){
+								console.log("Setting authenticated to true");
+								authenticated = true;
+								name = data.user.toString().trim();
+								resolve("Success!");
+							}else{
+								reject(result.reason);
+							}
+						});
 					}
-					reject("Denied");
+				}else{
+					reject("Bad data package");
 				}
-				reject("Bad data package");
 			});
 		});
 		
 		// With the help of a Promise we wait for the authentication process to complete
 		authPromise.then(function(){
+			console.log("Promise successful: authenticated:" + authenticated)
 			// We don't need this check, when the promise is rejected this function is skipped
 			if(authenticated){
 				socket.emit("authenticate", {
@@ -66,16 +140,36 @@ io.on('connection', function(socket) {
 				socket.on('send:message', function(data) {
 					console.log("User msg: " + data.message);
 					
-					//Broadcast to everyone except the sender
-					socket.broadcast.emit("send:message", {
-						user: name,
-						text: data.message
-					});
-					//Emit a copy to sender (Probably a nicer way to do this)
-					socket.emit("send:message", {
-						user: name,
-						text: data.message
-					});
+					//TODO: Error handling
+					var joinCommand = "/join ";
+					if((data.message.substring(0, joinCommand.length) == joinCommand)){
+						  console.log("join command");
+						  var channel = data.message.substring(data.message.indexOf("/") + 6);
+						  console.log(name + " joined " + channel);
+						  //Should check/handle strange/invalid input
+						  activeRooms.push(channel);
+						  socket.join(channel);
+					}
+					
+					if(data.room && activeRooms.indexOf(data.room) != -1){
+						console.log("Room(" + data.room + "): " + data.message);
+						io.sockets.in(data.room).emit("send:message", {
+							user: name,
+							text: data.message,
+							room: data.room
+						});
+					}else{
+						//Broadcast to everyone except the sender
+						socket.broadcast.emit("send:message", {
+							user: name,
+							text: data.message
+						});
+						//Emit a copy to sender (Probably a nicer way to do this)
+						socket.emit("send:message", {
+							user: name,
+							text: data.message
+						});
+					}
 				});
 				
 				// On user-disconnect, clean-up
