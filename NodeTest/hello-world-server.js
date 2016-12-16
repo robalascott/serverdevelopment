@@ -5,20 +5,7 @@ var Promise = require('bluebird');
 var MongoClient = require('mongodb').MongoClient, assert = require('assert');
 var url = 'mongodb://localhost:27017/NodeTest';
 
-var insertDocuments = function(db, callback) {
-	  // Get the documents collection
-	  var collection = db.collection('users');
-	  // Insert some documents
-	  collection.insertMany([
-	    {a : 1}, {a : 2}, {a : 3}
-	  ], function(err, result) {
-	    assert.equal(err, null);
-	    assert.equal(3, result.result.n);
-	    assert.equal(3, result.ops.length);
-	    console.log("Inserted 3 documents into the collection");
-	    callback(result);
-	  });
-	};
+
 
 var test;
 //TODO: Decide where & how (in the code) to connect, do we do it several times or just one that we close when connection is closed
