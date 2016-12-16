@@ -2,71 +2,17 @@ var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var Promise = require('bluebird');
-var MongoClient = require('mongodb').MongoClient, assert = require('assert');
-var url = 'mongodb://localhost:27017/NodeTest';
+var assert = require('assert');
+/*Dbase things*/
+var config = require("./libs/config.js");
+var mongojs = require('mongojs');
+var dbtest = mongojs('NodeTest',['users']);
+var helper = require('./libs/helper.js');
+var userslist = [];
 
 
 
-var test;
-//TODO: Decide where & how (in the code) to connect, do we do it several times or just one that we close when connection is closed
-//Connect to the MongoDB
-MongoClient.connect(url, function(err, db) {
-  assert.equal(null, err);
-  console.log("Connected successfully to server");
-  test = db;
-  /*
-  findDocuments(db, "Daniel", "123", function() {
-	  console.log("Closing connection");
-      db.close();
-  });
-  */
-});
 
-//TODO: Make values in DB unique, checking in code for now
-var Auth = (function() {
-	var login = function(db, name, password, callback){
-		 var collection = db.collection('users');
-		  // Find some documents
-		  console.log("Looking for: " + name + ":" + password);
-		  collection.findOne({"name": name, "password": password}, function(err, user){
-
-		    assert.equal(err, null);
-		    if(user){
-		    console.log("Found the following records");
-		    console.log(user);
-		    callback(true);
-		   }else{
-			   callback(false);
-		   }
-		  });  
-	};
-	
-	var register = function(db, name, password, callback){
-		 var collection = db.collection('users');
-		  // Find some documents
-		  collection.findOne({"name": name}, function(err, user){
-		  if(user){
-		    console.log("Found the following records");
-		    console.log(user);
-		    callback({success: false, reason: "exist"});
-		   }else{
-			   //Create user
-			   collection.insert({"name": name, "password":password}, function(err, user){
-				   if(user){
-					   callback({success: true});
-				   }else{
-					   callback({success: false, reason: "something went wrong"});
-				   }
-			   });
-		   }
-		  });  
-	};
-	
-	return{
-		login: login,
-		register: register
-	};
-})();
 
 //TODO: Improve structure (Split into functions and separate modules)
 io.on('connection', function(socket) {
@@ -85,17 +31,21 @@ io.on('connection', function(socket) {
 				if(data.user != null && data.pass != null){
 					
 					if(data.command === "login"){
-						Auth.login(test, data.user.toString().trim(), data.pass.toString().trim(), function(authConfirmed){
+					    helper.login(dbtest, data.user.toString().trim(), data.pass.toString().trim(),userslist, function(authConfirmed) {
 							if(authConfirmed){
 								console.log("Setting authenticated to true");
 								authenticated = true;
 								name = data.user.toString().trim();
 								resolve("Success!");
+								socket.username = data.user;
+								userslist.push(socket.username);
+								console.log(userslist)
+                                updateAll(socket);
 							}else
 								reject("Denied");
 						});
 					}else if(data.command == "register"){
-						Auth.register(test, data.user.toString().trim(), data.pass.toString().trim(), function(result){
+						helper.register(dbtest, data.user.toString().trim(), data.pass.toString().trim(), function(result){
 							if(result.success){
 								console.log("Setting authenticated to true");
 								authenticated = true;
@@ -136,6 +86,7 @@ io.on('connection', function(socket) {
 						  //Should check/handle strange/invalid input
 						  activeRooms.push(channel);
 						  socket.join(channel);
+
 					}
 					
 					if(data.room && activeRooms.indexOf(data.room) != -1){
@@ -163,6 +114,11 @@ io.on('connection', function(socket) {
 				socket.on("disconnect", function() {
 					console.log(name + " disconnected");
 					// Tell other users that this user disconnected
+                    if(!socket.username){
+                        return;
+                    }
+                    userslist.splice(userslist.indexOf(socket.username,1));
+                    console.log(userslist);
 					socket.broadcast.emit("notice", {
 						user: name,
 						message: "Disconnected"
@@ -181,6 +137,14 @@ io.on('connection', function(socket) {
 	// Keep connection alive
 	keepAlive();
 });
+
+function updateAll(socket) {
+    data = "update here!"
+    socket.emit("send:uppdateall", {
+        text: data.text
+    });
+
+}
 
 // Create the server 
 http.listen(1337, '127.0.0.1', function() {

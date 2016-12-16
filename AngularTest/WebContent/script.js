@@ -134,7 +134,7 @@ app.controller('mainCtrl', ['$scope', 'Auth', '$location', "Page", function ($sc
 app.controller('myCtrl', ["$scope", "mySocket", "Page", "Auth", function($scope, mySocket, Page, Auth) {
 	
 	$scope.messages = [];
-	$scope.friendsList = [{status: "offline", name: "Daniel"},{status: "offline", name: "Daniel"}]; //{status: "offline", name: "Daniel"}
+	$scope.friendsList = []; //{status: "offline", name: "Daniel"}
 	$scope.Page = Page;
 	$scope.name = Auth.getDisplayName()
 	$scope.activeRoom = "General";
@@ -155,8 +155,15 @@ app.controller('myCtrl', ["$scope", "mySocket", "Page", "Auth", function($scope,
 			});
 		}
 	});
-	
-	// The user click send
+    mySocket.on('send:uppdateall', function(data) {
+        console.log("Got update: " + data);
+        $scope.$apply(function() {
+            $scope.friendsList.push({status: data.text, user: data.text});
+        })
+    });
+
+
+    // The user click send
 	$scope.sendMessage = function () {
 		console.log("Called SendMessage: " + $scope.message);
 		  event.preventDefault();

@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "description": "NodeTest",
-  "main": "hello-world-server.js",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified! Configure in package.json\" && exit 1"
   },
@@ -19,7 +19,8 @@
   "dependencies": {
     "bluebird": "^3.4.6",
     "express": "^4.14.0",
-    "mongodb": "^2.2.15",
+    "mongodb": "^2.2.16",
+    "mongojs": "^2.4.0",
     "socket.io": "^1.7.1"
   }
 }
