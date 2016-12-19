@@ -10,10 +10,6 @@ var dbtest = mongojs('NodeTest',['users']);
 var helper = require('./libs/helper.js');
 var userslist = [];
 
-
-
-
-
 //TODO: Improve structure (Split into functions and separate modules)
 io.on('connection', function(socket) {
 	console.log("User Connected");

@@ -10,8 +10,8 @@ var self = {
             assert.equal(err,null);
             //No double logins now!!
             if(docs && userslist.indexOf(docs.name)!=0){
-                console.log("Found the following records");
-                console.log(docs);
+               // console.log("Found the following records");
+               // console.log(docs);
                 callback(true);
             }else{
                 callback(false);
@@ -22,11 +22,11 @@ var self = {
      register: function(db, name, password, callback) {
 
          db.users.findOne({name: name, password: password}, function (err, docs) {
-             console.log(docs)
+             //console.log(docs)
              assert.equal(err, null);
              if (docs) {
-                 console.log("Found the following records");
-                 console.log(docs);
+               //  console.log("Found the following records");
+               //  console.log(docs);
                  callback(false);
              } else {
                  //Create user
