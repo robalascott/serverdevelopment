@@ -1,3 +1,4 @@
+
 var app = angular.module('myApp', [
 	'btford.socket-io',
 	'ngRoute',
@@ -134,7 +135,7 @@ app.controller('mainCtrl', ['$scope', 'Auth', '$location', "Page", function ($sc
 app.controller('myCtrl', ["$scope", "mySocket", "Page", "Auth", function($scope, mySocket, Page, Auth) {
 	
 	$scope.messages = [];
-	$scope.friendsList = []; //{status: "offline", name: "Daniel"}
+    $scope.friendsList = [];
 	$scope.Page = Page;
 	$scope.name = Auth.getDisplayName()
 	$scope.activeRoom = "General";
@@ -155,11 +156,13 @@ app.controller('myCtrl', ["$scope", "mySocket", "Page", "Auth", function($scope,
 			});
 		}
 	});
-    mySocket.on('send:uppdateall', function(data) {
-        console.log("Got update: " + data);
+    mySocket.on('send:update', function(userslist) {
+        console.log("Got update: " + userslist);
+        alert(userslist);
         $scope.$apply(function() {
-            $scope.friendsList.push({status: data.text, user: data.text});
-        })
+            $scope.friendsList.push(userslist);
+        });
+
     });
 
 
@@ -192,7 +195,7 @@ app.controller('myCtrl', ["$scope", "mySocket", "Page", "Auth", function($scope,
 //TODO: Is this an acceptable solution? Removing the listener after getting response? Was accedently creating a new 
 // listener every call before, quickly resulted in a bunch of them
 function waitforServerResponse($q, $timeout, Auth){
-	return $q(function(resolve, reject){
+    return $q(function(resolve, reject){
 		var timeoutPromise = $timeout(function(){
 		  console.log("Rejecting: timeout");
 		  reject("Timeout");

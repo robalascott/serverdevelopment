@@ -16,7 +16,6 @@ io.on('connection', function(socket) {
 	var authenticated = false;
 	var name = "Rookie";
 	var activeRooms = [];
-
 	// Keep connection alive untill we decide otherwise
 	function keepAlive(){
 		
@@ -36,7 +35,6 @@ io.on('connection', function(socket) {
 								socket.username = data.user;
 								userslist.push(socket.username);
 								console.log(userslist)
-                                updateAll(socket);
 							}else
 								reject("Denied");
 						});
@@ -56,19 +54,17 @@ io.on('connection', function(socket) {
 					reject("Bad data package");
 				}
 			});
+
 		});
 		
 		// With the help of a Promise we wait for the authentication process to complete
 		authPromise.then(function(){
 			console.log("Promise successful: authenticated:" + authenticated)
 			// We don't need this check, when the promise is rejected this function is skipped
+
 			if(authenticated){
-				socket.emit("authenticate", {
-					status: "success",
-					name: name
-				});
-				console.log("Sending authentication status: " + "success");
-				
+				helper.authmsg(socket,name);
+
 				// Listen for incoming messages from authenticated user
 				socket.on('send:message', function(data) {
 					console.log("User msg: " + data.message);
@@ -93,16 +89,7 @@ io.on('connection', function(socket) {
 							room: data.room
 						});
 					}else{
-						//Broadcast to everyone except the sender
-						socket.broadcast.emit("send:message", {
-							user: name,
-							text: data.message
-						});
-						//Emit a copy to sender (Probably a nicer way to do this)
-						socket.emit("send:message", {
-							user: name,
-							text: data.message
-						});
+						helper.sendAll(socket,name,data);
 					}
 				});
 				
@@ -110,11 +97,12 @@ io.on('connection', function(socket) {
 				socket.on("disconnect", function() {
 					console.log(name + " disconnected");
 					// Tell other users that this user disconnected
-                    if(!socket.username){
-                        return;
-                    }
-                    userslist.splice(userslist.indexOf(socket.username,1));
-                    console.log(userslist);
+                    if(socket.username){
+                        userslist.splice(userslist.indexOf(socket.username,1));
+                        console.log(userslist);
+                        updateAll(socket,userslist);
+                    };
+
 					socket.broadcast.emit("notice", {
 						user: name,
 						message: "Disconnected"
@@ -125,6 +113,10 @@ io.on('connection', function(socket) {
 			// The promise was rejected, inform the user
 			socket.emit("authenticate", {status: reason.toString()});
 			console.log("Authentication failed: " + reason);
+            if(socket.username){
+                userslist.splice(userslist.indexOf(socket.username,1));
+                console.log(userslist);
+            }
 			// Recursive call, so that we can process another login-attempt
 			keepAlive();
 		});
@@ -134,10 +126,11 @@ io.on('connection', function(socket) {
 	keepAlive();
 });
 
-function updateAll(socket) {
-    data = "update here!"
-    socket.emit("send:uppdateall", {
-        text: data.text
+function updateAll(socket,user) {
+    console.log("update here " + user);
+    var test = {'test':userslist}
+    socket.emit("send:update", {
+        data: test
     });
 
 }

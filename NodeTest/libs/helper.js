@@ -9,7 +9,7 @@ var self = {
             //console.log(docs)
             assert.equal(err,null);
             //No double logins now!!
-            if(docs && userslist.indexOf(docs.name)!=0){
+            if(docs && userslist.indexOf(docs.name)!=1){
                // console.log("Found the following records");
                // console.log(docs);
                 callback(true);
@@ -18,6 +18,30 @@ var self = {
             }
         });
     },
+
+    sendAll:function (socket,name,data) {
+        //Broadcast to everyone except the sender
+        socket.broadcast.emit("send:message", {
+            user: name,
+            text: data.message
+        });
+        //Emit a copy to sender (Probably a nicer way to do this)
+        socket.emit("send:message", {
+            user: name,
+            text: data.message
+        });
+    },
+
+
+    authmsg:function (socket,names) {
+        socket.emit("authenticate", {
+            status: "success",
+            name: names,
+        });
+        console.log("Sending authentication status: " + "success");
+    },
+
+
 
      register: function(db, name, password, callback) {
 
@@ -40,5 +64,9 @@ var self = {
              }
          })
      }
+
+
+
+
 }
 module.exports = self;
