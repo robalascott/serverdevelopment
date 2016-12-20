@@ -8,8 +8,8 @@ var self = {
         db.users.findOne({name:name,password:password},function (err,docs) {
             //console.log(docs)
             assert.equal(err,null);
-            //No double logins now!!
-            if(docs && userslist.indexOf(docs.name)!=1){
+            //No double logins now!! && userslist.indexOf(docs.name)!=1)
+            if(docs  && userslist.indexOf(docs.name)!=1){
                // console.log("Found the following records");
                // console.log(docs);
                 callback(true);
@@ -42,10 +42,10 @@ var self = {
     },
     updateAll:function(socket,user) {
         console.log("update here " + user);
-        var test = {'test':userslist}
+      /*  var test = {'test':}
         socket.emit("send:update", {
             data: test
-        })
+        })*/
     },
     
      register: function(db, name, password, callback) {

@@ -24,7 +24,7 @@ io.on('connection', function(socket) {
 			socket.on('authenticate', function(data) {
 				// !== is wrong!
 				if(data.user != null && data.pass != null){
-					
+
 					if(data.command === "login"){
 					    helper.login(dbtest, data.user.toString().trim(), data.pass.toString().trim(),userslist, function(authConfirmed) {
 							if(authConfirmed){
@@ -54,9 +54,8 @@ io.on('connection', function(socket) {
 					reject("Bad data package");
 				}
 			});
-
 		});
-		
+
 		// With the help of a Promise we wait for the authentication process to complete
 		authPromise.then(function(){
 			console.log("Promise successful: authenticated:" + authenticated)
@@ -64,6 +63,14 @@ io.on('connection', function(socket) {
 
 			if(authenticated){
 				helper.authmsg(socket,name);
+                socket.on('updateall',function (data) {
+                    console.log('Updateall - server side');
+                    var object ={
+                        usersobject:[]
+                    };
+                    object['usersobject'].push(userslist);
+                    socket.emit('updateall',{ob:object});
+                });
 
 				// Listen for incoming messages from authenticated user
 				socket.on('send:message', function(data) {

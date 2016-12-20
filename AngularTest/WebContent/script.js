@@ -24,6 +24,8 @@ app.factory("Page", function() {
 	};
 });
 
+
+
 app.factory("Auth", function() {
 	var user;
 	
@@ -84,6 +86,7 @@ app.config(['$routeProvider', '$locationProvider', function($routeProvider, $loc
 app.run(["$rootScope", "$location", "Auth", function($rootScope, $location, Auth) {
 	console.log("In run");
 	console.log($location.host());
+	$rootScope.name = [];
 	$rootScope.$on("$locationChangeStart", function(event) {
 		console.log('Running Auth, path = ' + $location.path());
 		if (!Auth.isLoggedIn()) {
@@ -132,14 +135,13 @@ app.controller('mainCtrl', ['$scope', 'Auth', '$location', "Page", function ($sc
 
 // Chat Controller
 // Current Experiment, Apperently the [] are to prevent minification to break the code (TODO: read about it and ng-annotate)
-app.controller('myCtrl', ["$scope", "mySocket", "Page", "Auth", function($scope, mySocket, Page, Auth) {
+app.controller('myCtrl', ["$scope", "mySocket", "Page", "Auth","$rootScope", function($scope, mySocket, Page, Auth,$rootScope) {
 	
 	$scope.messages = [];
-    $scope.friendsList = [];
+    $scope.friendsList = $rootScope.name;
 	$scope.Page = Page;
-	$scope.name = Auth.getDisplayName()
+	$scope.name = Auth.getDisplayName();
 	$scope.activeRoom = "General";
-		
 	Page.setTitle("Lets Chat");
 	console.log("In myCtrl");
 		
@@ -241,5 +243,23 @@ app.controller('AlertDemoCtrl', function ($scope) {
 	    $scope.alerts.splice(index, 1);
 	  };
 });
-  
-  
+
+function waitfordata($q,$rootScope){
+    return $q(function(resolve){
+       console.log("updateall: outer shell" );
+        mySocket.on('updateall', function(object) {
+            console.log("update: " + object.ob.usersobject);
+            var temp = object.ob.usersobject[0];
+            if(temp!=null){
+                for (var key in temp) {
+                    if (temp.hasOwnProperty(key)) {
+                        $rootScope.name.push(temp[key]);
+                    }
+                }
+
+            }
+            resolve(true);
+        });
+        resolve(false);
+    });
+}

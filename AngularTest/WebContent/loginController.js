@@ -1,4 +1,4 @@
-app.controller('loginController', [ '$scope', 'Auth', 'mySocket', '$q', '$timeout', '$location', function ($scope, Auth, mySocket, $q, $timeout, $location) {
+app.controller('loginController', [ '$scope', 'Auth', 'mySocket', '$q', '$timeout', '$location','$rootScope', function ($scope, Auth, mySocket, $q, $timeout, $location,$rootScope) {
 	  
 	  $scope.pagelink = function(){
 		  $location.path("/register");
@@ -17,6 +17,9 @@ app.controller('loginController', [ '$scope', 'Auth', 'mySocket', '$q', '$timeou
 			};
 			console.log("Setting user");
 			Auth.setUser(user)
+			mySocket.emit('updateall');
+            waitfordata($q,$rootScope);
+
 		}, function(reason){
 			//If auth failed
 			//TODO: Something when login fails (check reason, could be timeout or w/e)
