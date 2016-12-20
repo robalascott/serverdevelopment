@@ -46,6 +46,10 @@ app.factory("Auth", function() {
 				return true;
 			}
 		},
+		logout : function(){
+			console.log("Logging out");
+			user = null;
+		},
 		getDisplayName(){
 			return user.name;
 		}
@@ -89,6 +93,7 @@ app.run(["$rootScope", "$location", "Auth", function($rootScope, $location, Auth
 		if (!Auth.isLoggedIn()) {
 			//Redirect to login
             console.log('Not logged in');
+            $rootScope.loggedIn = false;
             if($location.path().localeCompare("/login") != 0 && $location.path().localeCompare("/register") != 0){
             	console.log('Redirecting to login');
 	            event.preventDefault();
@@ -100,15 +105,17 @@ app.run(["$rootScope", "$location", "Auth", function($rootScope, $location, Auth
         else {
         	//Should check if permission
             console.log('Allowed');
+            $rootScope.loggedIn = true;
             //Redirect to suitable page
             $location.path('/home');
         }
 	});
 }]);
 
-app.controller('mainCtrl', ['$scope', 'Auth', '$location', "Page", function ($scope, Auth, $location, Page) {
+app.controller('mainCtrl', ['$scope', 'Auth', '$location', "Page", "mySocket", function ($scope, Auth, $location, Page, mySocket) {
 	
 	$scope.Page = Page;
+	$scope.logout = Auth.logout;
 	Page.setTitle("Home Page");
 	
 	// Watch the value of Auth isLoggedIn function, if it changes this is triggered
@@ -118,6 +125,8 @@ app.controller('mainCtrl', ['$scope', 'Auth', '$location', "Page", function ($sc
 	// If we were Authenticated and now we are not
 	if(!authenticated && previouslyAuthenticated) {
 		console.log("Disconnect");
+		mySocket.disconnect();
+		mySocket.connect("http://127.0.0.1:1337/");
 		$location.path('/login');
 	}
 	
@@ -225,21 +234,6 @@ app.directive('myDirective', function($timeout) {
             scope.width = element.prop('offsetWidth');
         }
     };
-});
-
-app.controller('AlertDemoCtrl', function ($scope) {
-	  $scope.alerts = [
-	    { type: 'danger', msg: 'Oh snap! Change a few things up and try submitting again.' },
-	    { type: 'success', msg: 'Well done! You successfully read this important alert message.' }
-	  ];
-
-	  $scope.addAlert = function() {
-	    $scope.alerts.push({msg: 'Another alert!'});
-	  };
-
-	  $scope.closeAlert = function(index) {
-	    $scope.alerts.splice(index, 1);
-	  };
 });
   
   

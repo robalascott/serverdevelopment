@@ -15,13 +15,15 @@ app.controller('loginController', [ '$scope', 'Auth', 'mySocket', '$q', '$timeou
 			var user = {
 					name: $scope.credentials.username	
 			};
+			console.log("LoginController: Authenticated: " + Auth.isLoggedIn());
 			console.log("Setting user");
 			Auth.setUser(user)
 		}, function(reason){
 			//If auth failed
 			//TODO: Something when login fails (check reason, could be timeout or w/e)
 			console.log("Promise rejected: " + reason);
+			console.log("LoginController: Authenticated: " + Auth.isLoggedIn());
 		});
-	    console.log("LoginController: Authenticated: " + Auth.isLoggedIn());
+	    
 	  };
 }]);
