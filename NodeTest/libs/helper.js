@@ -40,9 +40,14 @@ var self = {
         });
         console.log("Sending authentication status: " + "success");
     },
-
-
-
+    updateAll:function(socket,user) {
+        console.log("update here " + user);
+        var test = {'test':userslist}
+        socket.emit("send:update", {
+            data: test
+        })
+    },
+    
      register: function(db, name, password, callback) {
 
          db.users.findOne({name: name, password: password}, function (err, docs) {

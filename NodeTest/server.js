@@ -100,7 +100,7 @@ io.on('connection', function(socket) {
                     if(socket.username){
                         userslist.splice(userslist.indexOf(socket.username,1));
                         console.log(userslist);
-                        updateAll(socket,userslist);
+                        helper.updateAll(socket,userslist);
                     };
 
 					socket.broadcast.emit("notice", {
@@ -126,14 +126,6 @@ io.on('connection', function(socket) {
 	keepAlive();
 });
 
-function updateAll(socket,user) {
-    console.log("update here " + user);
-    var test = {'test':userslist}
-    socket.emit("send:update", {
-        data: test
-    });
-
-}
 
 // Create the server 
 http.listen(1337, '127.0.0.1', function() {
