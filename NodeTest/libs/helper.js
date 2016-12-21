@@ -9,7 +9,7 @@ var self = {
             //console.log(docs)
             assert.equal(err,null);
             //No double logins now!! && userslist.indexOf(docs.name)!=1)
-            if(docs  && userslist.indexOf(docs.name)!=1){
+            if(docs  && userslist.indexOf(docs.name)!=0){
                // console.log("Found the following records");
                // console.log(docs);
                 callback(true);
@@ -19,37 +19,29 @@ var self = {
         });
     },
 
-    sendAll:function (socket,name,data) {
+    sendAll:function (socket,data) {
         //Broadcast to everyone except the sender
         socket.broadcast.emit("send:message", {
-            user: name,
+            user: socket.username,
             text: data.message
         });
         //Emit a copy to sender (Probably a nicer way to do this)
         socket.emit("send:message", {
-            user: name,
+            user: socket.username,
             text: data.message
         });
     },
 
 
-    authmsg:function (socket,names) {
+    authmsg:function (socket) {
+        //Send auth message on success
         socket.emit("authenticate", {
             status: "success",
-            name: names,
+            name: socket.username,
         });
         console.log("Sending authentication status: " + "success");
     },
-    updateAll:function(socket,user) {
-        console.log("update here " + user);
-      /*  var test = {'test':}
-        socket.emit("send:update", {
-            data: test
-        })*/
-    },
-    
      register: function(db, name, password, callback) {
-
          db.users.findOne({name: name, password: password}, function (err, docs) {
              //console.log(docs)
              assert.equal(err, null);
@@ -68,8 +60,28 @@ var self = {
                  })
              }
          })
-     }
-
+     },
+    splicelist:function(socket,userslist) {
+        var i = userslist.indexOf( socket.username);
+        if(i !=-1){
+            userslist.splice(i,1);
+        }
+    },
+    updateexit:function(socket,userslist) {
+        var object ={
+            usersobject:[]
+        };
+        object['usersobject'].push(userslist);
+        socket.broadcast.emit('updateall',{ob:object});
+    },
+    updatestart:function(socket,userslist) {
+        var object ={
+            usersobject:[]
+        };
+        object['usersobject'].push(userslist);
+        socket.emit('updateall',{ob:object});
+        socket.broadcast.emit('updateall',{ob:object});
+    }
 
 
 

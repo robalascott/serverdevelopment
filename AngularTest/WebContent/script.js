@@ -24,8 +24,6 @@ app.factory("Page", function() {
 	};
 });
 
-
-
 app.factory("Auth", function() {
 	var user;
 	
@@ -48,7 +46,11 @@ app.factory("Auth", function() {
 				return true;
 			}
 		},
-		getDisplayName(){
+		logout : function(){
+			console.log("Logging out");
+			user = null;
+		},
+		getDisplayName: function(){
 			return user.name;
 		}
 	}
@@ -92,6 +94,7 @@ app.run(["$rootScope", "$location", "Auth", function($rootScope, $location, Auth
 		if (!Auth.isLoggedIn()) {
 			//Redirect to login
             console.log('Not logged in');
+            $rootScope.loggedIn = false;
             if($location.path().localeCompare("/login") != 0 && $location.path().localeCompare("/register") != 0){
             	console.log('Redirecting to login');
 	            event.preventDefault();
@@ -103,15 +106,17 @@ app.run(["$rootScope", "$location", "Auth", function($rootScope, $location, Auth
         else {
         	//Should check if permission
             console.log('Allowed');
+            $rootScope.loggedIn = true;
             //Redirect to suitable page
             $location.path('/home');
         }
 	});
 }]);
 
-app.controller('mainCtrl', ['$scope', 'Auth', '$location', "Page", function ($scope, Auth, $location, Page) {
+app.controller('mainCtrl', ['$scope', 'Auth', '$location', "Page", "mySocket", function ($scope, Auth, $location, Page, mySocket) {
 	
 	$scope.Page = Page;
+	$scope.logout = Auth.logout;
 	Page.setTitle("Home Page");
 	
 	// Watch the value of Auth isLoggedIn function, if it changes this is triggered
@@ -121,6 +126,8 @@ app.controller('mainCtrl', ['$scope', 'Auth', '$location', "Page", function ($sc
 	// If we were Authenticated and now we are not
 	if(!authenticated && previouslyAuthenticated) {
 		console.log("Disconnect");
+		mySocket.disconnect();
+		mySocket.connect("http://127.0.0.1:1337/");
 		$location.path('/login');
 	}
 	
@@ -144,7 +151,10 @@ app.controller('myCtrl', ["$scope", "mySocket", "Page", "Auth","$rootScope", fun
 	$scope.activeRoom = "General";
 	Page.setTitle("Lets Chat");
 	console.log("In myCtrl");
-		
+
+
+
+
 	mySocket.on('send:message', function(data) {
 		console.log("Got message: " + data.text.toString() + " from: " + data.user.toString());
 		
@@ -158,13 +168,20 @@ app.controller('myCtrl', ["$scope", "mySocket", "Page", "Auth","$rootScope", fun
 			});
 		}
 	});
-    mySocket.on('send:update', function(userslist) {
-        console.log("Got update: " + userslist);
-        alert(userslist);
+    mySocket.on('updateall', function(object) {
+        console.log("update: " + object.ob.usersobject);
         $scope.$apply(function() {
-            $scope.friendsList.push(userslist);
+            $rootScope.name = [];
+            var temp = object.ob.usersobject[0];
+            if (temp != null) {
+                for (var key in temp) {
+                    if (temp.hasOwnProperty(key)) {
+                        $rootScope.name.push(temp[key]);
+                    }
+                }
+            }
         });
-
+        $scope.friendsList = $rootScope.name;
     });
 
 
@@ -229,26 +246,12 @@ app.directive('myDirective', function($timeout) {
     };
 });
 
-app.controller('AlertDemoCtrl', function ($scope) {
-	  $scope.alerts = [
-	    { type: 'danger', msg: 'Oh snap! Change a few things up and try submitting again.' },
-	    { type: 'success', msg: 'Well done! You successfully read this important alert message.' }
-	  ];
-
-	  $scope.addAlert = function() {
-	    $scope.alerts.push({msg: 'Another alert!'});
-	  };
-
-	  $scope.closeAlert = function(index) {
-	    $scope.alerts.splice(index, 1);
-	  };
-});
-
 function waitfordata($q,$rootScope){
     return $q(function(resolve){
        console.log("updateall: outer shell" );
         mySocket.on('updateall', function(object) {
             console.log("update: " + object.ob.usersobject);
+            $rootScope.name = [];
             var temp = object.ob.usersobject[0];
             if(temp!=null){
                 for (var key in temp) {
@@ -256,10 +259,9 @@ function waitfordata($q,$rootScope){
                         $rootScope.name.push(temp[key]);
                     }
                 }
-
             }
             resolve(true);
         });
         resolve(false);
     });
-}
+};

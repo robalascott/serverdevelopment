@@ -9,13 +9,11 @@ var mongojs = require('mongojs');
 var dbtest = mongojs('NodeTest',['users']);
 var helper = require('./libs/helper.js');
 var userslist = [];
-
+var activeRooms = [];
 //TODO: Improve structure (Split into functions and separate modules)
 io.on('connection', function(socket) {
 	console.log("User Connected");
 	var authenticated = false;
-	var name = "Rookie";
-	var activeRooms = [];
 	// Keep connection alive untill we decide otherwise
 	function keepAlive(){
 		
@@ -30,7 +28,6 @@ io.on('connection', function(socket) {
 							if(authConfirmed){
 								console.log("Setting authenticated to true");
 								authenticated = true;
-								name = data.user.toString().trim();
 								resolve("Success!");
 								socket.username = data.user;
 								userslist.push(socket.username);
@@ -43,7 +40,7 @@ io.on('connection', function(socket) {
 							if(result.success){
 								console.log("Setting authenticated to true");
 								authenticated = true;
-								name = data.user.toString().trim();
+                                socket.username = data.user;
 								resolve("Success!");
 							}else{
 								reject(result.reason);
@@ -62,14 +59,10 @@ io.on('connection', function(socket) {
 			// We don't need this check, when the promise is rejected this function is skipped
 
 			if(authenticated){
-				helper.authmsg(socket,name);
+				helper.authmsg(socket);
+				//This trigger update of userlist
                 socket.on('updateall',function (data) {
-                    console.log('Updateall - server side');
-                    var object ={
-                        usersobject:[]
-                    };
-                    object['usersobject'].push(userslist);
-                    socket.emit('updateall',{ob:object});
+                    helper.updatestart(socket,userslist);
                 });
 
 				// Listen for incoming messages from authenticated user
@@ -81,49 +74,40 @@ io.on('connection', function(socket) {
 					if((data.message.substring(0, joinCommand.length) == joinCommand)){
 						  console.log("join command");
 						  var channel = data.message.substring(data.message.indexOf("/") + 6);
-						  console.log(name + " joined " + channel);
+						  console.log(socket.username + " joined " + channel);
 						  //Should check/handle strange/invalid input
 						  activeRooms.push(channel);
 						  socket.join(channel);
 
 					}
-					
+
 					if(data.room && activeRooms.indexOf(data.room) != -1){
 						console.log("Room(" + data.room + "): " + data.message);
 						io.sockets.in(data.room).emit("send:message", {
-							user: name,
+							user: socket.username,
 							text: data.message,
 							room: data.room
 						});
 					}else{
-						helper.sendAll(socket,name,data);
+						//Sends to general chat
+						helper.sendAll(socket,data);
 					}
 				});
 				
 				// On user-disconnect, clean-up
 				socket.on("disconnect", function() {
-					console.log(name + " disconnected");
+					console.log(socket.username+ " disconnected");
 					// Tell other users that this user disconnected
                     if(socket.username){
-                        userslist.splice(userslist.indexOf(socket.username,1));
-                        console.log(userslist);
-                        helper.updateAll(socket,userslist);
+                        helper.splicelist(socket,userslist);
+                        helper.updateexit(socket,userslist);
                     };
-
-					socket.broadcast.emit("notice", {
-						user: name,
-						message: "Disconnected"
-					});
 				});
 			}
 		}, function(reason){
 			// The promise was rejected, inform the user
 			socket.emit("authenticate", {status: reason.toString()});
 			console.log("Authentication failed: " + reason);
-            if(socket.username){
-                userslist.splice(userslist.indexOf(socket.username,1));
-                console.log(userslist);
-            }
 			// Recursive call, so that we can process another login-attempt
 			keepAlive();
 		});
