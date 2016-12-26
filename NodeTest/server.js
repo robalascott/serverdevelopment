@@ -81,6 +81,16 @@ io.on('connection', function(socket) {
 
 					}
 
+                    var createCommand = "/create ";
+                    if((data.message.substring(0, createCommand.length) == createCommand)){
+                        console.log("create command");
+                        var room = data.message.substring(data.message.indexOf("/") + 7);
+                        console.log(socket.username + " create " + room);
+                        //Should check/handle strange/invalid input
+                        helper.checkroom(socket,activeRooms,room);
+                       // socket.join(channel);
+
+                    }
 					if(data.room && activeRooms.indexOf(data.room) != -1){
 						console.log("Room(" + data.room + "): " + data.message);
 						io.sockets.in(data.room).emit("send:message", {

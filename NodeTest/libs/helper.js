@@ -81,6 +81,15 @@ var self = {
         object['usersobject'].push(userslist);
         socket.emit('updateall',{ob:object});
         socket.broadcast.emit('updateall',{ob:object});
+    },
+    checkroom:function(socket,activeRooms,room) {
+        console.log(activeRooms);
+        if(activeRooms.indexOf(room)==-1){
+           activeRooms.push(room);
+           console.log(activeRooms);
+           socket.join(room);
+           socket.emit('send:changeroom',{msg:room});
+       }
     }
 
 

@@ -14,7 +14,7 @@
 					<form class="input-group" ng-submit="sendMessage()">
 			      		<input class="form-control" type="text" ng-model="message" autocomplete="off" />
 			      		<span class="input-group-btn"> 
-				      		<button class="btn btn-primary" type="button" style="margin-left:2;">Send</button>
+				      		<button class="btn btn-primary" type="submit" style="margin-left:2;">Send</button>
 		    		  	</span>
 				    </form>
 				</div>	
@@ -28,7 +28,7 @@
 				</div>
 				<div class="chatBox" style="height:70%;">
 					<table>
-						<tr ng-repeat="friends in friendsList">
+						<tr ng-repeat="friends in friendsList" ng-click="">
 							<td>{{friends}}</td>
 						</tr>
 					</table>
