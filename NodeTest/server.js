@@ -9,7 +9,7 @@ var mongojs = require('mongojs');
 var dbtest = mongojs('NodeTest',['users']);
 var helper = require('./libs/helper.js');
 var userslist = [];
-var activeRooms = [];
+var activeRooms = ['General'];
 //TODO: Improve structure (Split into functions and separate modules)
 io.on('connection', function(socket) {
 	console.log("User Connected");
@@ -31,7 +31,8 @@ io.on('connection', function(socket) {
 								resolve("Success!");
 								socket.username = data.user;
 								userslist.push(socket.username);
-								console.log(userslist)
+								console.log(userslist);
+								helper.setGeneralRoom(socket,activeRooms,activeRooms[0]);
 							}else
 								reject("Denied");
 						});
@@ -69,29 +70,22 @@ io.on('connection', function(socket) {
 				socket.on('send:message', function(data) {
 					console.log("User msg: " + data.message);
 					
-					//TODO: Error handling
+
 					var joinCommand = "/join ";
-					if((data.message.substring(0, joinCommand.length) == joinCommand)){
-						  console.log("join command");
-						  var channel = data.message.substring(data.message.indexOf("/") + 6);
-						  console.log(socket.username + " joined " + channel);
-						  //Should check/handle strange/invalid input
-						  activeRooms.push(channel);
-						  socket.join(channel);
-
-					}
-
                     var createCommand = "/create ";
-                    if((data.message.substring(0, createCommand.length) == createCommand)){
+					if((data.message.substring(0, joinCommand.length) == joinCommand)){
+                         console.log("join command");
+                         var channel = data.message.substring(data.message.indexOf("/") + 6);
+                         console.log(socket.username + " joined " + channel);
+						  //Should check/handle strange/invalid input
+						 helper.joinRoom(socket,activeRooms,channel,io);
+					}else if((data.message.substring(0, createCommand.length) == createCommand)){
                         console.log("create command");
-                        var room = data.message.substring(data.message.indexOf("/") + 7);
+                        var room = data.message.substring(data.message.indexOf("/") + 8);
                         console.log(socket.username + " create " + room);
                         //Should check/handle strange/invalid input
                         helper.checkroom(socket,activeRooms,room);
-                       // socket.join(channel);
-
-                    }
-					if(data.room && activeRooms.indexOf(data.room) != -1){
+                    }else if(data.room && activeRooms.indexOf(data.room) != -1){
 						console.log("Room(" + data.room + "): " + data.message);
 						io.sockets.in(data.room).emit("send:message", {
 							user: socket.username,
@@ -99,8 +93,8 @@ io.on('connection', function(socket) {
 							room: data.room
 						});
 					}else{
-						//Sends to general chat
-						helper.sendAll(socket,data);
+						//Sends to general chat not needed
+                        //	helper.sendAll(socket,data);
 					}
 				});
 				

@@ -90,8 +90,31 @@ var self = {
            socket.join(room);
            socket.emit('send:changeroom',{msg:room});
        }
-    }
+    },
+    setGeneralRoom:function(socket,activeRooms,room) {
+        console.log(activeRooms);
+        socket.join(room);
+        socket.emit('send:changeroom',{msg:room});
 
+    },
+    joinRoom:function(socket,activeRooms,room,io) {
+        console.log(activeRooms);
+        console.log(room + ' outer shell Join' + activeRooms);
+        if(activeRooms.indexOf(room)>=0){
+            socket.join(room);
+            socket.emit('send:changeroom',{msg:room});
+            console.log('inner shell Join ' + activeRooms);
+            socket.emit('send:message',{msg:room});
+            this.sendMessage(io,socket,room,'Welcome to ' + room);
+        }
+    },
+    sendMessage:function(io,socket,text){
+        io.sockets.in(socket.room).emit("send:message", {
+            user: 'Service',
+            text: text,
+            room: socket.room
+        });
+    }
 
 
 }
