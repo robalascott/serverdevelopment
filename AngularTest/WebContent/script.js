@@ -72,7 +72,7 @@ app.config(['$routeProvider', '$locationProvider', function($routeProvider, $loc
 	  });
 	  $routeProvider.when('/home', {
 	    templateUrl: 'home.html',
-	    controller: 'myCtrl',
+	    controller: 'chatController',
 	  });
 	  $routeProvider.when('/register', {
 		    templateUrl: 'register.html',
@@ -140,76 +140,6 @@ app.controller('mainCtrl', ['$scope', 'Auth', '$location', "Page", "mySocket", f
 	}, true);
 }]);
 
-// Chat Controller
-// Current Experiment, Apperently the [] are to prevent minification to break the code (TODO: read about it and ng-annotate)
-app.controller('myCtrl', ["$scope", "mySocket", "Page", "Auth","$rootScope", function($scope, mySocket, Page, Auth,$rootScope) {
-	
-	$scope.messages = [];
-    $scope.friendsList = $rootScope.name;
-	$scope.Page = Page;
-	$scope.name = Auth.getDisplayName();
-	$scope.activeRoom = "General";
-	Page.setTitle("Lets Chat");
-	console.log("In myCtrl");
-
-
-
-
-	mySocket.on('send:message', function(data) {
-		console.log("Got message: " + data.text.toString() + " from: " + data.user.toString());
-		
-		if(data.room){
-			$scope.$apply(function() {
-				$scope.messages.push({user: data.user, message: data.text, room: data.room});
-			});
-		}else{
-			$scope.$apply(function() {
-				$scope.messages.push({user: data.user, message: data.text, room: "General"});
-			});
-		}
-	});
-    mySocket.on('updateall', function(object) {
-        console.log("update: " + object.ob.usersobject);
-        $scope.$apply(function() {
-            $rootScope.name = [];
-            var temp = object.ob.usersobject[0];
-            if (temp != null) {
-                for (var key in temp) {
-                    if (temp.hasOwnProperty(key)) {
-                        $rootScope.name.push(temp[key]);
-                    }
-                }
-            }
-        });
-        $scope.friendsList = $rootScope.name;
-    });
-
-
-    // The user click send
-	$scope.sendMessage = function () {
-		console.log("Called SendMessage: " + $scope.message);
-		  event.preventDefault();
-		  if ($scope.message) {
-			  var changeRoom = "/change "
-			  if(($scope.message.substring(0, changeRoom.length) == changeRoom)){
-				  console.log("User want to change room");
-				  var tmp = $scope.message.substring(changeRoom.length);
-				  console.log("Want to change room to: " + tmp);
-				  // Should probably check if exist/allowed
-				  $scope.activeRoom = tmp;
-				  //Should check/handle strange/invalid input
-			  }else{
-				  console.log("Sending text: " + $scope.message + "to room " + $scope.activeRoom);
-		        	
-			    	mySocket.emit('send:message', {
-			    		message: $scope.message,
-			    		room: $scope.activeRoom
-			    	});
-			  }
-			  $scope.message = '';
-		  }
-	}
-}])
 
 //TODO: Is this an acceptable solution? Removing the listener after getting response? Was accedently creating a new 
 // listener every call before, quickly resulted in a bunch of them
@@ -254,6 +184,7 @@ function waitfordata($q,$rootScope){
             $rootScope.name = [];
             var temp = object.ob.usersobject[0];
             if(temp!=null){
+                console.log("updateall: outer shell" );
                 for (var key in temp) {
                     if (temp.hasOwnProperty(key)) {
                         $rootScope.name.push(temp[key]);

@@ -8,7 +8,11 @@ var config = require("./libs/config.js");
 var mongojs = require('mongojs');
 var dbtest = mongojs('NodeTest',['users']);
 var helper = require('./libs/helper.js');
+var rooms = require('./libs/rooms.js');
 var userslist = [];
+var roomslist ={};
+rooms.init(roomslist);
+
 var activeRooms = ['General'];
 //TODO: Improve structure (Split into functions and separate modules)
 io.on('connection', function(socket) {
@@ -30,9 +34,12 @@ io.on('connection', function(socket) {
 								authenticated = true;
 								resolve("Success!");
 								socket.username = data.user;
+								socket.currentroom = 'General';
 								userslist.push(socket.username);
-								console.log(userslist);
-								helper.setGeneralRoom(socket,activeRooms,activeRooms[0]);
+								console.log('userlist :' + userslist);
+                                roomslist['General'].people.push(socket.username);
+                                console.log(roomslist['General'].name + ' roomlist ' + roomslist['General'].people);
+                                helper.setGeneralRoom(socket,activeRooms[0]);
 							}else
 								reject("Denied");
 						});
@@ -63,29 +70,25 @@ io.on('connection', function(socket) {
 				helper.authmsg(socket);
 				//This trigger update of userlist
                 socket.on('updateall',function (data) {
-                    helper.updatestart(socket,userslist);
+                    helper.updatestart(socket,roomslist);
                 });
 
 				// Listen for incoming messages from authenticated user
 				socket.on('send:message', function(data) {
 					console.log("User msg: " + data.message);
-					
-
 					var joinCommand = "/join ";
                     var createCommand = "/create ";
 					if((data.message.substring(0, joinCommand.length) == joinCommand)){
-                         console.log("join command");
                          var channel = data.message.substring(data.message.indexOf("/") + 6);
                          console.log(socket.username + " joined " + channel);
-						  //Should check/handle strange/invalid input
-						 helper.joinRoom(socket,activeRooms,channel,io);
+						 helper.joinRoom(socket,roomslist,channel);
 					}else if((data.message.substring(0, createCommand.length) == createCommand)){
                         console.log("create command");
                         var room = data.message.substring(data.message.indexOf("/") + 8);
                         console.log(socket.username + " create " + room);
-                        //Should check/handle strange/invalid input
-                        helper.checkroom(socket,activeRooms,room);
-                    }else if(data.room && activeRooms.indexOf(data.room) != -1){
+                        helper.checkroom(socket,roomslist,room);
+                        console.log(roomslist);
+                    }else if(data.room ){
 						console.log("Room(" + data.room + "): " + data.message);
 						io.sockets.in(data.room).emit("send:message", {
 							user: socket.username,
@@ -104,7 +107,7 @@ io.on('connection', function(socket) {
 					// Tell other users that this user disconnected
                     if(socket.username){
                         helper.splicelist(socket,userslist);
-                        helper.updateexit(socket,userslist);
+                        helper.updateexit(socket,roomslist);
                     };
 				});
 			}
@@ -127,11 +130,3 @@ http.listen(1337, '127.0.0.1', function() {
 });
 
 console.log('Server running at http://127.0.0.1:1337/');
-
-// Old code i want to keep a while longer
-/*
-io.emit('send:message', {
-	name: "NewName",
-	text: "Hardcoded msg"
-});
-*/

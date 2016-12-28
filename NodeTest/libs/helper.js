@@ -6,10 +6,11 @@ var self = {
 
     login:function (db, name, password,userslist, callback) {
         db.users.findOne({name:name,password:password},function (err,docs) {
-            //console.log(docs)
+            console.log(docs);
+            console.log(name +' ' + password)
             assert.equal(err,null);
             //No double logins now!! && userslist.indexOf(docs.name)!=1)
-            if(docs  && userslist.indexOf(docs.name)!=0){
+            if(docs && userslist.indexOf(docs.name)!=0){
                // console.log("Found the following records");
                // console.log(docs);
                 callback(true);
@@ -19,17 +20,25 @@ var self = {
         });
     },
 
-    sendAll:function (socket,data) {
-        //Broadcast to everyone except the sender
-        socket.broadcast.emit("send:message", {
-            user: socket.username,
-            text: data.message
-        });
-        //Emit a copy to sender (Probably a nicer way to do this)
-        socket.emit("send:message", {
-            user: socket.username,
-            text: data.message
-        });
+    updateOwn:function (socket,roomlist) {
+        var object = {
+            usersobject: [],
+
+        };
+        object['usersobject'].push(roomlist[socket.currentroom].people);
+        socket.emit('updateall', {ob: object});
+        socket.broadcast.to(socket.currentroom).emit('updateall',{ob:object});
+        console.log("inner" + object.room);
+
+    }
+    ,
+    updateOthers:function (socket,roomlist) {
+        var object = {
+            usersobject: [],
+        };
+        object['usersobject'].push(roomlist[socket.currentroom].people);
+        socket.broadcast.to(socket.currentroom).emit('updateall', {ob: object});
+        console.log("inner" + object.room);
     },
 
 
@@ -67,54 +76,68 @@ var self = {
             userslist.splice(i,1);
         }
     },
-    updateexit:function(socket,userslist) {
+    updateexit:function(socket,roomlist) {
         var object ={
             usersobject:[]
         };
-        object['usersobject'].push(userslist);
-        socket.broadcast.emit('updateall',{ob:object});
+        this.splicelist(socket,roomlist[socket.currentroom].people)
+        object['usersobject'].push(roomlist[socket.currentroom].people);
+        socket.broadcast.to(socket.currentroom).emit('updateall',{ob:object});
+
     },
-    updatestart:function(socket,userslist) {
+    updatestart:function(socket,roomlist) {
         var object ={
             usersobject:[]
         };
-        object['usersobject'].push(userslist);
+        object['usersobject'].push(roomlist[socket.currentroom].people);
         socket.emit('updateall',{ob:object});
-        socket.broadcast.emit('updateall',{ob:object});
+        console.log("updatestart" + socket.currentroom);
+        this.updateOthers(socket,roomlist);
+        socket.broadcast.to(socket.currentroom).emit('updateall',{ob:object});
     },
-    checkroom:function(socket,activeRooms,room) {
-        console.log(activeRooms);
-        if(activeRooms.indexOf(room)==-1){
-           activeRooms.push(room);
-           console.log(activeRooms);
-           socket.join(room);
-           socket.emit('send:changeroom',{msg:room});
-       }
+    checkroom:function(socket,roomlist,room,rooms) {
+        console.log(roomlist);
+        for(x = 0; x <roomlist.length;x++){
+            console.log('looper' + roomlist[x].name);
+            if(roomlist[x]==room){
+                return;
+            }
+        }
+        var roomtemp = {
+            name:room,
+            people:[]
+        };
+        roomlist[roomtemp.name]=roomtemp;
+        roomlist[room].people.push(socket.username);
+        this.splicelist(socket,roomlist[socket.currentroom].people)
+        socket.currentroom = room;
+        socket.join(room);
+        socket.emit('send:changeroom',{msg:room});
+        console.log(roomlist);
     },
-    setGeneralRoom:function(socket,activeRooms,room) {
-        console.log(activeRooms);
+    setGeneralRoom:function(socket,room) {
         socket.join(room);
         socket.emit('send:changeroom',{msg:room});
 
     },
-    joinRoom:function(socket,activeRooms,room,io) {
-        console.log(activeRooms);
-        console.log(room + ' outer shell Join' + activeRooms);
-        if(activeRooms.indexOf(room)>=0){
+    joinRoom:function(socket,roomlist,room) {
+        //console.log('current' + roomlist[room].people);
+       // console.log(room + ' outer shell Join' + roomlist[room].name);
+        if(roomlist[room]!=undefined){
+            this.splicelist(socket,roomlist[socket.currentroom].people)
+            //update here for old room
+            this.updateOthers(socket,roomlist);
+            socket.leave(socket.currentroom,null);
+            socket.currentroom = room;
+            roomlist[room].people.push(socket.username);
             socket.join(room);
             socket.emit('send:changeroom',{msg:room});
-            console.log('inner shell Join ' + activeRooms);
-            socket.emit('send:message',{msg:room});
-            this.sendMessage(io,socket,room,'Welcome to ' + room);
+            //update for new room
+            this.updateOwn(socket,roomlist);
         }
-    },
-    sendMessage:function(io,socket,text){
-        io.sockets.in(socket.room).emit("send:message", {
-            user: 'Service',
-            text: text,
-            room: socket.room
-        });
+        console.log(roomlist);
     }
+
 
 
 }
