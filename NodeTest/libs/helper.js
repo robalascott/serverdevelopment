@@ -11,8 +11,6 @@ var self = {
             assert.equal(err,null);
             //No double logins now!! && userslist.indexOf(docs.name)!=1)
             if(docs && userslist.indexOf(docs.name)!=0){
-               // console.log("Found the following records");
-               // console.log(docs);
                 callback(true);
             }else{
                 callback(false);
@@ -136,7 +134,15 @@ var self = {
             this.updateOwn(socket,roomlist);
         }
         console.log(roomlist);
-    }
+    },
+    send:function(socket,io,data) {
+        console.log("Room(" + data.room + "): " + data.message);
+        io.sockets.in(data.room).emit("send:message", {
+            user: socket.username,
+            text: data.message,
+            room: data.room
+        });
+    },
 
 
 

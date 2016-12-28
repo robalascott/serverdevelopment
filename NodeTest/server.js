@@ -7,14 +7,16 @@ var assert = require('assert');
 var config = require("./libs/config.js");
 var mongojs = require('mongojs');
 var dbtest = mongojs('NodeTest',['users']);
+/*Helpers and rooms*/
 var helper = require('./libs/helper.js');
 var rooms = require('./libs/rooms.js');
+/*holders*/
 var userslist = [];
 var roomslist ={};
 rooms.init(roomslist);
 
 var activeRooms = ['General'];
-//TODO: Improve structure (Split into functions and separate modules)
+
 io.on('connection', function(socket) {
 	console.log("User Connected");
 	var authenticated = false;
@@ -24,7 +26,7 @@ io.on('connection', function(socket) {
 		// Wait for authentication to respond
 		var authPromise = new Promise(function(resolve, reject){
 			socket.on('authenticate', function(data) {
-				// !== is wrong!
+
 				if(data.user != null && data.pass != null){
 
 					if(data.command === "login"){
@@ -65,10 +67,9 @@ io.on('connection', function(socket) {
 		authPromise.then(function(){
 			console.log("Promise successful: authenticated:" + authenticated)
 			// We don't need this check, when the promise is rejected this function is skipped
-
 			if(authenticated){
 				helper.authmsg(socket);
-				//This trigger update of userlist
+				//Trigger update of userlist
                 socket.on('updateall',function (data) {
                     helper.updatestart(socket,roomslist);
                 });
@@ -89,12 +90,7 @@ io.on('connection', function(socket) {
                         helper.checkroom(socket,roomslist,room);
                         console.log(roomslist);
                     }else if(data.room ){
-						console.log("Room(" + data.room + "): " + data.message);
-						io.sockets.in(data.room).emit("send:message", {
-							user: socket.username,
-							text: data.message,
-							room: data.room
-						});
+						helper.send(socket,io,data);
 					}else{
 						//Sends to general chat not needed
                         //	helper.sendAll(socket,data);
