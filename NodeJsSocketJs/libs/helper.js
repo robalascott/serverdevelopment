@@ -18,11 +18,18 @@ var self = {
             }
         });
     },
+    setGeneralRoom:function(socket,room) {
+        console.log('generalroom:' + room);
+        socket.send(JSON.stringify({type: "changeroom", msg: room}));
 
-    sendAll:function (socket, message) {
-        //Broadcast to everyone except the sender
-    	console.log("BroadCasting message")
-    	socket.send(JSON.stringify({type: "message", text: message, user: socket.username}));
+    },
+    sendAll:function (socket, message, userlist) {
+    	console.log("BroadCasting message");
+            for (var i in userlist) {
+                if(userlist[i].currentroom == socket.currentroom){
+                    userlist[i].send(JSON.stringify({type: "message", text: message, user: socket.username}));
+                }
+            }
     },
 
 

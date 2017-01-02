@@ -8,10 +8,11 @@ var config = require("./libs/config.js");
 var mongojs = require('mongojs');
 var dbtest = mongojs('NodeTest',['users']);
 var helper = require('./libs/helper.js');
+/*User Handler*/
 var userslist = [];
-var activeRooms = [];
-var WebSocketServer = require('websocket').server;
+var roomslist =['General','Java'];
 
+var WebSocketServer = require('websocket').server;
 console.log('Server running at http://127.0.0.1:1337/');
 http.listen(1337, function() { });
 
@@ -38,8 +39,8 @@ function authenticate(connection, data){
 								console.log("Setting authenticated to true");
 								connection.authenticated = true;
 								connection.username = message.username;
-								userslist.push(connection.username);
-								console.log(userslist)
+								connection.currentroom = roomslist[0];
+								userslist.push(connection);
 								resolve("Success!");
 							}else
 								reject("Denied: Incorrect Credentials");
@@ -101,7 +102,7 @@ function processMessage(connection, data){
 				}
 				break;
 			case "message":
-				helper.sendAll(connection, message.text);
+				helper.sendAll(connection, message.text, userslist);
 				break;
 			case "logout":
 				// The client wants to logout but remain on the page
