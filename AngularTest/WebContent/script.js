@@ -6,20 +6,18 @@ var app = angular.module('myApp', [
 ]).factory('mySocket', function (socketFactory) {
 	
 	var mySocket = new WebSocket('ws://127.0.0.1:1337/');
-
-    mySocket.onopen = function (event) {
+	return mySocket;
+	
+	mySocket.onopen = function (event) {
         console.log("Open!");
     };
+	
+
+ 
 	
 	//var mySocket = new EventBus("http://127.0.0.1:1337/eventbus/");
 	 //var mySocket = new SockJS('http://127.0.0.1:1337/eventbus/');
 	 
-	/*
-	 mySocket.onopen = function() {
-	     console.log('open');
-	 };
-	 */
-	 return mySocket;
 	 
 	/*
 	// Create the IO-Socket
@@ -145,9 +143,15 @@ app.controller('mainCtrl', ['$scope', 'Auth', '$location', "Page", "mySocket", f
 	if(!authenticated && previouslyAuthenticated) {
 		console.log("Disconnect");
 		// You can create/define close-event to inform server that it was intended
-		mySocket.onclose = function(){};
-		mySocket.close();
-		mySocket = new WebSocket('ws://127.0.0.1:1337/');
+		/*
+		mySocket.get().onclose = function(){};
+		mySocket.get().send()
+		mySocket.get().close();
+		mySocket.reload();
+		*/ 
+		var logoutReq = {type: "logout"};
+		mySocket.send(JSON.stringify(logoutReq));
+		
 		$location.path('/login');
 	}
 	

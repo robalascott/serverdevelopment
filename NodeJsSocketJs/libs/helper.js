@@ -53,7 +53,7 @@ var self = {
          })
      },
     splicelist:function(socket,userslist) {
-        var i = userslist.indexOf( socket.username);
+        var i = userslist.indexOf(socket.username);
         if(i !=-1){
             userslist.splice(i,1);
         }

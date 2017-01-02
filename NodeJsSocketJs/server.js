@@ -10,11 +10,7 @@ var dbtest = mongojs('NodeTest',['users']);
 var helper = require('./libs/helper.js');
 var userslist = [];
 var activeRooms = [];
-var sockjs = require('sockjs');
 var WebSocketServer = require('websocket').server;
-
-var userslist = [];
-var activeRooms = [];
 
 console.log('Server running at http://127.0.0.1:1337/');
 http.listen(1337, function() { });
@@ -32,7 +28,11 @@ function authenticate(connection, data){
 		switch(message.type){
 			case "authentication":
 				if(message.username != null && message.password != null){
-					console.log("Authmessage recieved: " + message.username + ", " + message.password)
+					if(userslist.indexOf(message.username) !== -1){
+						console.log("User already logged in");
+						reject("User already logged in!");
+					}else{
+						console.log("Authmessage recieved: " + message.username + ", " + message.password);
 					    helper.login(dbtest, message.username.toString().trim(), message.password.toString().trim(),userslist, function(authConfirmed) {
 							if(authConfirmed){
 								console.log("Setting authenticated to true");
@@ -44,17 +44,18 @@ function authenticate(connection, data){
 							}else
 								reject("Denied: Incorrect Credentials");
 						});
+					}
 				}else{
 					console.log("Missing values: username and/or password");
 					reject("Denied: Missing input");
 				}
 				break;
 			case "register":
-				helper.register(dbtest, data.user.toString().trim(), data.pass.toString().trim(), function(result){
+				helper.register(dbtest, message.username.toString().trim(), message.password.toString().trim(), function(result){
 					if(result.success){
 						console.log("Setting authenticated to true");
 						connection.authenticated = true;
-                        connection.username = data.user;
+                        connection.username = message.username;
 						resolve("Success!");
 					}else{
 						reject(result.reason);
@@ -87,7 +88,7 @@ function processMessage(connection, data){
 	
 	if(data.type == 'utf8'){
 		var message = JSON.parse(data.utf8Data);
-		console.log("Message From: " + connection.username + " Message: " + message.text);
+		console.log("Message(Type: " + message.type + ") From: " + connection.username);
 		switch(message.type){
 			case "command":
 				switch(message.command){
@@ -101,6 +102,20 @@ function processMessage(connection, data){
 				break;
 			case "message":
 				helper.sendAll(connection, message.text);
+				break;
+			case "logout":
+				// The client wants to logout but remain on the page
+				// Keep socket open for further communication
+				console.log("User wants to logout");
+				
+				// Clear information about/concerning the authenticated user
+				helper.splicelist(connection, userslist);
+				helper.updateexit(connection, userslist);
+				connection.username = null;
+				connection.authenticated = false;
+				
+				// We might want to inform user about successfull logout
+				//connection.send(JSON.stringify({type: "authentication", status: "success"}));
 				break;
 			default:
 				console.log("Unrecognized message type");
@@ -175,14 +190,21 @@ wsServer.on('request', function(request) {
 	        	*/
 		// Wait for authentication to respond
 		//var authPromise = new Promise(function(resolve, reject){
+    
+    		//------------Socket Listeners/Handlers for different events------------//
+    
+    		// Message received on socket
 			connection.on('message', function(data) {
 				console.log("Authenticated: " + connection.authenticated);
+				// Handle message
 				if(connection.authenticated){
 					processMessage(connection, data);
 				}else{
 					authenticate(connection, data);
 				}
 			});
+			
+			// The socket was closed by the client
 			connection.on('close', function(data) {
 				console.log(connection.username + " disconnected");
 				
@@ -191,10 +213,14 @@ wsServer.on('request', function(request) {
 				//console.log(data.reason);
 				//console.log(data.wasclean);
 				//console.log(data);
-				// Tell other users that this user disconnected
+				
+				// Cleanup
                 if(connection.username){
+                	// Remove data concerning the user
                     helper.splicelist(connection, userslist);
                     helper.updateexit(connection, userslist);
+                    // Inform other users
+                    helper.sendAll(connection, {type: "info", user: connection.username, status: "disconnected"});
                 };
 			});
 			connection.on('error', function(data) {

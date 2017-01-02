@@ -3,10 +3,10 @@ app.controller("registerController", ["$scope", "mySocket", "$q", "$timeout", "A
 		$scope.registerUser = function(){
 		
 		// Send a register-request to the server
-		mySocket.emit("authenticate", {command: "register", user: $scope.credentials.username, pass: $scope.credentials.password});
+		mySocket.send(JSON.stringify({type: "register", username: $scope.credentials.username, password: $scope.credentials.password}));
 		
 		// Then wait for server response
-		var promise = waitforServerResponse($q, $timeout, Auth);
+		var promise = waitforServerResponse($q, $timeout, Auth, mySocket);
 		promise.then(function(){
 			//If promise resolved(we get a response)
 			var user = {

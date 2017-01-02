@@ -12,6 +12,8 @@ app.controller('loginController', [ '$scope', 'Auth', 'mySocket', '$q', '$timeou
 			   console.log("Sending hej");
 			    var credentials = {type: "authentication", username: $scope.credentials.username, password: $scope.credentials.password};
 	            mySocket.send(JSON.stringify(credentials));
+		  }else{
+			  console.log("Socket closed");
 		  }
 		  /*
 		  mySocket.publish("chat.to.server", "Hej");
