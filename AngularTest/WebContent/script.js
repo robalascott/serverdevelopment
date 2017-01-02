@@ -205,6 +205,7 @@ function waitfordata($q,$rootScope){
             $rootScope.name = [];
             var temp = object.ob.usersobject[0];
             if(temp!=null){
+                console.log("updateall: outer shell" );
                 for (var key in temp) {
                     if (temp.hasOwnProperty(key)) {
                         $rootScope.name.push(temp[key]);

@@ -4,6 +4,7 @@ app.controller('chatController', ["$scope", "mySocket", "Page", "Auth","$rootSco
 	
 	$scope.messages = [];
     $scope.friendsList = $rootScope.name;
+    $scope.activeRooms = [];
 	$scope.Page = Page;
 	$scope.name = Auth.getDisplayName();
 	$scope.activeRoom = "General";
@@ -27,6 +28,7 @@ app.controller('chatController', ["$scope", "mySocket", "Page", "Auth","$rootSco
 				}
 				break;
 			case "info":
+				// Add changeroom-check
 				console.log("update: " + message.ob.usersobject);
 		        $scope.$apply(function() {
 		            $rootScope.name = [];
@@ -47,7 +49,13 @@ app.controller('chatController', ["$scope", "mySocket", "Page", "Auth","$rootSco
 		
 	});
 	
-	
+	/*
+	mySocket.on('send:changeroom', function(data) {
+        console.log("Got changeroom: " + " from: " + data.msg.toString());
+        $scope.activeRoom = data.msg.toString();
+
+    });
+    */
 	/*
     mySocket.on('updateall', function(object) {
         console.log("update: " + object.ob.usersobject);
