@@ -17,6 +17,7 @@
     "angular-animate": "^1.6.0",
     "angular-ui-bootstrap": "*",
     "bootstrap": "^3.3.7",
-    "socket.io-client": "^1.7.2"
+    "socket.io-client": "^1.7.2",
+    "vertx3-eventbus-client": "^3.3.3"
   }
 }

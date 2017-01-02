@@ -25,8 +25,15 @@ form button.message { width: 8.8%; background: rgb(130, 224, 255); border: none;
 	padding:0;
 }
 
+.row-eq-height{
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
 .chatBox{
-	height:45%;
+	height:50%;
 	overflow:scroll; 
 	overflow-wrap: break-word;
 	overflow-x:hidden; 

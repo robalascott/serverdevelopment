@@ -1,10 +1,10 @@
 <!-- Container: Got margin and stuff, Container-fluid: fill screen -->
 <div class="container-fluid">
 	<h3 class="text-center">Welcome to AwesomeChat {{name}}!</h3>
-	<div class="row">
-		<div class="col-md-4 col-xs-4 col-sm-4 col-md-offset-3 col-xs-offset-3 col-sm-offset-3" style="margin-right:0;padding-right: 0;">
+	<div class="row row-eq-height">
+		<div class="col-md-4 col-xs-4 col-sm-4 col-md-offset-3 col-xs-offset-3 col-sm-offset-3" style="margin-right:0;padding-right: 0;display:flex;">
 			<div class="containerLayout chatContainer" style="padding-right: 0;margin-right: 0;">
-				<h6 class="text-center header-text">Talking in {{room}}</h6>
+				<h6 style="top:0;"class="text-center header-text">Talking in {{room}}</h6>
 				<div class="chatBox">
 					<div ng-repeat="message in messages" >
 						{{message.room}}:{{message.user}}: {{message.message}}
@@ -14,19 +14,20 @@
 					<form class="input-group" ng-submit="sendMessage()">
 			      		<input class="form-control" type="text" ng-model="message" autocomplete="off" />
 			      		<span class="input-group-btn"> 
-				      		<button class="btn btn-primary" type="button" style="margin-left:2;">Send</button>
+				      		<button class="btn btn-primary" type="submit" style="margin-left:2;">Send</button>
 		    		  	</span>
 				    </form>
 				</div>	
 			</div>
 		</div>
-		<div class="col-md-2 col-xs-2 col-sm-2 col-md-offset-7 col-sm-offset-7 col-xs-offset-7" style="margin-left:0;padding-left: 0;">
-			<div class="containerLayout chatContainer" style="margin-left: 3;padding-left: 0;height:60%;">
-				<div style="height:30%">
+		<div class="col-md-2 col-xs-2 col-sm-2 col-md-offset-7 col-sm-offset-7 col-xs-offset-7" style="margin-left:0;padding-left: 0;display:flex;flex-wrap: wrap;">
+			<div class="containerLayout chatContainer" style="margin-left: 3;padding-left: 0; top:0; bottom:0;display:flex; flex:1;flex-direction:column;">
+				<div style="width:100%;">
 					<h6 class="text-center header-text">Friends Online</h6>
 					<h6>--Search Function--</h6>
 				</div>
-				<div class="chatBox" style="height:70%;">
+				<div class="chatBox" style="padding:0;bottom:0;">
+					<p>Some friend</p>
 					<table>
 						<tr ng-repeat="friends in friendsList">
 							<td>{{friends}}</td>

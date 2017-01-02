@@ -7,9 +7,23 @@ app.controller('loginController', [ '$scope', 'Auth', 'mySocket', '$q', '$timeou
 	  $scope.login = function () {
 		
 		// Send provided user credentials
-		mySocket.emit("authenticate", {command: "login", user: $scope.credentials.username, pass: $scope.credentials.password});
+		// mySocket.emit("authenticate", {command: "login", user: $scope.credentials.username, pass: $scope.credentials.password});
+		  if (mySocket.readyState == WebSocket.OPEN) {
+			   console.log("Sending hej");
+			    var credentials = {type: "authentication", username: $scope.credentials.username, password: $scope.credentials.password};
+	            mySocket.send(JSON.stringify(credentials));
+		  }
+		  /*
+		  mySocket.publish("chat.to.server", "Hej");
+			console.log("Req login");
+			var credentials = {type: "authentication", username: $scope.credentials.username, password: $scope.credentials.password};
+			*/
+			
+			//mySocket.send(JSON.stringify(credentials));
+		
+		
 		// Then wait for server response
-		var promise = waitforServerResponse($q, $timeout, Auth);
+		var promise = waitforServerResponse($q, $timeout, Auth, mySocket);
 		promise.then(function(){
 			//If successfull
 			var user = {
@@ -18,8 +32,8 @@ app.controller('loginController', [ '$scope', 'Auth', 'mySocket', '$q', '$timeou
 			console.log("LoginController: Authenticated: " + Auth.isLoggedIn());
 			console.log("Setting user");
 			Auth.setUser(user)
-			mySocket.emit('updateall');
-            waitfordata($q,$rootScope);
+			//mySocket.emit('updateall');
+            //waitfordata($q,$rootScope);
 
 		}, function(reason){
 			//If auth failed

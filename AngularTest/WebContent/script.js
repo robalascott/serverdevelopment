@@ -5,6 +5,23 @@ var app = angular.module('myApp', [
 	'ui.bootstrap',
 ]).factory('mySocket', function (socketFactory) {
 	
+	var mySocket = new WebSocket('ws://127.0.0.1:1337/');
+
+    mySocket.onopen = function (event) {
+        console.log("Open!");
+    };
+	
+	//var mySocket = new EventBus("http://127.0.0.1:1337/eventbus/");
+	 //var mySocket = new SockJS('http://127.0.0.1:1337/eventbus/');
+	 
+	/*
+	 mySocket.onopen = function() {
+	     console.log('open');
+	 };
+	 */
+	 return mySocket;
+	 
+	/*
 	// Create the IO-Socket
 	var myIoSocket = io.connect('http://127.0.0.1:1337/');
 
@@ -13,6 +30,7 @@ var app = angular.module('myApp', [
 	  });
 
 	  return mySocket;
+	*/
 });
 
 //Simple Service to change title (and give me better understanding)
@@ -72,7 +90,7 @@ app.config(['$routeProvider', '$locationProvider', function($routeProvider, $loc
 	  });
 	  $routeProvider.when('/home', {
 	    templateUrl: 'home.html',
-	    controller: 'myCtrl',
+	    controller: 'chatController',
 	  });
 	  $routeProvider.when('/register', {
 		    templateUrl: 'register.html',
@@ -126,8 +144,10 @@ app.controller('mainCtrl', ['$scope', 'Auth', '$location', "Page", "mySocket", f
 	// If we were Authenticated and now we are not
 	if(!authenticated && previouslyAuthenticated) {
 		console.log("Disconnect");
-		mySocket.disconnect();
-		mySocket.connect("http://127.0.0.1:1337/");
+		// You can create/define close-event to inform server that it was intended
+		mySocket.onclose = function(){};
+		mySocket.close();
+		mySocket = new WebSocket('ws://127.0.0.1:1337/');
 		$location.path('/login');
 	}
 	
@@ -140,98 +160,29 @@ app.controller('mainCtrl', ['$scope', 'Auth', '$location', "Page", "mySocket", f
 	}, true);
 }]);
 
-// Chat Controller
-// Current Experiment, Apperently the [] are to prevent minification to break the code (TODO: read about it and ng-annotate)
-app.controller('myCtrl', ["$scope", "mySocket", "Page", "Auth","$rootScope", function($scope, mySocket, Page, Auth,$rootScope) {
-	
-	$scope.messages = [];
-    $scope.friendsList = $rootScope.name;
-	$scope.Page = Page;
-	$scope.name = Auth.getDisplayName();
-	$scope.activeRoom = "General";
-	Page.setTitle("Lets Chat");
-	console.log("In myCtrl");
-
-
-
-
-	mySocket.on('send:message', function(data) {
-		console.log("Got message: " + data.text.toString() + " from: " + data.user.toString());
-		
-		if(data.room){
-			$scope.$apply(function() {
-				$scope.messages.push({user: data.user, message: data.text, room: data.room});
-			});
-		}else{
-			$scope.$apply(function() {
-				$scope.messages.push({user: data.user, message: data.text, room: "General"});
-			});
-		}
-	});
-    mySocket.on('updateall', function(object) {
-        console.log("update: " + object.ob.usersobject);
-        $scope.$apply(function() {
-            $rootScope.name = [];
-            var temp = object.ob.usersobject[0];
-            if (temp != null) {
-                for (var key in temp) {
-                    if (temp.hasOwnProperty(key)) {
-                        $rootScope.name.push(temp[key]);
-                    }
-                }
-            }
-        });
-        $scope.friendsList = $rootScope.name;
-    });
-
-
-    // The user click send
-	$scope.sendMessage = function () {
-		console.log("Called SendMessage: " + $scope.message);
-		  event.preventDefault();
-		  if ($scope.message) {
-			  var changeRoom = "/change "
-			  if(($scope.message.substring(0, changeRoom.length) == changeRoom)){
-				  console.log("User want to change room");
-				  var tmp = $scope.message.substring(changeRoom.length);
-				  console.log("Want to change room to: " + tmp);
-				  // Should probably check if exist/allowed
-				  $scope.activeRoom = tmp;
-				  //Should check/handle strange/invalid input
-			  }else{
-				  console.log("Sending text: " + $scope.message + "to room " + $scope.activeRoom);
-		        	
-			    	mySocket.emit('send:message', {
-			    		message: $scope.message,
-			    		room: $scope.activeRoom
-			    	});
-			  }
-			  $scope.message = '';
-		  }
-	}
-}])
 
 //TODO: Is this an acceptable solution? Removing the listener after getting response? Was accedently creating a new 
 // listener every call before, quickly resulted in a bunch of them
-function waitforServerResponse($q, $timeout, Auth){
+function waitforServerResponse($q, $timeout, Auth, mySocket){
     return $q(function(resolve, reject){
 		var timeoutPromise = $timeout(function(){
 		  console.log("Rejecting: timeout");
 		  reject("Timeout");
 		}, 5000);
-  
-		mySocket.on('authenticate', function(data) {
-			console.log("Auth reply: " + status);
-			if(data.status === "success"){
+		console.log("in wait");
+		mySocket.onmessage = function(data) {
+			var message = JSON.parse(data.data);
+			console.log("Waiting for server listener got message of type: " + message.type);
+			console.log("Auth reply: " + message.status);
+			if(message.status === "success"){
 				$timeout.cancel(timeoutPromise);
-				mySocket.removeAllListeners("authenticate");
+				//mySocket.removeAllListeners;
 				resolve("Correct");
 			}else{
 				$timeout.cancel(timeoutPromise);
-				mySocket.removeAllListeners("authenticate");
 				reject("Denied");
 			}
-		});
+		};
 	});
 }
 
