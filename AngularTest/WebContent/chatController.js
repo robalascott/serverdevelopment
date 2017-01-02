@@ -7,7 +7,7 @@ app.controller('chatController', ["$scope", "mySocket", "Page", "Auth","$rootSco
     $scope.activeRooms = [];
 	$scope.Page = Page;
 	$scope.name = Auth.getDisplayName();
-	$scope.activeRoom = "General";
+	$scope.activeRoom = "thing";
 	Page.setTitle("Lets Chat");
 	console.log("In chatController");
 	
@@ -27,6 +27,11 @@ app.controller('chatController', ["$scope", "mySocket", "Page", "Auth","$rootSco
 					});
 				}
 				break;
+            case "changeroom":
+                console.log("changeroom" + message.data);
+                $scope.activeRoom = message.data;
+                break;
+
 			case "info":
 				// Add changeroom-check
 				console.log("update: " + message.ob.usersobject);

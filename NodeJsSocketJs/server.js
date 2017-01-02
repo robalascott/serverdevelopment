@@ -8,14 +8,12 @@ var config = require("./libs/config.js");
 var mongojs = require('mongojs');
 var dbtest = mongojs('NodeTest',['users']);
 var helper = require('./libs/helper.js');
+/*User Handler*/
 var userslist = [];
-var activeRooms = [];
-var sockjs = require('sockjs');
+var roomslist =['General','Java'];
+
+
 var WebSocketServer = require('websocket').server;
-
-var userslist = [];
-var activeRooms = [];
-
 console.log('Server running at http://127.0.0.1:1337/');
 http.listen(1337, function() { });
 
@@ -37,10 +35,10 @@ function authenticate(connection, data){
 							if(authConfirmed){
 								console.log("Setting authenticated to true");
 								connection.authenticated = true;
+                                resolve("Success!");
 								connection.username = message.username;
-								userslist.push(connection.username);
-								console.log(userslist)
-								resolve("Success!");
+                                connection.currentroom = roomslist[0];
+                                userslist.push(connection);
 							}else
 								reject("Denied: Incorrect Credentials");
 						});
@@ -100,7 +98,7 @@ function processMessage(connection, data){
 				}
 				break;
 			case "message":
-				helper.sendAll(connection, message.text);
+				helper.sendAll(connection, message.text,userslist);
 				break;
 			default:
 				console.log("Unrecognized message type");
@@ -116,7 +114,7 @@ function processMessage(connection, data){
     */
 	/*
 		console.log("User msg: " + data.message);
-		
+
 		//TODO: Error handling
 		var joinCommand = "/join ";
 		if((data.message.substring(0, joinCommand.length) == joinCommand)){
@@ -140,7 +138,7 @@ function processMessage(connection, data){
 			//Sends to general chat
 			helper.sendAll(socket,data);
 		}
-	
+
 	// On user-disconnect, clean-up
 	socket.on("disconnect", function() {
 		console.log(socket.username+ " disconnected");
@@ -160,7 +158,7 @@ wsServer.on('request', function(request) {
     var connection = request.accept(null, request.origin);
     
     // The currently connected users name
-    connection.username = "zulu";
+   // connection.username = "zulu";
     connection.authenticated = false;
 	// Keep connection alive untill we decide otherwise
     
