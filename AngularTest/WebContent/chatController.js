@@ -4,7 +4,7 @@ app.controller('chatController', ["$scope", "mySocket", "Page", "Auth","$rootSco
 	
 	$scope.messages = [];
     $scope.friendsList = $rootScope.name;
-    $scope.activeRooms = [];
+    $scope.activeRooms = $rootScope.rooms;
 	$scope.Page = Page;
 	$scope.name = Auth.getDisplayName();
 	$scope.activeRoom = "thing";
@@ -28,25 +28,28 @@ app.controller('chatController', ["$scope", "mySocket", "Page", "Auth","$rootSco
 				}
 				break;
             case "changeroom":
-                console.log("changeroom" + message.data);
-                $scope.activeRoom = message.data;
+            	if(message.status === "OK"){
+	                console.log("changeroom " + message.room);
+	                $scope.$apply(function() {
+	                	$scope.activeRoom = message.room;
+			        });
+            	}else{
+            		console.log("Not allowed");
+            	}
                 break;
-
-			case "info":
+			case "updateUsersConnectedList":
+				console.log(message.userList[0]);
+				console.log("Got listupdate (Items: " + message.userList.length + ")");
 				// Add changeroom-check
-				console.log("update: " + message.ob.usersobject);
 		        $scope.$apply(function() {
-		            $rootScope.name = [];
-		            var temp = message.ob.usersobject[0];
-		            if (temp != null) {
-		                for (var key in temp) {
-		                    if (temp.hasOwnProperty(key)) {
-		                        $rootScope.name.push(temp[key]);
-		                    }
-		                }
-		            }
+		            $scope.friendsList = message.userList;
 		        });
-		        $scope.friendsList = $rootScope.name;
+				break;
+			case "updateRooms":
+				console.log("Room update");
+				$scope.$apply(function() {
+			            $scope.activeRooms = message.roomList;
+		        });
 				break;
 			default: 
 				// Ignore message
@@ -99,5 +102,16 @@ app.controller('chatController', ["$scope", "mySocket", "Page", "Auth","$rootSco
 			  }
 			  $scope.message = '';
 		  }
+	}
+	
+	$scope.enterGroup = function(group){
+		console.log("Want to enter group: " + group);
+		mySocket.send(JSON.stringify({type: "command", command: "changeRoom", room: group}));
+	}
+	
+	$scope.createGroup = function(){
+		console.log("Want to create group: " + $scope.newGroup);
+		mySocket.send(JSON.stringify({type: "command", command: "createRoom", room: $scope.newGroup}));
+		$scope.newGroup = '';
 	}
 }])

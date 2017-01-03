@@ -2,7 +2,32 @@
 <div class="container-fluid">
 	<h3 class="text-center">Welcome to AwesomeChat {{name}}!</h3>
 	<div class="row row-eq-height">
-		<div class="col-md-4 col-xs-4 col-sm-4 col-md-offset-3 col-xs-offset-3 col-sm-offset-3" style="margin-right:0;padding-right: 0;display:flex;">
+		<div class="col-md-2 col-xs-2 col-sm-2 col-md-offset-2 col-sm-offset-2 col-xs-offset-2" style="margin-right:0;padding-right: 0;display:flex;flex-wrap: wrap;">
+			<div class="containerLayout chatContainer" style="margin-right: 3;padding-left: 0; top:0; bottom:0;display:flex; flex:1;flex-direction:column;">
+				<div style="width:100%;">
+					<h6 class="text-center header-text">Groups</h6>
+					<h6>--Search Function--</h6>
+				</div>
+				<div class="chatBox" style="padding:0;bottom:0;">
+					<table>
+						<tr ng-repeat="group in activeRooms">
+							<td>
+								<a class="text-center" ng-href='#here' ng-click='enterGroup(group)'>{{group}}</a>
+							</td>
+						</tr>
+					</table>
+				</div>
+				<div class="form-group" style="">
+					<form class="input-group" ng-submit="createGroup()">
+			      		<input class="form-control" type="text" ng-model="newGroup" autocomplete="off" />
+			      		<span class="input-group-btn"> 
+				      		<button class="btn btn-primary" type="submit" style="margin-left:2;">Create Group</button>
+		    		  	</span>
+				    </form>
+				</div>	
+			</div>
+		</div>
+		<div class="col-md-4 col-xs-4 col-sm-4 col-md-offset-4 col-xs-offset-4 col-sm-offset-4" style="margin-left:0;padding-left:0;margin-right:0;padding-right: 0;display:flex;">
 			<div class="containerLayout chatContainer" style="padding-right: 0;margin-right: 0;">
 				<h6 style="top:0;"class="text-center header-text">Talking in {{activeRoom}}</h6>
 				<div class="chatBox">
@@ -20,16 +45,16 @@
 				</div>	
 			</div>
 		</div>
-		<div class="col-md-2 col-xs-2 col-sm-2 col-md-offset-7 col-sm-offset-7 col-xs-offset-7" style="margin-left:0;padding-left: 0;display:flex;flex-wrap: wrap;">
+		<div class="col-md-2 col-xs-2 col-sm-2 col-md-offset-8 col-sm-offset-8 col-xs-offset-8" style="margin-left:0;padding-left: 0;display:flex;flex-wrap: wrap;">
 			<div class="containerLayout chatContainer" style="margin-left: 3;padding-left: 0; top:0; bottom:0;display:flex; flex:1;flex-direction:column;">
 				<div style="width:100%;">
 					<h6 class="text-center header-text">Friends Online</h6>
 					<h6>--Search Function--</h6>
 				</div>
 				<div class="chatBox" style="padding:0;bottom:0;">
-					<p>Some friend</p>
 					<table>
-						<tr ng-repeat="friends in friendsList">
+						<!-- Track by $index allows duplicates (not sure if we want that or not) -->
+						<tr ng-repeat="friends in friendsList track by $index">
 							<td>{{friends}}</td>
 						</tr>
 					</table>

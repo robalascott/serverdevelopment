@@ -105,6 +105,7 @@ app.run(["$rootScope", "$location", "Auth", function($rootScope, $location, Auth
 	console.log("In run");
 	console.log($location.host());
 	$rootScope.name = [];
+	$rootScope.rooms = [];
 	$rootScope.$on("$locationChangeStart", function(event) {
 		console.log('Running Auth, path = ' + $location.path());
 		if (!Auth.isLoggedIn()) {
@@ -167,7 +168,7 @@ app.controller('mainCtrl', ['$scope', 'Auth', '$location', "Page", "mySocket", f
 
 //TODO: Is this an acceptable solution? Removing the listener after getting response? Was accedently creating a new 
 // listener every call before, quickly resulted in a bunch of them
-function waitforServerResponse($q, $timeout, Auth, mySocket){
+function waitforServerResponse($q, $timeout, Auth, mySocket, $rootScope){
     return $q(function(resolve, reject){
 		var timeoutPromise = $timeout(function(){
 		  console.log("Rejecting: timeout");
@@ -176,15 +177,18 @@ function waitforServerResponse($q, $timeout, Auth, mySocket){
 		console.log("in wait");
 		mySocket.onmessage = function(data) {
 			var message = JSON.parse(data.data);
-			console.log("Waiting for server listener got message of type: " + message.type);
-			console.log("Auth reply: " + message.status);
-			if(message.status === "success"){
-				$timeout.cancel(timeoutPromise);
-				//mySocket.removeAllListeners;
-				resolve("Correct");
-			}else{
-				$timeout.cancel(timeoutPromise);
-				reject("Denied");
+			if(message.type === "authentication"){
+				console.log("Auth reply: " + message.status);
+				$rootScope.name = message.userList;
+				console.log(message.roomList);
+				$rootScope.rooms = message.roomList;
+				if(message.status === "success"){
+					$timeout.cancel(timeoutPromise);
+					resolve("Correct");
+				}else{
+					$timeout.cancel(timeoutPromise);
+					reject("Denied");
+				}
 			}
 		};
 	});

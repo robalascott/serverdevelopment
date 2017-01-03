@@ -74,7 +74,7 @@ function authenticate(connection, data){
 });
 	authPromise.then(function(){
 		// We are authenticated, inform the user
-		helper.authmsg(connection);
+		helper.authmsg(connection, userslist, roomslist);
 	}, function(reason){
 		// The promise was rejected, inform the user
 		connection.send(JSON.stringify({status: reason.toString()}));
@@ -95,7 +95,31 @@ function processMessage(connection, data){
 				switch(message.command){
 					case "join":
 						break;
-					case "create":
+					case "createRoom":
+						if(roomslist.indexOf(message.room) === -1){
+							console.log("User created room " + message.room);
+							// Might want to check if valid room
+							roomslist.push(message.room);
+							connection.currentroom = message.room;
+							// Inform ok?
+							helper.sendRoomChanged(connection);
+							helper.updateRooms(userslist, roomslist);
+							
+						}else{
+							console.log("Room does not exist");
+						}
+						break;
+					case "changeRoom":
+						if(roomslist.indexOf(message.room) != -1){
+							console.log("User changed room to " + message.room);
+							// If allowed or w/e set current room
+							connection.currentroom = message.room;
+							// Inform ok?
+							helper.sendRoomChanged(connection);
+							
+						}else{
+							console.log("Room does not exist");
+						}
 						break;
 					default:
 						console.log("Unrecognized command");
@@ -111,7 +135,7 @@ function processMessage(connection, data){
 				
 				// Clear information about/concerning the authenticated user
 				helper.splicelist(connection, userslist);
-				helper.updateexit(connection, userslist);
+				helper.updateConnectedUsers(userslist);
 				connection.username = null;
 				connection.authenticated = false;
 				
@@ -219,9 +243,9 @@ wsServer.on('request', function(request) {
                 if(connection.username){
                 	// Remove data concerning the user
                     helper.splicelist(connection, userslist);
-                    helper.updateexit(connection, userslist);
+                    helper.updateConnectedUsers(userslist);
                     // Inform other users
-                    helper.sendAll(connection, {type: "info", user: connection.username, status: "disconnected"});
+                    //helper.sendAll(connection, {type: "info", user: connection.username, status: "disconnected"});
                 };
 			});
 			connection.on('error', function(data) {
