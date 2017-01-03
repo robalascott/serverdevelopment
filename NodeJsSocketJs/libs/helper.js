@@ -33,6 +33,16 @@ var self = {
     sendRoomChanged : function (socket) {
     	socket.send(JSON.stringify({type: "changeroom", status: "OK", room: socket.currentroom}))
     },
+    init:function(socket, socketList, rooms){
+    	connectedUsersByName = [];
+    	for(i = 0; i < socketList.length; ++i){
+	    		console.log("Index " + i + ": " + socketList[i].username);
+	    		connectedUsersByName.push(socketList[i].username);
+    	}
+    	console.log("Sedning init");
+    	message = {type: "init", userList: connectedUsersByName, roomList: rooms, currentRoom: socket.currentroom}
+    	socket.send(JSON.stringify(message));
+    },
     // Inform the user that the authentication was successfull and include Initiation Data
     authmsg:function (socket, socketList, rooms) {
     	 console.log("Sending authentication status: " + "success");
@@ -43,7 +53,8 @@ var self = {
 	    		connectedUsersByName.push(socketList[i].username);
     	}
     	// Send Authentication successfull message
-    	var message = {type: "authentication", status: "success", name: socket.username, userList: connectedUsersByName, roomList: rooms}
+    	var message = {type: "authentication", status: "success", name: socket.username}
+    	
         socket.send(JSON.stringify(message));
     	
     	// Update all connected Users with the newly connected user

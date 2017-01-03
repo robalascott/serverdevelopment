@@ -1,29 +1,28 @@
 // Chat Controller
 // Current Experiment, Apperently the [] are to prevent minification to break the code (TODO: read about it and ng-annotate)
-app.controller('chatController', ["$scope", "mySocket", "Page", "Auth","$rootScope", function($scope, mySocket, Page, Auth,$rootScope) {
+app.controller('chatController', ["$scope", "mySocket", "Page", "Auth", function($scope, mySocket, Page, Auth) {
 	
+	// Variables
 	$scope.messages = [];
-	// TODO: Remove rootscope (replace with init-request)
-    $scope.friendsList = $rootScope.name;
-    $scope.activeRooms = $rootScope.rooms;
-	$scope.Page = Page;
+    $scope.friendsList = [];
+    $scope.activeRooms = [];
+    $scope.activeRoom;
 	$scope.name = Auth.getDisplayName();
-	$scope.activeRoom;
+	$scope.Page = Page;
 	Page.setTitle("Lets Chat");
-	console.log("In chatController");
 
-	/* // Should request init of groups and friendslist
-	if($scope.friendsList<=0){
-		console.log('empty list');
-        mySocket.send(JSON.stringify({type: "command", command: "update", room: 'General'}));
-	}*/
+	// Request data from server
+    mySocket.send(JSON.stringify({type: "command", command: "init"}));
 
+    // Add listener/handler for messages from server
 	mySocket.addEventListener("message", function(data) {
 		var message = JSON.parse(data.data);
 		
+		// Proccess message according to type
 		switch(message.type){
 			case "message":
-				console.log("chatController: message under processing");
+				console.log("Got a message from server: (Room: " + message.room + ")" + "(From: " + message.user + " Message: " + message.text + ")");
+				// TODO: Only create room messages got attribute room (All others are undefined), not really a problem since we dont use it
 				if(message.room){
 					$scope.$apply(function() {
 					    console.log('room = ' +message.room);
@@ -54,14 +53,16 @@ app.controller('chatController', ["$scope", "mySocket", "Page", "Auth","$rootSco
 		            $scope.friendsList = message.userList;
 		        });
 				break;
-			case "updateRooms":
-				console.log("Room update");
+			case "init":
+				// Requested update from server
 				$scope.$apply(function() {
 			            $scope.activeRooms = message.roomList;
+			            $scope.friendsList = message.userList;
+			            $scope.activeRoom = message.currentRoom;
 		        });
 				break;
 			default: 
-				// Ignore message
+				// Ignore message (type not handled by this listener)
 		}
 		
 	});

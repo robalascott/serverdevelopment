@@ -104,8 +104,6 @@ app.config(['$routeProvider', '$locationProvider', function($routeProvider, $loc
 app.run(["$rootScope", "$location", "Auth", function($rootScope, $location, Auth) {
 	console.log("In run");
 	console.log($location.host());
-	$rootScope.name = [];
-	$rootScope.rooms = [];
 	$rootScope.$on("$locationChangeStart", function(event) {
 		console.log('Running Auth, path = ' + $location.path());
 		if (!Auth.isLoggedIn()) {
@@ -142,24 +140,24 @@ app.controller('mainCtrl', ['$scope', 'Auth', '$location', "Page", "mySocket", f
 	
 	// If we were Authenticated and now we are not
 	if(!authenticated && previouslyAuthenticated) {
-		console.log("Disconnect");
-		// You can create/define close-event to inform server that it was intended
-		/*
-		mySocket.get().onclose = function(){};
-		mySocket.get().send()
-		mySocket.get().close();
-		mySocket.reload();
-		*/ 
+		console.log("No longer authenticated, sending logout to server");
+		
+		// TODO: You can create/define close-event to inform server that it was intended
+		//mySocket.onclose = function(){};
+
+		// Inform server that we intend to logout
 		var logoutReq = {type: "logout"};
 		mySocket.send(JSON.stringify(logoutReq));
 		
+		// TODO: Consider waiting for a reply (If we want to know we logged out successfully)
+		// Redirect to login-page
 		$location.path('/login');
 	}
 	
     if(authenticated) {
-    	console.log("Connect");
+    	console.log("User Authenticated");
+    	// Redirect to Home
     	$location.path('/main');
-    	//Do something when the user is connected
     }
 
 	}, true);
@@ -168,7 +166,7 @@ app.controller('mainCtrl', ['$scope', 'Auth', '$location', "Page", "mySocket", f
 
 //TODO: Is this an acceptable solution? Removing the listener after getting response? Was accedently creating a new 
 // listener every call before, quickly resulted in a bunch of them
-function waitforServerResponse($q, $timeout, Auth, mySocket, $rootScope){
+function waitforServerResponse($q, $timeout, Auth, mySocket){
     return $q(function(resolve, reject){
 		var timeoutPromise = $timeout(function(){
 		  console.log("Rejecting: timeout");
@@ -179,9 +177,6 @@ function waitforServerResponse($q, $timeout, Auth, mySocket, $rootScope){
 			var message = JSON.parse(data.data);
 			if(message.type === "authentication"){
 				console.log("Auth reply: " + message.status);
-				$rootScope.name = message.userList;
-				console.log(message.roomList);
-				$rootScope.rooms = message.roomList;
 				if(message.status === "success"){
 					$timeout.cancel(timeoutPromise);
 					resolve("Correct");
@@ -193,35 +188,3 @@ function waitforServerResponse($q, $timeout, Auth, mySocket, $rootScope){
 		};
 	});
 }
-
-app.directive('myDirective', function($timeout) {
-    return {
-        restrict: 'A',
-        link: function(scope, element) {
-        	scope.myStyle = {'background':'black'};
-            scope.height = element.prop('offsetHeight').toString().trim();
-            scope.width = element.prop('offsetWidth');
-        }
-    };
-});
-
-function waitfordata($q,$rootScope){
-    return $q(function(resolve){
-       console.log("updateall: outer shell" );
-        mySocket.on('updateall', function(object) {
-            console.log("update: " + object.ob.usersobject);
-            $rootScope.name = [];
-            var temp = object.ob.usersobject[0];
-            if(temp!=null){
-                console.log("updateall: outer shell" );
-                for (var key in temp) {
-                    if (temp.hasOwnProperty(key)) {
-                        $rootScope.name.push(temp[key]);
-                    }
-                }
-            }
-            resolve(true);
-        });
-        resolve(false);
-    });
-};

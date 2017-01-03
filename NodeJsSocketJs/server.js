@@ -125,9 +125,9 @@ function processMessage(connection, data){
 							console.log("Room does not exist");
 						}
 						break;
-                    case "update":
+                    case "init":
                     	// TODO: Change to init (remove rootscope)
-                      	helper.updatelist(connection,userslist);
+                      	helper.init(connection,userslist,roomslist);
                         break;
 					default:
 						console.log("Unrecognized command");
