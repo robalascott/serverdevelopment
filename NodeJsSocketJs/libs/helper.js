@@ -27,7 +27,7 @@ var self = {
     	console.log("BroadCasting message");
             for (var i in userlist) {
                 if(userlist[i].currentroom == socket.currentroom){
-                    userlist[i].send(JSON.stringify({type: "message", text: message, user: socket.username}));
+                    userlist[i].send(JSON.stringify({type: "message", text: message, user: socket.username,room: socket.currentroom}));
                 }
             }
     },
@@ -44,8 +44,6 @@ var self = {
              //console.log(docs)
              assert.equal(err, null);
              if (docs) {
-               //  console.log("Found the following records");
-               //  console.log(docs);
                  callback(false);
              } else {
                  //Create user
@@ -70,7 +68,20 @@ var self = {
             usersobject:[]
         };
         object['usersobject'].push(userslist);
-        socket.send(JSON.stringify({type: "info", ob : object}));
+       // socket.send(JSON.stringify({type: "info", ob : object}));
+    },
+    checkroom:function(socket,roomlist,message){
+        console.log("create Room " + message.room);
+        if(roomlist.indexOf(message.room)<0){
+            socket.currentroom = message.room;
+            roomlist.push(message.room);
+            console.log(roomlist);
+            socket.send(JSON.stringify({type: "changeroom", msg: socket.currentroom}));
+            socket.send(JSON.stringify({type: "clearlist"}));
+            socket.send(JSON.stringify({type: "message", text: 'Created new Room' , user: 'System',room:socket.currentroom}));
+        }else{
+            socket.send(JSON.stringify({type: "message", text: 'Failed to Create new Room' , user: 'System',room:socket.currentroom}));
+        }
     },
     updatestart:function(socket,userslist) {
         var object ={
@@ -79,6 +90,23 @@ var self = {
         object['usersobject'].push(userslist);
         socket.emit('updateall',{ob:object});
         socket.broadcast.emit('updateall',{ob:object});
+    },
+    updatelist:function(socket,userslist) {
+        console.log('Update' + socket.currentroom );
+        /*Build list */
+        var temp = [];
+        for (var i in userslist) {
+            if(userslist[i].currentroom == socket.currentroom){
+              temp.push(userslist[i].username);
+            }
+        }
+        console.log(temp);
+        /*Send list */
+        for (var i in userslist) {
+            if(userslist[i].currentroom == socket.currentroom){
+              userslist[i].send(JSON.stringify({type: "update", list: temp,room:socket.currentroom}));
+            }
+        }
     }
 
 

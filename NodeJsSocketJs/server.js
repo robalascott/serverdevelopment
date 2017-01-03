@@ -96,7 +96,11 @@ function processMessage(connection, data){
 					case "join":
 						break;
 					case "create":
+                        helper.checkroom(connection,roomslist,message);
 						break;
+                    case "update":
+                       helper.updatelist(connection,userslist);
+                        break;
 					default:
 						console.log("Unrecognized command");
 				}
@@ -221,7 +225,8 @@ wsServer.on('request', function(request) {
                     helper.splicelist(connection, userslist);
                     helper.updateexit(connection, userslist);
                     // Inform other users
-                    helper.sendAll(connection, {type: "info", user: connection.username, status: "disconnected"});
+                    helper.updatelist(connection,userslist);
+                    connection.currentroom='';
                 };
 			});
 			connection.on('error', function(data) {
