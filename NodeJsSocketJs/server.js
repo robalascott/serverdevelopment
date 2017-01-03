@@ -100,7 +100,7 @@ function processMessage(connection, data){
 							// If allowed or w/e set current room
 							connection.currentroom = message.room;
 							// Inform ok?
-							helper.sendRoomChanged(connection);
+							helper.sendRoomChanged(connection, userslist);
 							
 						}else{
 							console.log("Room does not exist");

@@ -62,7 +62,9 @@ app.controller('chatController', ["$scope", "mySocket", "Page", "Auth", function
 		        });
 				break;
 			case "updateRooms":
-				$scope.activeRooms = message.roomList;
+				$scope.$apply(function() {
+		            $scope.activeRooms = message.roomList;
+				});
 				break;
 			default: 
 				// Ignore message (type not handled by this listener)

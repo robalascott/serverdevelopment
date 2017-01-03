@@ -25,14 +25,17 @@ var self = {
                 }
             }
     },
-    sendRoomChanged : function (socket) {
+    sendRoomChanged : function (socket, socketList) {
     	socket.send(JSON.stringify({type: "changeroom", status: "OK", room: socket.currentroom}))
+    	this.updateConnectedUsers(socketList);
     },
     init:function(socket, socketList, rooms){
     	connectedUsersByName = [];
-    	for(i = 0; i < socketList.length; ++i){
-	    		console.log("Index " + i + ": " + socketList[i].username);
-	    		connectedUsersByName.push(socketList[i].username);
+    	for(i = 0; i < socketList.length; i++){
+    			if(socketList[i].currentroom === socket.currentroom){
+		    		console.log("Index " + i + ": " + socketList[i].username);
+		    		connectedUsersByName.push(socketList[i].username);
+    			}
     	}
     	console.log("Sedning init");
     	message = {type: "init", userList: connectedUsersByName, roomList: rooms, currentRoom: socket.currentroom}
@@ -57,21 +60,27 @@ var self = {
     },
     // Send an updated list of all connected users by name
     updateConnectedUsers: function(socketList){
-    	connectedUsersByName = [];
-    	// Get username from all connected sockets
-    	for(i = 0; i < socketList.length; i++){
-	    		console.log("Index " + i + ": " + socketList[i].username);
-	    		connectedUsersByName.push(socketList[i].username);
-    	}
+    	// TODO: Figure out better approach, i higly doubt that you should uppdate all users when someone connect/move/or disconnects
     	// Send the uppdated list to all connected sockets
     	for(i = 0; i < socketList.length; i++){
-    			console.log("Sending update to: " + socketList[i].username);
-    			console.log("Updated list: " + connectedUsersByName.toString());
-	    		socketList[i].send(JSON.stringify({type: "updateUsersConnectedList", userList: connectedUsersByName}));
+    		
+    		connectedUsersByName = [];
+        	// Get username from all connected sockets
+        	for(j = 0; j < socketList.length; j++){
+        			if(socketList[j].currentroom === socketList[i].currentroom){
+	    	    		console.log("Index " + j + ": " + socketList[j].username);
+	    	    		connectedUsersByName.push(socketList[j].username);
+        			}
+        	}
+        	
+			console.log("Sending update to: " + socketList[i].username);
+			console.log("Updated list: " + connectedUsersByName.toString());
+    		socketList[i].send(JSON.stringify({type: "updateUsersConnectedList", userList: connectedUsersByName}));
     	}
     },
     updateRooms: function(socketList, rooms){
     	for(i = 0; i < socketList.length; i++){
+    		console.log("Sending room-update to: " + socketList[i].username);
     		socketList[i].send(JSON.stringify({type: "updateRooms", roomList: rooms}));
     	}
     },
@@ -107,7 +116,7 @@ var self = {
             socket.currentroom = message.room;
             roomlist.push(message.room);
             console.log("asdasda: " + roomlist);
-            this.sendRoomChanged(socket);
+            this.sendRoomChanged(socket, userslist);
 			this.updateRooms(userslist, roomlist);
 			socket.send(JSON.stringify({type: "message", text: 'Created new Room' , user: 'System',room:socket.currentroom}));
         }else{
