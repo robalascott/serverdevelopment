@@ -1,6 +1,5 @@
 var app = require('express')();	
 var http = require('http').Server(app);
-var io = require('socket.io')(http);
 var Promise = require('bluebird');
 var assert = require('assert');
 /*Dbase things*/
@@ -11,15 +10,14 @@ var helper = require('./libs/helper.js');
 /*User Handler*/
 var userslist = [];
 var roomslist =['General','Java'];
-
-var WebSocketServer = require('websocket').server;
-console.log('Server running at http://127.0.0.1:1337/');
-http.listen(1337, function() { });
-
 // create the server
+var WebSocketServer = require('websocket').server;
 wsServer = new WebSocketServer({
     httpServer: http
 });
+console.log('Server running at http://127.0.0.1:1337/');
+http.listen(1337, function() { });
+
 
 function authenticate(connection, data){
 	console.log("In authenticate");
@@ -36,11 +34,8 @@ function authenticate(connection, data){
 						console.log("Authmessage recieved: " + message.username + ", " + message.password);
 					    helper.login(dbtest, message.username.toString().trim(), message.password.toString().trim(),userslist, function(authConfirmed) {
 							if(authConfirmed){
-								console.log("Setting authenticated to true");
-								connection.authenticated = true;
-								connection.username = message.username;
-								connection.currentroom = roomslist[0];
-								userslist.push(connection);
+                                connection.authenticated = true;
+							    helper.loginaccept(connection,userslist,roomslist,message);
 								resolve("Success!");
 							}else
 								reject("Denied: Incorrect Credentials");
@@ -98,20 +93,6 @@ function processMessage(connection, data){
 						break;
 					case "createRoom":
 						helper.checkroom(connection, roomslist, message, userslist);
-						/*
-						if(roomslist.indexOf(message.room) === -1){
-							console.log("User created room " + message.room);
-							// Might want to check if valid room
-							roomslist.push(message.room);
-							connection.currentroom = message.room;
-							// Inform ok?
-							helper.sendRoomChanged(connection);
-							helper.updateRooms(userslist, roomslist);
-							
-						}else{
-							console.log("Room already exist");
-						}
-						*/
 						break;
 					case "changeRoom":
 						if(roomslist.indexOf(message.room) != -1){
@@ -127,7 +108,7 @@ function processMessage(connection, data){
 						break;
                     case "update":
                     	// TODO: Change to init (remove rootscope)
-                      	helper.updatelist(connection,userslist);
+                      	//helper.updatelist(connection,userslist);
                         break;
 					default:
 						console.log("Unrecognized command");
@@ -140,15 +121,11 @@ function processMessage(connection, data){
 				// The client wants to logout but remain on the page
 				// Keep socket open for further communication
 				console.log("User wants to logout");
-				
 				// Clear information about/concerning the authenticated user
 				helper.splicelist(connection, userslist);
 				helper.updateConnectedUsers(userslist);
 				connection.username = null;
 				connection.authenticated = false;
-				
-				// We might want to inform user about successfull logout
-				//connection.send(JSON.stringify({type: "authentication", status: "success"}));
 				break;
 			default:
 				console.log("Unrecognized message type");
@@ -164,17 +141,10 @@ wsServer.on('request', function(request) {
 	// We open a connection to the client via a websocket
 	console.log("Someone Connected");
     var connection = request.accept(null, request.origin);
-    
-    // The currently connected users name
-    connection.username = "zulu";
     connection.authenticated = false;
-	// Keep connection alive untill we decide otherwise
-
+	// Keep connection alive until we decide otherwise
 		// Wait for authentication to respond
-		//var authPromise = new Promise(function(resolve, reject){
-    
     		//------------Socket Listeners/Handlers for different events------------//
-    
     		// Message received on socket
 			connection.on('message', function(data) {
 				console.log("Authenticated: " + connection.authenticated);

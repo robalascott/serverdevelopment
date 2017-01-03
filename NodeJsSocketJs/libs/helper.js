@@ -17,11 +17,6 @@ var self = {
             }
         });
 	},
-    setGeneralRoom:function(socket,room) {
-        console.log('generalroom:' + room);
-        socket.send(JSON.stringify({type: "changeroom", msg: room}));
-
-    },
     sendAll:function (socket, message, userlist) {
     	console.log("BroadCasting message");
             for (var i in userlist) {
@@ -107,6 +102,12 @@ var self = {
         }else{
             socket.send(JSON.stringify({type: "message", text: 'Failed to Create new Room' , user: 'System',room:socket.currentroom}));
         }
+    },
+    loginaccept:function (connection,userslist,roomslist,message) {
+        console.log("Setting authenticated to true");
+        connection.username = message.username;
+        connection.currentroom = roomslist[0];
+        userslist.push(connection);
     }
 }
 module.exports = self;
