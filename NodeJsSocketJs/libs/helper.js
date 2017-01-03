@@ -94,6 +94,19 @@ var self = {
         if(i !=-1){
             userslist.splice(i,1);
         }
+    },
+    checkroom:function(socket,roomlist,message, userslist){
+        console.log("create Room " + message.room);
+        if(roomlist.indexOf(message.room)<0){
+            socket.currentroom = message.room;
+            roomlist.push(message.room);
+            console.log("asdasda: " + roomlist);
+            this.sendRoomChanged(socket);
+			this.updateRooms(userslist, roomlist);
+			socket.send(JSON.stringify({type: "message", text: 'Created new Room' , user: 'System',room:socket.currentroom}));
+        }else{
+            socket.send(JSON.stringify({type: "message", text: 'Failed to Create new Room' , user: 'System',room:socket.currentroom}));
+        }
     }
 }
 module.exports = self;
