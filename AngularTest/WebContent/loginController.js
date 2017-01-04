@@ -25,7 +25,7 @@ app.controller('loginController', [ '$scope', 'Auth', 'mySocket', '$q', '$timeou
 		
 		
 		// Then wait for server response
-		var promise = waitforServerResponse($q, $timeout, Auth, mySocket, $rootScope);
+		var promise = waitforServerResponse($q, $timeout, Auth, mySocket);
 		promise.then(function(){
 			//If successfull
 			var user = {
