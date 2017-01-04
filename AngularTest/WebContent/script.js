@@ -174,7 +174,10 @@ function waitforServerResponse($q, $timeout, Auth, mySocket){
 		}, 5000);
 		console.log("in wait");
 		mySocket.onmessage = function(data) {
+			console.log("Got: " + data);
+			console.log("Data: " + data.data);
 			var message = JSON.parse(data.data);
+			console.log("type: " + message.type);
 			if(message.type === "authentication"){
 				console.log("Auth reply: " + message.status);
 				if(message.status === "success"){
