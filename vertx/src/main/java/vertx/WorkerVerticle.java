@@ -31,6 +31,9 @@ public class WorkerVerticle extends AbstractVerticle {
 			
 			switch(message.getString("type")){
 				case "authentication":
+					
+					JsonObject reply = new JsonObject();
+					
 					// Extract data from message
 					username = message.getString("username");
 					password = message.getString("password");
@@ -41,32 +44,37 @@ public class WorkerVerticle extends AbstractVerticle {
 					
 					// Query MongoDb
 					client.findOne("users", query, null, res -> {
-						boolean success = false;
 					  // If the db-query was successful
 					  if (res.succeeded()) {
 						  if(res.result() == null){
-							  // No user found
 							  System.out.println("No user found");
+							  // Should not need this 2 times
+							  vertx.eventBus().send(message.getString("socket"), reply
+									  .put("type", "authentication")
+									  .put("status", "failed")
+									  .toString());
 						  }else{
 							  System.out.println("User found");
-							  success = true;
+							  vertx.eventBus().send(message.getString("socket"), reply
+									  .put("type", "authentication")
+									  .put("status", "success")
+									  .put("name", username)
+									  .toString());
+							  System.out.println("Sending Auth");
+							  vertx.eventBus().send("Auth", reply.clear()
+									  .put("auth", true)
+									  .put("username", username)
+									  .put("socket", message.getString("socket"))
+									  .toString());							  
 						  }
 					  } else {
 						  // Error
+						  vertx.eventBus().send(message.getString("socket"), reply
+								  .put("type", "authentication")
+								  .put("status", "failed")
+								  .toString());
 						  res.cause().printStackTrace();
 					  }
-					  
-					  // The reply to send on websocket
-					  JsonObject reply = new JsonObject();
-					  if(success){
-						  reply.put("type", "authentication");
-						  reply.put("status", "success");
-						  reply.put("name", "Daniel");
-					  }else{
-						  reply.put("type", "authentication");
-						  reply.put("status", "failed");
-					  }				  
-					  event.reply(reply);
 					});
 					break;
 				case "register":
@@ -76,7 +84,7 @@ public class WorkerVerticle extends AbstractVerticle {
 					
 					query = new JsonObject().put("name", username).put("password", password);
 					
-					JsonObject reply = new JsonObject();
+					reply = new JsonObject();
 					
 					// TODO: Db-functions findUser or w/e
 					client.findOne("users", query, null, res -> {
@@ -101,23 +109,25 @@ public class WorkerVerticle extends AbstractVerticle {
 						  client.save("users", newUser, res2 -> {
 	
 							  if (res2.succeeded()) {
-								  System.out.println("Created new user");
-								  reply.put("type", "authentication");
-								  reply.put("status", "success");
-								  reply.put("name", "Daniel");
-								  event.reply(reply);
+								  vertx.eventBus().send(message.getString("socket"), new JsonObject()
+										  .put("type", "authentication")
+										  .put("status", "success")
+										  .put("name", username)
+										  .toString());
 							  } else {
-								  reply.put("type", "authentication");
-								  reply.put("status", "failed");
-							    res.cause().printStackTrace();
+								  vertx.eventBus().send(message.getString("socket"), new JsonObject()
+										  .put("type", "authentication")
+										  .put("status", "failed")
+										  .toString());
+								  res.cause().printStackTrace();
 							  }
 	
 						  });
 					  }else{
-						  reply.put("type", "authentication");
-						  reply.put("status", "failed");
-						  System.out.println("Sending reply back");
-						  event.reply(reply);
+						  vertx.eventBus().send(message.getString("socket"), new JsonObject()
+								  .put("type", "authentication")
+								  .put("status", "failed")
+								  .toString());
 					  }			
 					});
 					break;

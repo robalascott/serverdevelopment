@@ -11,7 +11,7 @@ app.controller('chatController', ["$scope", "mySocket", "Page", "Auth", function
 	$scope.Page = Page;
 	Page.setTitle("Lets Chat");
 
-	// Request data from server
+	// Request data from server (should retry if no reply)
     mySocket.send(JSON.stringify({type: "command", command: "init"}));
 
     // Add listener/handler for messages from server
