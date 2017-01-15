@@ -1,22 +1,37 @@
 package com.kth.todoapp.todoapp;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.content.Intent;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class TodoActivity extends AppCompatActivity {
-    RecycleAdapter adapter;
-    ArrayList<Todo> todolist;
+    private RecyclerView recyclerView ;
+    private TodoAdapter adapter;
+    private List<Todo> todolist= new ArrayList<>();;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,10 +44,26 @@ public class TodoActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent newIntent = new Intent(TodoActivity.this,TodoAddActivity.class);
+                Intent newIntent = new Intent(TodoActivity.this, TodoAddActivity.class);
                 TodoActivity.this.startActivity(newIntent);
             }
         });
+
+        recyclerView = (RecyclerView) findViewById(R.id.recycle_view);
+        adapter = new TodoAdapter(todolist,this);
+        LinearLayoutManager llm = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(llm);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
+        adapter.setOnClick(new TodoAdapter.ItemClickListener (){
+            @Override
+            public void onItemClick(View v, int pos) {
+                String name = todolist.get(pos).getOwner();
+                Toast.makeText(getApplicationContext (),name,Toast.LENGTH_SHORT).show ();
+            }
+        });
+
     }
 
     @Override
@@ -57,42 +88,30 @@ public class TodoActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        database.getReference("Java").addListenerForSingleValueEvent(
+                new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        todolist.clear();
+                        for (DataSnapshot data : dataSnapshot.getChildren()) {
+                            Todo todo = data.getValue(Todo.class);
+                            todolist.add(todo);
+                        }
+                        adapter.notifyDataSetChanged();
+                    }
 
-    private class RecycleAdapter extends RecyclerView.Adapter {
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Log.w("TodoActivity", "getUserError");
+                    }
+                }
 
-        @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-          //  View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.todo_item, parent, false);
-          //  SimpleItemViewHolder pvh = new SimpleItemViewHolder(v);
-           return null;
-            // return pvh;
-        }
 
-        @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            SimpleItemViewHolder viewHolder = (SimpleItemViewHolder) holder;
-            viewHolder.position = position;
-            Todo todo = todolist.get(position);
-           // ((SimpleItemViewHolder) holder).title.setText(todo.getName());
-        }
-
-        @Override
-        public int getItemCount() {
-            return todolist.size();
-        }
-        public final  class SimpleItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-          //  TextView title;
-            public int position;
-            public SimpleItemViewHolder(View itemView) {
-                super(itemView);
-                itemView.setOnClickListener(this);
-            //    title = (TextView) itemView.findViewById(R.id.myTextView);
-            }
-
-            @Override
-            public void onClick(View view) {
-
-            }
-        }
+        );
     }
 }
+
