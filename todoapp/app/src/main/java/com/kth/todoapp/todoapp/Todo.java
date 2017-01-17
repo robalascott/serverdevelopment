@@ -11,8 +11,16 @@ public class Todo implements Serializable {
     private String owner;
     private String message;
     private String date;
+    private String key;
 
-    public void todo(){}
+
+
+    public Todo(){}
+    public Todo(String owner,String message,String date){
+        this.setDate (date);
+        this.setMessage (message);
+        this.setOwner (owner);
+    }
     public String getOwner() {
         return owner;
     }
@@ -56,5 +64,13 @@ public class Todo implements Serializable {
         this.message = null;
         this.owner = null;
         this.date = null;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 }

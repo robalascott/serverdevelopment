@@ -1,20 +1,24 @@
 package com.kth.todoapp.todoapp;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
+import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.*;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Map;
 import java.util.HashMap;
 
@@ -23,10 +27,17 @@ public class TodoAddActivity extends AppCompatActivity {
     EditText message,owner;
     Toolbar toolbar;
     TextView labelOwner,labelMessage;
+    String DatebaseKey;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_todo_add);
+        setContentView(R.layout.activity_todo_add);  Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            DatebaseKey  = bundle.getString("channelkey");
+        }else{
+            Log.i("TodaAdd","Nullpointer");
+        }
 
         UI();
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -52,7 +63,7 @@ public class TodoAddActivity extends AppCompatActivity {
 
         /*Firebase*/
         FirebaseDatabase db = FirebaseDatabase.getInstance();
-        String key = db.getReference("Java").push().getKey();
+        String key = db.getReference(DatebaseKey).push().getKey();
         /*TodoObject*/
         Todo todo = new Todo();
         todo.setOwner(owner.getText().toString());
@@ -62,7 +73,7 @@ public class TodoAddActivity extends AppCompatActivity {
         if(todo.checkValues()){
             Map<String, Object> childUpdates = new HashMap<>();
             childUpdates.put( key, todo.toFireBaseTodo());
-            db.getReference("Java").updateChildren(childUpdates, new DatabaseReference.CompletionListener() {
+            db.getReference(DatebaseKey).updateChildren(childUpdates, new DatabaseReference.CompletionListener() {
                 @Override
                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                     if (databaseError == null) {
@@ -78,12 +89,19 @@ public class TodoAddActivity extends AppCompatActivity {
         }
     }
 
+    @NonNull
     private String buildDate(){
-        Date date = new Date();
-        date.setMonth(datePicker.getMonth());
-        date.setYear(datePicker.getYear());
-        date.setDate(datePicker.getDayOfMonth());
-        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-        return format.format(date);
+        StringBuilder str = new StringBuilder();
+        str.append (datePicker.getDayOfMonth ());
+        if(datePicker.getMonth ()+1 <10){
+            str.append ("/0"+(datePicker.getMonth ()+1));
+        }else{
+            str.append ("/"+(datePicker.getMonth ()+1));
+        }
+        str.append("/"+datePicker.getYear () +" ");
+        String temp = String.valueOf (android.text.format.DateFormat.format(" HH:mm:ss", new java.util.Date()));
+        str.append(temp);
+        return str.toString ();
     }
+
 }
