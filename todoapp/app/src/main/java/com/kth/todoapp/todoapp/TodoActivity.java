@@ -29,6 +29,7 @@ public class TodoActivity extends AppCompatActivity {
     private TodoAdapter adapter;
     private List<Todo> todolist= new ArrayList<>();;
  //   private String channelKey ="todo/nodejs";
+    private String gmail = "robalascott@gmail.com";
     private String channelKey;
 
     @Override
@@ -63,8 +64,6 @@ public class TodoActivity extends AppCompatActivity {
             @Override
             public void onItemClick(View v, int pos) {
                 Alert(pos);
-
-
             }
         });
 
