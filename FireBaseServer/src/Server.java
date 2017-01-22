@@ -93,12 +93,14 @@ public class Server {
 
 	private static void processData(Map<String,Object> user) {
 	    String email = (String) user.get("username");
-	    String message = (String) user.get("groupId");
-	    System.out.println("Someone wants to invite " + email + " Bonus message: " + message);
-	    getUserTokenFromEmail(email, message);
+	    String groupId = (String) user.get("groupId");
+	    String sender = (String) user.get("sender");
+	    String groupName = (String) user.get("groupName");
+	    System.out.println( sender + " wants to invite " + email + " to group: " + groupName + "with id: " + groupId);
+	    getUserTokenFromEmail(email, groupName, sender);
 	}
 	
-	private static void getUserTokenFromEmail(String email, String message){
+	private static void getUserTokenFromEmail(String email, String message, String sender){
 		DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("user_FCMToken");
 		
 		// This is how you write: final Query query = ref.orderByChild("username").equalTo(email);
@@ -119,7 +121,7 @@ public class Server {
                     	System.out.println(child.getValue());
                         String userId = (String) value.get("token");
                         System.out.println("Usertoken: " + userId);
-                        sendNotification("/" + userId, message);
+                        sendNotification("/" + userId, message, sender);
                     }
                 }
             	else {
@@ -134,7 +136,7 @@ public class Server {
         });
 	}
 	
-	private static void sendNotification(String reciever, String messageContent){
+	private static void sendNotification(String reciever, String messageContent, String sender){
 		
 		/*
 		try {
@@ -153,8 +155,9 @@ public class Server {
 	
 	    // Generating a JSONObject for the content of the message, can be extracted through the intent, even if launched from background
 	    JSONObject message = new JSONObject();
-	    message.put("message", messageContent);
-	    message.put("background", "Some data");
+	    message.put("groupname", messageContent);
+	    message.put("groupid", messageContent);
+	    message.put("sender", sender);
 	    
 	    JSONObject notification = new JSONObject();
 	    notification.put("body", "Awesome Notification");

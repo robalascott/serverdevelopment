@@ -14,6 +14,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -64,7 +66,6 @@ public class TodoActivity extends BaseActivity {
 
             }
         });
-
     }
 
     @Override
@@ -79,7 +80,8 @@ public class TodoActivity extends BaseActivity {
         switch (item.getItemId()) {
             case R.id.action_add_task:
                 final EditText inviteEditText = new EditText(this);
-                android.support.v7.app.AlertDialog dialog = new android.support.v7.app.AlertDialog.Builder(this)
+                android.support.v7.app.AlertDialog dialog = new android.support.v7.app
+                        .AlertDialog.Builder(this)
                         .setTitle("Invite to list")
                         .setMessage("email")
                         .setView(inviteEditText)
@@ -88,11 +90,18 @@ public class TodoActivity extends BaseActivity {
                             public void onClick(DialogInterface dialog, int which) {
                                 String email = String.valueOf(inviteEditText.getText());
                                 DatabaseReference mDatabase;
-                                mDatabase = FirebaseDatabase.getInstance().getReference("notification");
+                                mDatabase = FirebaseDatabase.getInstance()
+                                        .getReference("notification");
 
                                 Map notification = new HashMap<>();
-                                notification.put("username", "dnlostberg@gmail.com");
+                                notification.put("username", email.toLowerCase().trim());
+                                // TODO:
+                                // Make the node use a unique id with a child containing the
+                                // name
                                 notification.put("groupId", channelKey);
+                                notification.put("groupName", channelKey);
+                                notification.put("sender", FirebaseAuth.getInstance()
+                                        .getCurrentUser().getEmail());
 
                                 mDatabase.push().setValue(notification);
                             }

@@ -43,6 +43,7 @@ public class BaseActivity extends AppCompatActivity{
 
     private static final String TAG = "Lab4";
     private MyReceiver receiver;
+    private boolean isActive = false;
 
     protected void onCreate(Bundle savedInstanceState, int layoutId)
     {
@@ -85,11 +86,25 @@ public class BaseActivity extends AppCompatActivity{
 
         receiver = new MyReceiver(new Handler(), this);
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter("custom_event"));
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ((MyApplication) getApplication()).activityResumed();
+        Log.d("Lab4", "Setting Active");
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
+        isActive = false;
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        ((MyApplication) getApplication()).activityPaused();
     }
 }

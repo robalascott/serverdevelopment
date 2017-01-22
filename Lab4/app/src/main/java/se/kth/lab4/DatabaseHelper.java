@@ -8,6 +8,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 import android.util.Log;
 
+import com.google.firebase.messaging.RemoteMessage;
+
 import java.util.ArrayList;
 
 import static se.kth.lab4.DatabaseHelper.InvitationReaderContract.Invite.*;
@@ -22,7 +24,9 @@ public class DatabaseHelper extends SQLiteOpenHelper{
     private static final String SQL_CREATE_ENTRIES =
             "CREATE TABLE " + TABLE_NAME + " (" +
                     _ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                    COLUMN_NAME_GROUP + " TEXT)";
+                    COLUMN_NAME_GROUP + " TEXT," +
+                    COLUMN_NAME_GROUP_ID + " TEXT," +
+                    COLUMN_NAME_SENDER + " TEXT)";
 
     public DatabaseHelper(Context context){
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -44,6 +48,22 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         SQLiteDatabase db = getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put(COLUMN_NAME_GROUP, invitation);
+        long result = db.insert(TABLE_NAME, null, cv);
+        if(result == -1){
+            Log.d("Lab4", "Failed");
+        }else{
+            Log.d("Lab4", "Success");
+        }
+        db.close();
+    }
+
+    public void insertInvite(RemoteMessage remoteMessage) {
+        Log.d("Lab4", "Inserting to " + COLUMN_NAME_GROUP);
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(COLUMN_NAME_GROUP, remoteMessage.getData().get("groupname"));
+        cv.put(COLUMN_NAME_GROUP_ID, remoteMessage.getData().get("groupid"));
+        cv.put(COLUMN_NAME_SENDER, remoteMessage.getData().get("sender"));
         long result = db.insert(TABLE_NAME, null, cv);
         if(result == -1){
             Log.d("Lab4", "Failed");
@@ -96,12 +116,22 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 
     }
 
+    public int getInvitationCount() {
+        SQLiteDatabase db = getReadableDatabase();
+        // TODO: Typesafe
+        Cursor res = db.rawQuery("SELECT Count(*) FROM " + TABLE_NAME, null);
+        res.moveToFirst();
+        return res.getInt(0);
+    }
+
     public static final class InvitationReaderContract {
         private InvitationReaderContract() {}
 
         public static class Invite implements BaseColumns {
             public static final String TABLE_NAME = "invite";
             public static final String COLUMN_NAME_GROUP = "groupName";
+            public static final String COLUMN_NAME_GROUP_ID = "groupid";
+            public static final String COLUMN_NAME_SENDER = "sender";
         }
     }
 }

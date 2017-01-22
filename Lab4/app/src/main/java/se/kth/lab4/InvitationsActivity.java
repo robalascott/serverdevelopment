@@ -15,11 +15,13 @@ public class InvitationsActivity extends BaseActivity {
 
         Log.d("Lab4", "Invite window");
         DatabaseHelper dbHelper = new DatabaseHelper(this);
+        Log.d("Lab4", "I have " + Integer.toString(dbHelper.getInvitationCount()) + " pending invitations");
 
         int i=0;
         for(String inv : dbHelper.getAllInvitations()){
             i++;
             Log.d("Lab4", "Invitation " + i + ": " + inv);
         }
+
     }
 }
