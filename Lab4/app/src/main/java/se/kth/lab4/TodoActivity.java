@@ -43,8 +43,10 @@ public class TodoActivity extends BaseActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent oldIntent = getIntent();
                 Intent newIntent = new Intent(TodoActivity.this, TodoAddActivity.class);
                 newIntent.putExtra("channelkey",channelKey);
+                newIntent.putExtra("username",oldIntent.getStringExtra(MainActivity.EXTRA_USERNAME));
                 TodoActivity.this.startActivity(newIntent);
             }
         });
@@ -61,7 +63,6 @@ public class TodoActivity extends BaseActivity {
             public void onItemClick(View v, int pos) {
                 Alert(pos);
 
-
             }
         });
 
@@ -70,7 +71,7 @@ public class TodoActivity extends BaseActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main_menu, menu);
+        getMenuInflater().inflate(R.menu.add_menu, menu);
         return true;
     }
 

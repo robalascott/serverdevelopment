@@ -42,7 +42,7 @@ import java.util.Map;
 public class BaseActivity extends AppCompatActivity{
 
     private static final String TAG = "Lab4";
-    private MyReceiver receiver;
+   // private MyReceiver receiver;
 
     protected void onCreate(Bundle savedInstanceState, int layoutId)
     {
@@ -83,13 +83,13 @@ public class BaseActivity extends AppCompatActivity{
         ab.setTitle(userName);
         ab.setIcon(userIMG);
 
-        receiver = new MyReceiver(new Handler(), this);
-        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter("custom_event"));
+       // receiver = new MyReceiver(new Handler(), this);
+       // LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter("custom_event"));
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
+        //LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
     }
 }

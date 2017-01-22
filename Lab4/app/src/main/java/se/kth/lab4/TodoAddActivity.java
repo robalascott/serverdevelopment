@@ -27,15 +27,17 @@ public class TodoAddActivity extends BaseActivity {
     private EditText message,owner;
     private TextView labelOwner,labelMessage;
     private String DatebaseKey;
-    private String email = "Robert";
+    private String username;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState, R.layout.activity_todo_add);
-
+        Log.i("TodaAdd","Start");
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             DatebaseKey  = bundle.getString("channelkey").concat("/todos/");
+            username = bundle.getString("username");
+            Log.i("Tag",username);
         }else{
             Log.i("TodaAdd","Nullpointer");
         }
@@ -45,7 +47,6 @@ public class TodoAddActivity extends BaseActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 saveTodoObject();
             }
         });
@@ -62,10 +63,7 @@ public class TodoAddActivity extends BaseActivity {
         FirebaseDatabase db = FirebaseDatabase.getInstance();
         String key = db.getReference(DatebaseKey).push().getKey();
         /*TodoObject*/
-        Todo todo = new Todo();
-        todo.setOwner(email);
-        todo.setMessage(message.getText().toString());
-        todo.setDate(buildDate());
+        Todo todo = new Todo(buildDate(),message.getText().toString(),username.toString());
 
         if(todo.checkValues()){
             Map<String, Object> childUpdates = new HashMap<>();

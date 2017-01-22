@@ -12,6 +12,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -54,7 +56,8 @@ public class TodoListActivity extends BaseActivity {
     private RecyclerView recyclerChannelView ;
     private ChannelsAdapter adapter;
     private String m_Text;
-    private List<Channels> channelList= new ArrayList<>();;
+    private List<Channels> channelList= new ArrayList<>();
+    DatabaseHelper dbHelper = new DatabaseHelper(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +85,12 @@ public class TodoListActivity extends BaseActivity {
         }
 
         // Roberts stuff
+        /*Database play things*/
+        Log.i(TAG,Boolean.toString(dbHelper.doesDataExist(this,"FCM")));
+     /*   dbHelper.insertInvite("Tommy");
+        dbHelper.insertInvite("Tommy2");
+        dbHelper.insertInvite("Tommy3");*/
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById (R.id.fab);
         fab.setOnClickListener (new View.OnClickListener () {
@@ -90,7 +99,6 @@ public class TodoListActivity extends BaseActivity {
                 AlertBuilder();
             }
         });
-
         recyclerChannelView = (RecyclerView) findViewById(R.id.recycle_view);
         adapter = new ChannelsAdapter(channelList,this);
         LinearLayoutManager llmc = new LinearLayoutManager(this);
@@ -108,6 +116,7 @@ public class TodoListActivity extends BaseActivity {
                     Intent oldIntent = getIntent();
                     Intent newIntent = new Intent(TodoListActivity.this, TodoActivity.class);
                     newIntent.putExtra("channelkey",name);
+                    newIntent.putExtra("username", oldIntent.getStringExtra(MainActivity.EXTRA_USERNAME));
                     // TODO: Consider other solutions (Just passing data along for now)
                     newIntent.putExtra(MainActivity.EXTRA_IMAGE, oldIntent.getStringExtra(MainActivity.EXTRA_IMAGE));
                     newIntent.putExtra(MainActivity.EXTRA_USERNAME, oldIntent.getStringExtra(MainActivity.EXTRA_USERNAME));
@@ -147,14 +156,15 @@ public class TodoListActivity extends BaseActivity {
     @Override
     protected void onStart() {
         super.onStart();
-
-        //sendNotificationToUser("Test", "Hello!");
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         fetchChannels(getString(R.string.DataBaseKey));
+          /*Database Update Icon*/
+        this.invalidateOptionsMenu();
+
     }
 
     public static void sendNotificationToUser(String user, final String message) {
@@ -172,40 +182,32 @@ public class TodoListActivity extends BaseActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
+        MenuItem item = menu.findItem(R.id.action_add_task);
+        if(dbHelper.hasList()){
+            item.setIcon(android.R.drawable.ic_popup_reminder);
+        }else{
+            item.setVisible(false);
+        }
         return super.onCreateOptionsMenu(menu);
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_add_task:
-                final EditText taskEditText = new EditText(this);
-                AlertDialog dialog = new AlertDialog.Builder(this)
-                        .setTitle("Create a new list")
-                        .setMessage("List name")
-                        .setView(taskEditText)
-                        .setPositiveButton("Add", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                String task = String.valueOf(taskEditText.getText());
-                                // TODO: Some persistance, add to db
-                                Log.d(TAG, "Task to add: " + task);
-                            }
-                        })
-                        .setNegativeButton("Cancel", null)
-                        .create();
-                dialog.show();
-
+                Intent oldIntent = getIntent();
+                Intent intent = new Intent(this, InvitationsActivity.class);
+                intent.putExtra(MainActivity.EXTRA_IMAGE, oldIntent.getStringExtra(MainActivity.EXTRA_IMAGE));
+                intent.putExtra(MainActivity.EXTRA_USERNAME, oldIntent.getStringExtra(MainActivity.EXTRA_USERNAME));
+                startActivity(intent);
                 return true;
-
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
     private void fetchChannels(String dataBaseKey) {
-
-
                         FirebaseDatabase database = FirebaseDatabase.getInstance();
                         database.getReference(getString(R.string.DataBaseKey)).addListenerForSingleValueEvent(
                                 new ValueEventListener() {
@@ -230,22 +232,6 @@ public class TodoListActivity extends BaseActivity {
                                                 }
                                             }
                                         }
-                        /*
-                        for (DataSnapshot data : dataSnapshot.getChildren()) {
-
-                            Log.i("ChannelsActivity",data.getKey ());
-
-                            Log.d("ChannelsActivity",test.toString());
-                            Channels chans = new Channels ();
-                            chans.setName (data.getKey ());
-                            if(chans.getName().isEmpty () || chans.getName()==null){
-                                Log.w("ChannelsActivity", "Emtpy channel");
-                            }else{
-                                channelList.add(chans);
-                            }
-
-                        }
-                        */
                         adapter.notifyDataSetChanged();
                         ChannelsEmpty("No Network Available !");
                     }

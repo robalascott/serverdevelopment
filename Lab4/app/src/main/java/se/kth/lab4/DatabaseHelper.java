@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 import android.util.Log;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import static se.kth.lab4.DatabaseHelper.InvitationReaderContract.Invite.*;
@@ -28,6 +29,10 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
+    public boolean doesDataExist(Context context,String name){
+        File dbFile = context.getDatabasePath(name);
+        return dbFile.exists();
+    }
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(SQL_CREATE_ENTRIES);
@@ -52,8 +57,33 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         }
         db.close();
     }
+    public boolean hasList(){
+        SQLiteDatabase db = getReadableDatabase();
+        String temp = "SELECT * FROM invite";
+        Cursor cursor = db.rawQuery(temp, null);
+        if (cursor.moveToFirst()) {
+            try{
+                Log.i("database",cursor.getString(0));
+                return true;
+            }catch (NullPointerException e){
+                return false;
+            }
+        }
+        cursor.close();
+        db.close();
+        return false;
+    }
 
-    public ArrayList<String> getAllInvitations() {
+    public boolean deleteRow(String value)
+    {
+        /*Single Row Solution */
+        /*Delete using unique id  or row id */
+        SQLiteDatabase db = this.getWritableDatabase();
+        Boolean bool = db.delete(TABLE_NAME, COLUMN_NAME_GROUP + "='" + value + "';", null) > 0;
+        db.close();
+        return true;
+    }
+    public ArrayList<InviteObject> getAllInvitations() {
 
         SQLiteDatabase db = getReadableDatabase();
 
@@ -83,12 +113,13 @@ public class DatabaseHelper extends SQLiteOpenHelper{
                 sortOrder                                 // The sort order
         );
 
-        ArrayList groupNames = new ArrayList<>();
+        ArrayList groupNames = new ArrayList<InviteObject>();
         while(cursor.moveToNext()) {
             String itemId = cursor.getString(
                     cursor.getColumnIndexOrThrow(COLUMN_NAME_GROUP));
             Log.d("Lab4", "Found this: " + itemId);
-            groupNames.add(itemId);
+            InviteObject tempObject = new InviteObject(itemId,itemId);
+            groupNames.add(tempObject);
         }
         cursor.close();
 
@@ -104,4 +135,5 @@ public class DatabaseHelper extends SQLiteOpenHelper{
             public static final String COLUMN_NAME_GROUP = "groupName";
         }
     }
+
 }

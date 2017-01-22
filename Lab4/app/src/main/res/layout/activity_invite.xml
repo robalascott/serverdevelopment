@@ -4,11 +4,10 @@
     android:layout_height="match_parent">
 
     <include layout="@layout/toolbar" />
-
-    <TextView
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycle_view_invite"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="TODO: Display invites, here we should be able to accept decline them and
-        remove them if user decide"/>
+        android:layout_height="wrap_content"
+        />
 
 </LinearLayout>
