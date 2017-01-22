@@ -61,6 +61,13 @@ public class TodoListActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState, R.layout.activity_main_channel);
 
+        // Can get som date if was launched from background, how do we get login intent stuff though?
+        // open main and attach intent info?
+
+        Intent intent = getIntent();
+        String payload = intent.getStringExtra("background");
+        Log.d(TAG, "" + payload);
+
         // Control flag signaling if token was refreshed
         SharedPreferences sharedpreferences = getSharedPreferences(this.getString(R.string.prefs), Context.MODE_PRIVATE);
         if(sharedpreferences.getBoolean(getString(R.string.token_updated), false)){
@@ -128,10 +135,13 @@ public class TodoListActivity extends BaseActivity {
         // TODO: Add some error control for invalid token
         if(token != null) {
             Map registerToFCM = new HashMap<>();
-            registerToFCM.put("username", "dnlostberg@gmail.com");
+            registerToFCM.put("username", FirebaseAuth.getInstance().getCurrentUser().getEmail());
             registerToFCM.put("token", token);
 
             mDatabase.push().setValue(registerToFCM);
+        }else{
+            // This should never happen
+            Log.d(TAG, "Something went wrong reading token from prefs");
         }
     }
 

@@ -26,11 +26,10 @@ public class Server {
 
 	public static void main(String[] args) {
 		
-		
 		// Init Firebase
 		FirebaseOptions options;
 		try {
-			System.out.println(new File(".").getCanonicalPath());
+			System.out.println("Server running from: " + new File(".").getCanonicalPath());
 			options = new FirebaseOptions.Builder()
 					  .setServiceAccount(new FileInputStream("./src/serviceAccountKey.json"))
 					  .setDatabaseUrl("https://lab4-64221.firebaseio.com")
@@ -61,7 +60,7 @@ public class Server {
 			@Override
 			public void onChildAdded(DataSnapshot dataSnapshot, String previousName) {
 				// TODO Auto-generated method stub
-				System.out.println("Child added (new request) previous name(what is this): " + previousName);
+				System.out.println("New notification request added");
 				System.out.println(dataSnapshot.getValue());
 				processData((Map<String,Object>) dataSnapshot.getValue());
 				
@@ -136,25 +135,42 @@ public class Server {
 	}
 	
 	private static void sendNotification(String reciever, String messageContent){
+		
+		/*
+		try {
+			Thread.sleep(4000);
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		*/
+		
 		// Declaration of Message Parameters
 	    String message_url = new String("https://fcm.googleapis.com/fcm/send");
 	    String message_sender_id = new String(reciever);
 	    //Servers key
 	    String message_key = new String("key=AAAAFpy5aYQ:APA91bEKL7EABW_98qa0qMON1mMHNRWmF-fJXMhy2IWbxTOgWqYOqQHFFfM1FqjOFvNmPXcnhuEpyFGgaEpwO8P3I529vRoV8-nRU3rQgOOHtUecR_BYYBh7OgGn7jhqfwjTP_fNSg3t");
 	
-	    // Generating a JSONObject for the content of the message
+	    // Generating a JSONObject for the content of the message, can be extracted through the intent, even if launched from background
 	    JSONObject message = new JSONObject();
 	    message.put("message", messageContent);
+	    message.put("background", "Some data");
 	    
 	    JSONObject notification = new JSONObject();
 	    notification.put("body", "Awesome Notification");
 	    notification.put("title", "Lab4");
+	    // Define intent-filter when notification is clicked if activity is in background
+	    // If not defined, the Main Activity is launched
+	    // notification.put("click_action", "OPEN_ACTIVITY_1");
 	    
+	    // Compose the message to send to the user
 	    JSONObject protocol = new JSONObject();
-	    // Works perfectly
 	    protocol.put("to", reciever); // Ex: Token or "/topics/topic" must have topic infront of subscribed topic
 	    protocol.put("data", message);
-	    protocol.put("notification", notification);
+	    // We can set the notification key which will result in firebase handling and displaying the message
+	    // although this gives us no controll over how the notification is displayed and/or processed onMessageReceived
+	    // will never be called in client-app if this is used
+	    //protocol.put("notification", notification);
 	
 	    // Send Protocol
 	    try {

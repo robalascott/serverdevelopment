@@ -13,7 +13,6 @@
             android:theme="@android:style/Theme.NoDisplay">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -31,7 +30,8 @@
 
         <activity
             android:name=".TodoListActivity"
-            android:theme="@style/MyCustomTheme"/>
+            android:theme="@style/MyCustomTheme">
+        </activity>
         <activity
             android:name=".LoginActivity"
             android:theme="@style/MyCustomTheme">
@@ -44,6 +44,10 @@
         <activity
             android:name=".TodoActivity"
             android:label="TodoActivity"
+            android:theme="@style/MyCustomTheme"/>
+        <activity
+            android:name=".InvitationsActivity"
+            android:label="InviteActivity"
             android:theme="@style/MyCustomTheme"/>
     </application>
 
