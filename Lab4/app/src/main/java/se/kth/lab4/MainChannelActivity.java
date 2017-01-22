@@ -1,43 +1,34 @@
 package se.kth.lab4;
 
-import android.app.Activity;
+
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
 
 
 
 public class MainChannelActivity extends BaseActivity {
     private RecyclerView recyclerChannelView ;
     private ChannelsAdapter adapter;
-    private final static String DataBaseKey = "todo";
     private String m_Text;
+    private static final String TAG = "Lab4";
     private List<Channels> channelList= new ArrayList<>();;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,14 +69,20 @@ public class MainChannelActivity extends BaseActivity {
 
     }
     @Override
+    protected void onStart() {
+        super.onStart();
+        fetchChannels(getString(R.string.DataBaseKey));
+
+    }
+    @Override
     protected void onResume() {
         super.onResume();
-        fetchChannels(DataBaseKey);
+        fetchChannels(getString(R.string.DataBaseKey));
     }
 
     private void fetchChannels(String dataBaseKey) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        database.getReference(DataBaseKey).addListenerForSingleValueEvent(
+        database.getReference(getString(R.string.DataBaseKey)).addListenerForSingleValueEvent(
                 new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -129,7 +126,7 @@ public class MainChannelActivity extends BaseActivity {
                     if(m_Text!=null || !m_Text.isEmpty ()){
 
                         AsyncTaskTestActivity task = new AsyncTaskTestActivity();
-                        task.add(adapter,channelList,DataBaseKey);
+                        task.add(adapter,channelList,getString(R.string.DataBaseKey));
                         task.execute(new String[] { "todo/"+m_Text,m_Text });
                         //   saveTodoObject("todo/"+m_Text,m_Text);
                         m_Text=null;}

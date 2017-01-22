@@ -24,4 +24,5 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_todo_add">TodoAddActivity</string>
     <string name="title_activity_main_channel">MainChannelActivity</string>
+    <string name="DataBaseKey">todo</string>
 </resources>

@@ -12,7 +12,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="se.kth.lab4.MainChannelActivity"
-    tools:showIn="@layout/activity_main_channelActivi">
+    tools:showIn="@layout/activity_main_channel">
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycle_view"
         android:layout_width="match_parent"

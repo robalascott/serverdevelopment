@@ -23,10 +23,11 @@ import java.util.Map;
 import java.util.HashMap;
 
 public class TodoAddActivity extends BaseActivity {
-    DatePicker datePicker;
-    EditText message,owner;
-    TextView labelOwner,labelMessage;
-    String DatebaseKey;
+    private DatePicker datePicker;
+    private EditText message,owner;
+    private TextView labelOwner,labelMessage;
+    private String DatebaseKey;
+    private String email = "Robert";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,10 +51,8 @@ public class TodoAddActivity extends BaseActivity {
         });
     }
     public void UI(){
-        this.owner = (EditText)findViewById(R.id.ownerTextEdit);
         this.message = (EditText)findViewById(R.id.messageTextEdit);
         this.datePicker = (DatePicker) findViewById(R.id.datePicker);
-        this.labelOwner = (TextView)findViewById(R.id.ownerView);
         this.labelMessage = (TextView)findViewById(R.id.messageView);
     }
 
@@ -64,7 +63,7 @@ public class TodoAddActivity extends BaseActivity {
         String key = db.getReference(DatebaseKey).push().getKey();
         /*TodoObject*/
         Todo todo = new Todo();
-        todo.setOwner(owner.getText().toString());
+        todo.setOwner(email);
         todo.setMessage(message.getText().toString());
         todo.setDate(buildDate());
 
@@ -80,7 +79,6 @@ public class TodoAddActivity extends BaseActivity {
                 }
             });
             todo.clear();
-            owner.setText(null);
             message.setText(null);
         }else{
             Toast.makeText(this, "Fail to create",Toast.LENGTH_SHORT ).show();

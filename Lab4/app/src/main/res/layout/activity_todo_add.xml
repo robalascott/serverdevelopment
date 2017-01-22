@@ -9,6 +9,10 @@
     tools:context="se.kth.lab4.TodoAddActivity">
 
     <include layout="@layout/toolbar" />
+    <include layout="@layout/content_todo_add"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
@@ -18,7 +22,6 @@
         android:layout_margin="@dimen/fab_margin"
         app:srcCompat="@android:drawable/ic_menu_upload" />
 
-    <include layout="@layout/content_todo_add"
-        android:id="@+id/content_todo_add"/>
+
 
 </android.support.design.widget.CoordinatorLayout>

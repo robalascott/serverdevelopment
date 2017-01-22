@@ -50,10 +50,9 @@ public class TodoListActivity extends BaseActivity {
 
     private static final String TAG = "Lab4";
 
-    // Roberts stuff TODO: Set in R.strings instead
+
     private RecyclerView recyclerChannelView ;
     private ChannelsAdapter adapter;
-    private final static String DataBaseKey = "todo";
     private String m_Text;
     private List<Channels> channelList= new ArrayList<>();;
 
@@ -145,7 +144,7 @@ public class TodoListActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        fetchChannels(DataBaseKey);
+        fetchChannels(getString(R.string.DataBaseKey));
     }
 
     public static void sendNotificationToUser(String user, final String message) {
@@ -198,7 +197,7 @@ public class TodoListActivity extends BaseActivity {
 
 
                         FirebaseDatabase database = FirebaseDatabase.getInstance();
-                        database.getReference(DataBaseKey).addListenerForSingleValueEvent(
+                        database.getReference(getString(R.string.DataBaseKey)).addListenerForSingleValueEvent(
                                 new ValueEventListener() {
                                     @Override
                                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -265,9 +264,8 @@ public class TodoListActivity extends BaseActivity {
                     if(m_Text!=null || !m_Text.isEmpty ()){
 
                         AsyncTaskTestActivity task = new AsyncTaskTestActivity();
-                        task.add(adapter,channelList,DataBaseKey);
+                        task.add(adapter,channelList,getString(R.string.DataBaseKey));
                         task.execute(new String[] { "todo/"+m_Text,m_Text });
-                        //   saveTodoObject("todo/"+m_Text,m_Text);
                         m_Text=null;}
                 }catch (NullPointerException v){
 
@@ -358,73 +356,39 @@ class AsyncTaskTestActivity  extends AsyncTask<String, Void, String> {
 
     @Override
     protected void onPostExecute(String result) {
-            FirebaseDatabase database = FirebaseDatabase.getInstance();
-            database.getReference(DataBaseKey).addListenerForSingleValueEvent(
-                    new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            channelList.clear();
-                            // Convert the Datasnapshot to a map so we can extract the attributes
-                            for(DataSnapshot todoList : dataSnapshot.getChildren()){
-                                Log.d(TAG, "Checking group: " + todoList.getValue());
-                                DataSnapshot members = todoList.child("members");
-                                for(DataSnapshot member : members.getChildren()){
-                                    String Token = (String) member.child("Token").getValue();
-                                    if(member.child("Token").getValue()
-                                            .equals(FirebaseAuth.getInstance()
-                                                    .getCurrentUser().getUid())){
-                                        Log.d(TAG, "User found");
-                                        Channels chans = new Channels();
-                                        chans.setName(todoList.getKey());
-                                        channelList.add(chans);
-                                    }else{
-                                        Log.d(TAG, "User not found");
-                                    }
-                                }
-                            }
-                            /*
-                            Map<String,Object> AllLists = (Map<String,Object>) dataSnapshot.getValue();
-                            for(Map.Entry<String,Object> currentList : AllLists.entrySet()){
-                                Map processingList = (Map) currentList.getValue();
-                                Log.d(TAG, "Checking group: " + currentList.getKey());
-
-                                Map test = (Map) processingList.get("members");
-                                Log.d(TAG, "Memberlist: " + test.toString());
-                                if(test.get("Token").equals(FirebaseAuth.getInstance().getCurrentUser().getUid())){
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        database.getReference(DataBaseKey).addListenerForSingleValueEvent(
+                new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        channelList.clear();
+                        // Convert the Datasnapshot to a map so we can extract the attributes
+                        for(DataSnapshot todoList : dataSnapshot.getChildren()){
+                            Log.d(TAG, "Checking group: " + todoList.getValue());
+                            DataSnapshot members = todoList.child("members");
+                            for(DataSnapshot member : members.getChildren()){
+                                String Token = (String) member.child("Token").getValue();
+                                if(member.child("Token").getValue()
+                                        .equals(FirebaseAuth.getInstance()
+                                                .getCurrentUser().getUid())){
                                     Log.d(TAG, "User found");
                                     Channels chans = new Channels();
-                                    chans.setName(currentList.getKey());
+                                    chans.setName(todoList.getKey());
                                     channelList.add(chans);
                                 }else{
                                     Log.d(TAG, "User not found");
                                 }
                             }
-                            */
-                        /*
-                        for (DataSnapshot data : dataSnapshot.getChildren()) {
-
-                            Log.i("ChannelsActivity",data.getKey ());
-
-                            Log.d("ChannelsActivity",test.toString());
-                            Channels chans = new Channels ();
-                            chans.setName (data.getKey ());
-                            if(chans.getName().isEmpty () || chans.getName()==null){
-                                Log.w("ChannelsActivity", "Emtpy channel");
-                            }else{
-                                channelList.add(chans);
-                            }
-
                         }
-                        */
-                            adapter.notifyDataSetChanged();
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-                            Log.w("ChannelsActivity", "getUserError");
-                        }
+                        adapter.notifyDataSetChanged();
                     }
-            );
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Log.w("ChannelsActivity", "getUserError");
+                    }
+                }
+        );
 
     }
 
