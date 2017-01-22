@@ -51,13 +51,18 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     // Unsure about best practices, should you have a LoginActivity or check if logged in on every
     // activity. Is it better to have the google login as main-activity? What if we want to show the
     // login activity again? on disconnect or logout or w/e?
+
+    // When opening from background? Login and start other activity?
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Intent launchIntent = getIntent();
+
         // Configure Google Sign In, can request certain user info
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.serverId))
+                .requestEmail()
                 .build();
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -66,20 +71,37 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 .build();
 
         // Check if we already got a valid login
+        // This is stupid, we just asume that firebaseauth is working) furthermore, if credentials
+        // are cached we dont even sign in to firebaseauth
         OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
         if (opr.isDone()) {
             // Get cached result
             GoogleSignInResult result = opr.get();
             if(result.isSuccess()){
-                // Start Home Activity
-                Intent intent = new Intent(this, TodoListActivity.class);
-                // Could pass data to the activity
-                Log.d(TAG, "Passing data");
-                // Not sure if this is the best way to pass usercredentials
-                intent.putExtra(EXTRA_USERNAME, result.getSignInAccount().getGivenName());
-                intent.putExtra(EXTRA_IMAGE, result.getSignInAccount().getPhotoUrl().toString());
-                intent.putExtra(EXTRA_TOKEN, result.getSignInAccount().getIdToken());
-                startActivity(intent);
+                // If launched from notification, the background flag should be set from backend
+                if(launchIntent.getStringExtra("background") != null){
+                    Log.d(TAG, "Launched from notificationClick");
+                    // Start Home Activity
+                    Intent intent = new Intent(this, InvitationsActivity.class);
+                    // Could pass data to the activity
+                    Log.d(TAG, "Passing data");
+                    // Not sure if this is the best way to pass usercredentials
+                    intent.putExtra(EXTRA_USERNAME, result.getSignInAccount().getGivenName());
+                    intent.putExtra(EXTRA_IMAGE, result.getSignInAccount().getPhotoUrl().toString());
+                    intent.putExtra(EXTRA_TOKEN, result.getSignInAccount().getIdToken());
+                    startActivity(intent);
+                // If launched by user
+                }else {
+                    // Start Home Activity
+                    Intent intent = new Intent(this, TodoListActivity.class);
+                    // Could pass data to the activity
+                    Log.d(TAG, "Passing data");
+                    // Not sure if this is the best way to pass usercredentials
+                    intent.putExtra(EXTRA_USERNAME, result.getSignInAccount().getGivenName());
+                    intent.putExtra(EXTRA_IMAGE, result.getSignInAccount().getPhotoUrl().toString());
+                    intent.putExtra(EXTRA_TOKEN, result.getSignInAccount().getIdToken());
+                    startActivity(intent);
+                }
             }else{
                 // Start Login Activity
                 Intent intent = new Intent(this, LoginActivity.class);

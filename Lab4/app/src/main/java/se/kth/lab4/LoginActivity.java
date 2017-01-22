@@ -1,6 +1,7 @@
 package se.kth.lab4;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
@@ -158,22 +159,12 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         if (result.isSuccess()) {
 
             GoogleSignInAccount account = result.getSignInAccount();
-            firebaseAuthWithGoogle(account);
+            firebaseAuthWithGoogle(account, result, this);
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
             Log.d(TAG, "Login Succes: " + acct.getGivenName());
 
-
-            // Launch Home Activity
-            Intent intent = new Intent(this, TodoListActivity.class);
-            // Could pass data to the activity
-            Log.d(TAG, "Passing data");
-            intent.putExtra(EXTRA_USERNAME, result.getSignInAccount().getGivenName());
-            intent.putExtra(EXTRA_IMAGE, result.getSignInAccount().getPhotoUrl().toString());
-
-            startActivity(intent);
-            finish();
-
+            //finish();
 
             // Tutorial updated a textview
             mStatusTextView.setText(getString(R.string.signed_in_fmt, acct.getDisplayName()));
@@ -185,7 +176,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         }
     }
 
-    private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
+    private void firebaseAuthWithGoogle(GoogleSignInAccount acct, final GoogleSignInResult result, final Context context) {
         Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
 
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
@@ -202,6 +193,16 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                             Log.w(TAG, "signInWithCredential", task.getException());
                             Toast.makeText(LoginActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
+                        }else{
+                            // Launch Home Activity
+                            Intent intent = new Intent(context, TodoListActivity.class);
+                            // Could pass data to the activity
+                            Log.d(TAG, "Passing data");
+                            intent.putExtra(EXTRA_USERNAME, result.getSignInAccount().getGivenName());
+                            intent.putExtra(EXTRA_IMAGE, result.getSignInAccount().getPhotoUrl().toString());
+
+                            startActivity(intent);
+                            finish();
                         }
                         // ...
                     }
