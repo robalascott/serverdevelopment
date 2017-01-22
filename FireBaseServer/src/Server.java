@@ -62,7 +62,7 @@ public class Server {
 				// TODO Auto-generated method stub
 				System.out.println("New notification request added");
 				System.out.println(dataSnapshot.getValue());
-				processData((Map<String,Object>) dataSnapshot.getValue());
+				processInviteRequest(dataSnapshot);
 				
 			}
 
@@ -91,13 +91,21 @@ public class Server {
 		}
 	}
 
-	private static void processData(Map<String,Object> user) {
-	    String email = (String) user.get("username");
-	    String groupId = (String) user.get("groupId");
-	    String sender = (String) user.get("sender");
-	    String groupName = (String) user.get("groupName");
-	    System.out.println( sender + " wants to invite " + email + " to group: " + groupName + "with id: " + groupId);
-	    getUserTokenFromEmail(email, groupName, sender);
+	/*
+	 * Process the request and send the notification, then delete the request
+	 */
+	private static void processInviteRequest(DataSnapshot datasnapshot) {
+		
+		final String sender = (String) datasnapshot.child("sender").getValue(), 
+				receiver = (String) datasnapshot.child("username").getValue(), 
+				groupName = (String) datasnapshot.child("groupName").getValue(), 
+				groupId = (String) datasnapshot.child("groupId").getValue();
+		
+	    System.out.println( sender + " wants to invite " + receiver + " to group: " + groupName + "with id: " + groupId);
+	    getUserTokenFromEmail(receiver, groupName, sender);
+	    
+	    // 
+	    datasnapshot.getRef().setValue(null);
 	}
 	
 	private static void getUserTokenFromEmail(String email, String message, String sender){
@@ -138,14 +146,14 @@ public class Server {
 	
 	private static void sendNotification(String reciever, String messageContent, String sender){
 		
-		/*
+		
 		try {
-			Thread.sleep(4000);
+			Thread.sleep(2000);
 		} catch (InterruptedException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		*/
+		
 		
 		// Declaration of Message Parameters
 	    String message_url = new String("https://fcm.googleapis.com/fcm/send");
@@ -191,5 +199,7 @@ public class Server {
 	        System.out.println(response.toString());
 	    } catch (Exception e) {
 	    }
+	    
+	    // Remove invite-request
 	}
 }

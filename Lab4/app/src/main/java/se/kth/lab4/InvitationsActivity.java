@@ -2,12 +2,14 @@ package se.kth.lab4;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.AdapterView;
+import android.widget.ListView;
 
 /**
  * Created by Daniel on 2017-01-21.
  */
 
-public class InvitationsActivity extends BaseActivity {
+public class InvitationsActivity extends BaseActivity{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -17,6 +19,8 @@ public class InvitationsActivity extends BaseActivity {
         DatabaseHelper dbHelper = new DatabaseHelper(this);
         Log.d("Lab4", "I have " + Integer.toString(dbHelper.getInvitationCount()) + " pending invitations");
 
+        // TODO: Display invitations and remove them when accepted or denied, also add yourself to
+        // group when accepting
         int i=0;
         for(String inv : dbHelper.getAllInvitations()){
             i++;

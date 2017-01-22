@@ -37,13 +37,14 @@ public class MyReceiver extends BroadcastReceiver{
             public void run() {
                // UI Code
                 AlertDialog alertDialog = new AlertDialog.Builder(ui).create();
-                alertDialog.setTitle("You were invited to list: " + intent.getStringExtra("data"));
-                alertDialog.setMessage("Wololo...");
-                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK",
+                alertDialog.setTitle(intent.getStringExtra("sender") + " has invited you to group: "
+                        + intent.getStringExtra("groupname"));
+                alertDialog.setMessage("Would you like to accept the invite");
+                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Accept",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(intent.getStringExtra("data") + "/members/");
-
+                                // TODO: Add feedback on result, now we just assume it worked
                                 Map member = new HashMap<>();
                                 member.put("Email", FirebaseAuth.getInstance().getCurrentUser().getEmail());
                                 member.put("Token", FirebaseAuth.getInstance().getCurrentUser().getUid());
@@ -52,7 +53,7 @@ public class MyReceiver extends BroadcastReceiver{
                                 dialog.dismiss();
                             }
                         });
-                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "No",
+                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Decline",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();

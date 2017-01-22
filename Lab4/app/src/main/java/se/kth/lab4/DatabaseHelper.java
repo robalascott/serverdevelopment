@@ -124,6 +124,29 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         return res.getInt(0);
     }
 
+    public ArrayList<Invitation> getInvitationLatest(int howMany) {
+        SQLiteDatabase db = getReadableDatabase();
+
+        ArrayList<Invitation> invites = new ArrayList<>();
+
+        String[] allColumns = {COLUMN_NAME_GROUP, COLUMN_NAME_SENDER, COLUMN_NAME_GROUP_ID};
+        Cursor cursor = db.query(TABLE_NAME, allColumns, null, null, null, null, _ID +" DESC",
+                Integer.toString(howMany));
+
+        try {
+            while (cursor.moveToNext()) {
+                invites.add(new Invitation(
+                        cursor.getString(cursor.getColumnIndex(COLUMN_NAME_GROUP)),
+                        cursor.getString(cursor.getColumnIndex(COLUMN_NAME_GROUP_ID)),
+                        cursor.getString(cursor.getColumnIndex(COLUMN_NAME_SENDER))));
+            }
+        } finally {
+            cursor.close();
+        }
+
+        return invites;
+    }
+
     public static final class InvitationReaderContract {
         private InvitationReaderContract() {}
 

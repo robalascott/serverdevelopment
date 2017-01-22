@@ -12,6 +12,9 @@ import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+
+import java.util.ArrayList;
+
 /**
  * Since we want more control over the notifications, stacking them for example, we use
  * data-messages and create our own Notifications via the Notification-Manager. There are two types
@@ -20,34 +23,40 @@ import com.google.firebase.messaging.RemoteMessage;
  */
 public class MessageHandlerService extends FirebaseMessagingService {
 
+    // TODO: Just a funny thought
+    // If someone else login on the same device, we don't check who the notification belong to,
+    // im guessing that we would register both tokens and receive invites designated to both
+    // accounts on both accounts
+
     final private String TAG = "Lab4";
 
-    // We receive a notification
+    // We receive a notification (Currently contain: groupname, groupid and sender)
     @Override
     public void onMessageReceived(final RemoteMessage remoteMessage) {
 
         // For debug, remove DB
-        this.getApplicationContext().deleteDatabase("FCM");
+        //this.getApplicationContext().deleteDatabase("FCM");
 
-        Log.d(TAG, "Notification Message: " + remoteMessage.getData());
-        Log.d(TAG, "Read data from message: " + remoteMessage.getData().get("message"));
         // Insert notification data to SQLite for later access
         DatabaseHelper dbHelper = new DatabaseHelper(this);
         dbHelper.insertInvite(remoteMessage);
         dbHelper.close();
 
         /* --- Decide what to do with notification, depending on if running or in background --- */
-        // TODO: Currently set in BaseActivity, not all activities extend this
+        // TODO: Extend baseActivity were it is needed
+        // Currently we set flag in BaseActivity, not all activities extend this, so if we are in
+        // login screen or for example, we would generate a Notification
         if(MyApplication.isActivityVisible()){
-            Log.d("Lab4", "Got notification while app active");
+            Log.d(TAG, "Got notification while app active");
             // TODO: Alert user that he/she got an invite
             // Perform a local broadcast via LocalBroadcastManager, this is to be intercepted
             // by a BroadcastReceiver in the Active activity
             Intent intent = new Intent("custom_event");
-            intent.putExtra("data", remoteMessage.getData().get("message"));
+            intent.putExtra("groupname", remoteMessage.getData().get("groupname"));
+            intent.putExtra("sender", remoteMessage.getData().get("sender"));
             LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
         }else{
-            Log.d("Lab4", "Got notification while app inactive");
+            Log.d(TAG, "Got notification while app inactive");
             generateNotification();
         }
 
@@ -61,7 +70,8 @@ public class MessageHandlerService extends FirebaseMessagingService {
 
         /* --- Get data from SQLite to present summary to user --- */
         DatabaseHelper dbHelper = new DatabaseHelper(this);
-        //dbHelper.getInvitationLatest();
+        ArrayList<Invitation> invites = dbHelper.getInvitationLatest(3);
+        Log.d(TAG, "Grabbed some old invites, found " + invites.size());
         int amount = dbHelper.getInvitationCount();
         dbHelper.close();
 
@@ -76,18 +86,24 @@ public class MessageHandlerService extends FirebaseMessagingService {
         Bitmap largeIcon = BitmapFactory.decodeResource(getResources(),
                 R.drawable.icon_notification);
 
-        // TODO: add lines and summary
+        // Dynamically create the style of the bigger notification summary
+        android.support.v7.app.NotificationCompat.InboxStyle style =
+                new NotificationCompat.InboxStyle();
+        for(int i=0; i<invites.size() && i<4;i++){
+            style.addLine(invites.get(i).getSender() + " invited you to "
+                    + invites.get(i).getGroupName());
+        }
+        style.setBigContentTitle("You got " + amount + " pending invitations");
+        style.setSummaryText("Click to see pending invites");
+
+        // TODO: Change small icon to something pretty
         Notification summaryNotification = new NotificationCompat.Builder(this)
                 .setContentTitle("You got " + Integer.toString(amount) + " pending invitations")
                 .setSmallIcon(R.drawable.icon_notification)
                 .setLargeIcon(largeIcon)
                 .setAutoCancel(false)
                 .setContentIntent(pIntent)
-                .setStyle(new NotificationCompat.InboxStyle()
-                        .addLine("Alex Faaborg   Check this out")
-                        .addLine("Jeff Chang   Launch Party")
-                        .setBigContentTitle("2 new messages")
-                        .setSummaryText("johndoe@gmail.com"))
+                .setStyle(style)
                 .setGroup(GROUP_KEY_EMAILS)
                 .setGroupSummary(true)
                 .build();
