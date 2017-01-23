@@ -115,7 +115,8 @@ public class Server {
         final Query query = ref.orderByChild("username").equalTo(email);
         
         // TODO: Entry should be unique but could make sure it only return one
-        query.addValueEventListener(new ValueEventListener()
+        // The other listener keept listening, no wonder my computer got slow...
+        query.addListenerForSingleValueEvent(new ValueEventListener()
         {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot)
