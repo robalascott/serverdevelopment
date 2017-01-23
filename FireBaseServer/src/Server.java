@@ -62,7 +62,7 @@ public class Server {
 				// TODO Auto-generated method stub
 				System.out.println("New notification request added");
 				System.out.println(dataSnapshot.getValue());
-				processData((Map<String,Object>) dataSnapshot.getValue());
+				processInviteRequest(dataSnapshot);
 				
 			}
 
@@ -91,14 +91,24 @@ public class Server {
 		}
 	}
 
-	private static void processData(Map<String,Object> user) {
-	    String email = (String) user.get("username");
-	    String message = (String) user.get("groupId");
-	    System.out.println("Someone wants to invite " + email + " Bonus message: " + message);
-	    getUserTokenFromEmail(email, message);
+	/*
+	 * Process the request and send the notification, then delete the request
+	 */
+	private static void processInviteRequest(DataSnapshot datasnapshot) {
+		
+		final String sender = (String) datasnapshot.child("sender").getValue(), 
+				receiver = (String) datasnapshot.child("username").getValue(), 
+				groupName = (String) datasnapshot.child("groupName").getValue(), 
+				groupId = (String) datasnapshot.child("groupId").getValue();
+		
+	    System.out.println( sender + " wants to invite " + receiver + " to group: " + groupName + "with id: " + groupId);
+	    getUserTokenFromEmail(receiver, groupName, sender);
+	    
+	    // 
+	    datasnapshot.getRef().setValue(null);
 	}
 	
-	private static void getUserTokenFromEmail(String email, String message){
+	private static void getUserTokenFromEmail(String email, String message, String sender){
 		DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("user_FCMToken");
 		
 		// This is how you write: final Query query = ref.orderByChild("username").equalTo(email);
@@ -119,7 +129,7 @@ public class Server {
                     	System.out.println(child.getValue());
                         String userId = (String) value.get("token");
                         System.out.println("Usertoken: " + userId);
-                        sendNotification("/" + userId, message);
+                        sendNotification("/" + userId, message, sender);
                     }
                 }
             	else {
@@ -134,16 +144,16 @@ public class Server {
         });
 	}
 	
-	private static void sendNotification(String reciever, String messageContent){
+	private static void sendNotification(String reciever, String messageContent, String sender){
 		
-		/*
+		
 		try {
-			Thread.sleep(4000);
+			Thread.sleep(2000);
 		} catch (InterruptedException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		*/
+		
 		
 		// Declaration of Message Parameters
 	    String message_url = new String("https://fcm.googleapis.com/fcm/send");
@@ -153,8 +163,9 @@ public class Server {
 	
 	    // Generating a JSONObject for the content of the message, can be extracted through the intent, even if launched from background
 	    JSONObject message = new JSONObject();
-	    message.put("message", messageContent);
-	    message.put("background", "Some data");
+	    message.put("groupname", messageContent);
+	    message.put("groupid", messageContent);
+	    message.put("sender", sender);
 	    
 	    JSONObject notification = new JSONObject();
 	    notification.put("body", "Awesome Notification");
@@ -188,5 +199,7 @@ public class Server {
 	        System.out.println(response.toString());
 	    } catch (Exception e) {
 	    }
+	    
+	    // Remove invite-request
 	}
 }
