@@ -11,10 +11,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Daniel on 2017-01-21.
@@ -69,9 +72,18 @@ public class InvitationsActivity extends BaseActivity {
                         //Todo change to a better Id for deleting
                         if(db.deleteRow(InviteList.get(pos).getGroupId())){
                             Toast.makeText(getApplicationContext (),"Joined Group " +InviteList.get(pos).getGroupName(),Toast.LENGTH_LONG).show ();
-                            InviteList.remove(pos);
+
                             InvAdapter.notifyDataSetChanged();
-                            //Todo Join a group
+                            Log.d("Lab4", "Joining group : " + InviteList.get(pos).getGroupName());
+                            DatabaseReference databaseReference = FirebaseDatabase.getInstance()
+                                    .getReference(InviteList.get(pos).getGroupName() + "/members/");
+                            // TODO: Add feedback on result, now we just assume it worked
+                            Map member = new HashMap<>();
+                            member.put("Email", FirebaseAuth.getInstance().getCurrentUser().getEmail());
+                            member.put("Token", FirebaseAuth.getInstance().getCurrentUser().getUid());
+                            Log.d("Lab4", "Sending update to db");
+                            InviteList.remove(pos);
+                            databaseReference.push().setValue(member);
                         }else {
                             Toast.makeText(getApplicationContext (),"Something went wong",Toast.LENGTH_LONG).show ();
                         }

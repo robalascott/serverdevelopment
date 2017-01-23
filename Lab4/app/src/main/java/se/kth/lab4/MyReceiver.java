@@ -43,7 +43,7 @@ public class MyReceiver extends BroadcastReceiver{
                 alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Accept",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(intent.getStringExtra("data") + "/members/");
+                                DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(intent.getStringExtra("groupId") + "/members/");
                                 // TODO: Add feedback on result, now we just assume it worked
                                 Map member = new HashMap<>();
                                 member.put("Email", FirebaseAuth.getInstance().getCurrentUser().getEmail());

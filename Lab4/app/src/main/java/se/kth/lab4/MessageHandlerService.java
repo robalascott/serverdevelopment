@@ -54,6 +54,7 @@ public class MessageHandlerService extends FirebaseMessagingService {
             Intent intent = new Intent("custom_event");
             intent.putExtra("groupname", remoteMessage.getData().get("groupname"));
             intent.putExtra("sender", remoteMessage.getData().get("sender"));
+            intent.putExtra("groupId", remoteMessage.getData().get("groupid"));
             LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
         }else{
             Log.d(TAG, "Got notification while app inactive");
@@ -104,6 +105,7 @@ public class MessageHandlerService extends FirebaseMessagingService {
                 .setAutoCancel(false)
                 .setContentIntent(pIntent)
                 .setStyle(style)
+                .setAutoCancel(true)
                 .setGroup(GROUP_KEY_EMAILS)
                 .setGroupSummary(true)
                 .build();

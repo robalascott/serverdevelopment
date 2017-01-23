@@ -13,6 +13,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -76,7 +77,7 @@ public class BaseActivity extends AppCompatActivity{
         }
 
         receiver = new MyReceiver(new Handler(), this);
-        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter("custom_event"));
+        //LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter("custom_event"));
 
     }
 
@@ -85,6 +86,8 @@ public class BaseActivity extends AppCompatActivity{
         super.onResume();
         // Set flag indicating the app is in foreground
         MyApplication.activityResumed();
+        Log.d("Lab4", "Registered receiver");
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter("custom_event"));
         //((MyApplication) getApplication()).activityResumed();
     }
 
@@ -100,6 +103,7 @@ public class BaseActivity extends AppCompatActivity{
         MyApplication.activityPaused();
         //((MyApplication) getApplication()).activityPaused();
         // Remove receiver listening for notification messages
+        Log.d("Lab4", "Unregistering receiver");
         LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
     }
 }
