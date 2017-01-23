@@ -1,8 +1,5 @@
 package se.kth.lab4;
 
-import android.app.AlertDialog;
-import android.content.BroadcastReceiver;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
@@ -16,18 +13,11 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by Daniel on 2017-01-18.
@@ -42,7 +32,7 @@ import java.util.Map;
 public class BaseActivity extends AppCompatActivity{
 
     private static final String TAG = "Lab4";
-   // private MyReceiver receiver;
+    private MyReceiver receiver;
 
     protected void onCreate(Bundle savedInstanceState, int layoutId)
     {
@@ -80,16 +70,36 @@ public class BaseActivity extends AppCompatActivity{
         // Get actionbar and configure items
         final ActionBar ab = getSupportActionBar();
         // Actionbar display the users name and picture
-        ab.setTitle(userName);
-        ab.setIcon(userIMG);
+        if (ab != null) {
+            ab.setTitle(userName);
+            ab.setIcon(userIMG);
+        }
 
-       // receiver = new MyReceiver(new Handler(), this);
-       // LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter("custom_event"));
+        receiver = new MyReceiver(new Handler(), this);
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter("custom_event"));
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Set flag indicating the app is in foreground
+        MyApplication.activityResumed();
+        //((MyApplication) getApplication()).activityResumed();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        //LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        // Remove flag indicating that app is in foreground
+        MyApplication.activityPaused();
+        //((MyApplication) getApplication()).activityPaused();
+        // Remove receiver listening for notification messages
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
     }
 }
