@@ -25,12 +25,13 @@ public class InvitationsActivity extends BaseActivity {
     private InvitationsAdapter InvAdapter;
     private DatabaseHelper db = new DatabaseHelper(this);
     private String TAG = "DBase";
-    ArrayList<InviteObject> InviteList = new ArrayList<>();
+    ArrayList<Invitation> InviteList = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState, R.layout.activity_invite);
 
         Log.d("Lab4", "Invite window");
+        DatabaseHelper dbHelper = new DatabaseHelper(this);
 
         InviteList = db.getAllInvitations();
         recyclerInvView  = (RecyclerView) findViewById(R.id.recycle_view_invite);
@@ -52,10 +53,10 @@ public class InvitationsActivity extends BaseActivity {
         Log.i(TAG,db.getDatabaseName());
         Log.i(TAG,Boolean.toString(db.hasList()));
         int i=0;
-        for(InviteObject inv : db.getAllInvitations()){
+      /*  for(Invitation inv : db.getAllInvitations()){
             i++;
-            Log.d("Lab4", "Invitation " + i + ": " + inv.getGroupname());
-        }
+            Log.d("Lab4", "Invitation " + i + ": " + inv.getGroupName());
+        }*/
     }
     public boolean Alert(int pos1){
         final int pos = pos1;
@@ -65,10 +66,12 @@ public class InvitationsActivity extends BaseActivity {
         alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Yes",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        if(db.deleteRow(InviteList.get(pos).getGroupname())){
-                            Toast.makeText(getApplicationContext (),"Joined Group " +InviteList.get(pos).getGroupname(),Toast.LENGTH_LONG).show ();
+                        //Todo change to a better Id for deleting
+                        if(db.deleteRow(InviteList.get(pos).getGroupId())){
+                            Toast.makeText(getApplicationContext (),"Joined Group " +InviteList.get(pos).getGroupName(),Toast.LENGTH_LONG).show ();
                             InviteList.remove(pos);
                             InvAdapter.notifyDataSetChanged();
+                            //Todo Join a group
                         }else {
                             Toast.makeText(getApplicationContext (),"Something went wong",Toast.LENGTH_LONG).show ();
                         }
@@ -79,7 +82,7 @@ public class InvitationsActivity extends BaseActivity {
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
 
-                        if(db.deleteRow(InviteList.get(pos).getGroupname())){
+                        if(db.deleteRow(InviteList.get(pos).getGroupName())){
                             InviteList.remove(pos);
                             InvAdapter.notifyDataSetChanged();
                             Toast.makeText(getApplicationContext (),"Deleted Group Invite ",Toast.LENGTH_LONG).show ();

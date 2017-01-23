@@ -16,9 +16,9 @@ import java.util.List;
 
 public class InvitationsAdapter extends RecyclerView.Adapter< InvitationsAdapter.InviteViewHolder > {
     private InviteClickListener listner;
-    private List<InviteObject> list;
+    private List<Invitation> list;
 
-    public InvitationsAdapter(List<InviteObject> temp ){
+    public InvitationsAdapter(List<Invitation> temp ){
         this.list = temp;
     }
     public interface InviteClickListener{
@@ -35,9 +35,9 @@ public class InvitationsAdapter extends RecyclerView.Adapter< InvitationsAdapter
 
     @Override
     public void onBindViewHolder(InvitationsAdapter.InviteViewHolder  holder, int position) {
-        InviteObject object = list.get(position);
-        holder. inviteNameView.setText(object.getGroupname());
-        holder.inviteGroupView.setText(object.getOwnerName());
+        Invitation object = list.get(position);
+        holder.inviteNameView.setText(object.getGroupId());
+        holder.inviteGroupView.setText(object.getGroupName());
     }
 
     @Override

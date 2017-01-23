@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             GoogleSignInResult result = opr.get();
             if(result.isSuccess()){
                 // If launched from notification, the background flag should be set from backend
-                if(launchIntent.getStringExtra("background") != null){
+                if(launchIntent.getBooleanExtra("background", false)){
                     Log.d(TAG, "Launched from notificationClick");
                     // Start Home Activity
                     Intent intent = new Intent(this, InvitationsActivity.class);
@@ -120,6 +120,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             startActivity(intent);
         }
         finish();
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
     }
 
     @Override

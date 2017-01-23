@@ -65,7 +65,6 @@ public class TodoListActivity extends BaseActivity {
 
         // Can get som date if was launched from background, how do we get login intent stuff though?
         // open main and attach intent info?
-
         Intent intent = getIntent();
         String payload = intent.getStringExtra("background");
         Log.d(TAG, "" + payload);
