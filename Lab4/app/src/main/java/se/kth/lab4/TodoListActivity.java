@@ -87,7 +87,7 @@ public class TodoListActivity extends BaseActivity {
         // Roberts stuff
         /*Database play things*/
         Log.i(TAG,Boolean.toString(dbHelper.doesDataExist(this,"FCM")));
-     /*   dbHelper.insertInvite("Tommy");
+        /*dbHelper.insertInvite("Tommy");
         dbHelper.insertInvite("Tommy2");
         dbHelper.insertInvite("Tommy3");*/
 

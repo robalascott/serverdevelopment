@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/border"
+    android:screenOrientation="portrait"
     tools:context="se.kth.lab4.TodoActivity">
 
     <include layout="@layout/toolbar"

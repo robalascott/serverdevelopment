@@ -7,6 +7,7 @@
     android:background="@color/blue_grey_700"
     android:orientation="vertical"
     android:weightSum="4"
+    android:screenOrientation="portrait"
     tools:context="se.kth.lab4.LoginActivity">
 
     <include layout="@layout/toolbar" />

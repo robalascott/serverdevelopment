@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/border"
+    android:screenOrientation="portrait"
     tools:context="se.kth.lab4.TodoListActivity">
 
     <!-- "android:layout_bellow" is not working for some reason, we set marginTop to the size of

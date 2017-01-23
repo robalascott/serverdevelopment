@@ -30,24 +30,29 @@
 
         <activity
             android:name=".TodoListActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/MyCustomTheme">
         </activity>
         <activity
             android:name=".LoginActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/MyCustomTheme">
         </activity>
         <activity
             android:name=".TodoAddActivity"
             android:label="@string/title_activity_todo_add"
+            android:screenOrientation="portrait"
             android:theme="@style/MyCustomTheme">
         </activity>
         <activity
             android:name=".TodoActivity"
             android:label="TodoActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/MyCustomTheme"/>
         <activity
             android:name=".InvitationsActivity"
             android:label="InviteActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/MyCustomTheme"/>
     </application>
 
