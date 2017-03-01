@@ -15,5 +15,6 @@ public class MenuController {
 	
 	public void newFile(){
 		System.out.println("Hello");
+		this.mainViewController.canvasController.test();
 	}
 }
