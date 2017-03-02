@@ -5,6 +5,7 @@ import javafx.scene.control.ToolBar;
 
 public class MenuController {
 	@FXML private ToolBar ToolBar;
+
 	private MainViewController mainViewController;
 	
 	
@@ -13,8 +14,7 @@ public class MenuController {
 		
 	}
 	
-	public void newFile(){
-		System.out.println("Hello");
-		this.mainViewController.canvasController.test();
+	public void exitProgram(){
+		 System.exit(0);
 	}
 }

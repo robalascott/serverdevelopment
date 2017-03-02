@@ -18,9 +18,10 @@ public class CanvasController {
 	public void init(MainViewController mainViewController1) {
 		this.mainViewController =  mainViewController1;
 		  Rectangle r = new Rectangle();
-	        r.setY(0);
-	        r.setWidth(200);
-	        r.setHeight(200);
+	        r.setX(0);
+		  	r.setY(0);
+	        r.setWidth(500);
+	        r.setHeight(500);
 	        r.setFill(Color.WHITE);
 	        canvas.getChildren().add(r);
 		  Line line1 = new Line(2, 2, 7, 9);

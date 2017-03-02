@@ -12,13 +12,13 @@ public class MainViewController implements Initializable{
 	@FXML MenuController menuController;
 	@FXML ShapeMenuController shapeMenuController;
 	@FXML CanvasController canvasController;
-	
+
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		menuController.init(this);
 		shapeMenuController.init(this);	
 		canvasController.init(this);
+		
 	}
-
 }

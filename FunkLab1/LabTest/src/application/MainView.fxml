@@ -1,22 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainViewController">
    <children>
-      <BorderPane fx:id="MainView" layoutX="1.0" layoutY="2.0" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <top>
-             <fx:include fx:id="menu" source="Menu.fxml" />
+      <BorderPane fx:id="MainView" layoutX="1.0" layoutY="2.0" prefHeight="600.0" prefWidth="1031.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <top>   
+       
+            <fx:include fx:id="menu" source="Menu.fxml" /> 
          </top>
-        
          <left>
-             <fx:include fx:id="shapeMenu" source="ShapeMenu.fxml" />
+             <fx:include fx:id="canvas" source="Canvas.fxml" BorderPane.alignment="TOP_LEFT" />
          </left>
-         <center>
-            <fx:include fx:id="canvas" source="Canvas.fxml" />
-         </center>
+         <right>
+          <fx:include fx:id="shapeMenu" source="ShapeMenu.fxml" prefHeight="600.0" prefWidth="100.0" BorderPane.alignment="TOP_RIGHT" />
+         </right>
+         <bottom>
+         
+         </bottom>
         </BorderPane>
    </children>
 </AnchorPane>
