@@ -7,7 +7,7 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.VBox;
 
 
-public class ShapeMenuController {
+public class ShapeMenuController{
 	@FXML private VBox ShapeMenu;
 	private MainViewController mainViewController;
 	private ToggleGroup toggleGroup = new ToggleGroup();
@@ -27,10 +27,22 @@ public class ShapeMenuController {
 	      };
 	      toggleGroup.selectedToggleProperty().addListener(E-> {
 	    	  	System.out.println("E" + E.toString());
-	    	  
+	    		System.out.println(getButtonType(E.toString()));
+	    		
 	        });
 	}
-	
+
+
+	private String getButtonType(String str){
+		if(str==null){
+			return null;
+		}else{
+			String temp = new String();
+			int startIndex = str.indexOf("'");
+			temp = str.substring(startIndex+1,str.length()-2);
+			return temp;
+		}
+	}
 
 	
 	
