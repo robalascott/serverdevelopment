@@ -3,8 +3,9 @@ package pojo;
 import java.util.Observable;
 
 import javafx.scene.paint.Color;
+import manager.RedoUndo;
 
-public class FormattingObject extends Observable{
+public class FormattingObject extends Observable   {
 	private Color colour;
 	private int width;
 	private String fill;
@@ -50,4 +51,7 @@ public class FormattingObject extends Observable{
 	public String toStringAll(){
 		return colour.toString() +" " + fill + " " + width ;
 	}
+
+
+
 }

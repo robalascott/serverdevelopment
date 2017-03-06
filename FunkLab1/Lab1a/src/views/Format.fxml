@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.ColorPicker?>
 <?import javafx.scene.control.Label?>
@@ -9,7 +10,7 @@
 
 <AnchorPane xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.FormatController">
    <children>
-      <HBox fx:id="FormatMenu" maxWidth="1.7976931348623157E308" minWidth="800" prefHeight="40.0" prefWidth="800.0" >
+      <HBox fx:id="FormatMenu" maxWidth="1.7976931348623157E308" minWidth="800" prefHeight="40.0" prefWidth="800.0">
          <children>
             <Label fx:id="colourLabel" contentDisplay="CENTER" prefHeight="25.0" prefWidth="57.0" text="Colour" textAlignment="CENTER" />
             <ColorPicker fx:id="colourChooser" />
@@ -17,6 +18,7 @@
             <ChoiceBox fx:id="fillbox" prefWidth="150.0" />
             <Slider fx:id="widthChooser" prefHeight="27.0" prefWidth="140.0" />
             <Label fx:id="labelWidth" prefHeight="26.0" prefWidth="39.0" text="Label" />
+            <Button fx:id="undoButton" mnemonicParsing="false" text="Undo" onAction="#eventUndo"/>
          </children></HBox>
    </children>
 </AnchorPane>

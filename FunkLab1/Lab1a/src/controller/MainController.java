@@ -14,17 +14,20 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
+import manager.UndoRedoManager;
 
 public class MainController implements Initializable {
 	@FXML MenuController menuController;
 	@FXML FormatController formatController;
 	@FXML ShapeMenuController shapeMenuController;
 	@FXML BorderPane MainView;
+	@FXML CanvasController canvasController;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		MediatorController.getInstance().registerController1(menuController);
-		MediatorController.getInstance().registerController2(formatController);
-		MediatorController.getInstance().registerController3(shapeMenuController);
+		MediatorController.getInstance().registerController(menuController);
+		MediatorController.getInstance().registerController(formatController);
+		MediatorController.getInstance().registerController(shapeMenuController);
+		MediatorController.getInstance().registerController(canvasController);
 	}
 }
